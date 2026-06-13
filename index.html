@@ -691,7 +691,7 @@
 
           <div class="button-row">
             <!-- Replace these mailto links once you have real pledge/support pages. -->
-            <a class="btn btn-primary" href="mailto:hello@thegreatlogout.org?subject=I want to join The Great Logout">Join the Pledge</a>
+            <a class="btn btn-primary email-link" href="#" data-email-subject="I want to join The Great Logout">Join the Pledge</a>
             <a class="btn btn-secondary" href="#support">Support the Project</a>
             <a class="btn btn-secondary" href="#manifesto">Read the Manifesto</a>
           </div>
@@ -935,8 +935,8 @@
 
             <div class="button-row">
               <!-- Replace with Stripe Payment Link, Open Collective, Ko-fi, GitHub Sponsors, or crowdfunding URL. -->
-              <a class="btn btn-primary" href="mailto:hello@thegreatlogout.org?subject=I want to support The Great Logout">Support the Project</a>
-              <a class="btn btn-secondary" href="mailto:hello@thegreatlogout.org?subject=I want to help with The Great Logout">Contact us</a>
+              <a class="btn btn-primary email-link" href="#" data-email-subject="I want to support The Great Logout">Support the Project</a>
+              <a class="btn btn-secondary email-link" href="#" data-email-subject="I want to help with The Great Logout">Contact us</a>
             </div>
           </div>
 
@@ -1029,6 +1029,20 @@
       await sleep(380);
       await typeInto(targetTwo, lineTwo);
     }
+
+    // Build the contact address only at runtime to reduce basic email scraping.
+    const contactLocal = ["he", "llo"].join("");
+    const contactDomain = ["thegreatlogout", "org"].join(".");
+    const contactAddress = `${contactLocal}${String.fromCharCode(64)}${contactDomain}`;
+
+    document.querySelectorAll(".email-link").forEach(link => {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        const subject = link.getAttribute("data-email-subject") || "The Great Logout";
+        const mailto = `mailto:${contactAddress}?subject=${encodeURIComponent(subject)}`;
+        window.location.href = mailto;
+      });
+    });
 
     document.getElementById("year").textContent = new Date().getFullYear();
     runTypewriter();
