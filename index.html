@@ -1,23 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <!--
-    The Great Logout — single-file GitHub Pages landing page
-    ----------------------------------------------------------
-    How to customize quickly:
-    1) Change the accent color in :root below: --accent: #B6FF3B;
-    2) Replace mailto links with your real support / donation / pledge links.
-    3) Optional: add a CNAME file for thegreatlogout.org once the domain is yours.
-  -->
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>The Great Logout — A collective exit from addictive social media</title>
-  <meta name="description" content="The Great Logout is a collective exit from addictive social media. We build safe tools, public resources, and a visible campaign for leaving the feed together." />
+  <title>The Great Logout - Post why you're leaving. Then leave.</title>
+  <meta name="description" content="The Great Logout is a public exit from addictive social media. Post your reasons for 1 to 7 days. Then log out." />
 
-  <!-- Open Graph / social preview -->
   <meta property="og:title" content="The Great Logout" />
-  <meta property="og:description" content="A collective exit from addictive social media." />
+  <meta property="og:description" content="Post why you're leaving. Then leave." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="og-image.png" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
@@ -25,16 +16,7 @@
 
   <style>
     :root {
-      /*
-        Change this one value to test different looks:
-        Signal green: #B6FF3B
-        Cyan:         #32E6FF
-        Red:          #FF3B3B
-        Amber:        #FFD166
-        Purple:       #B983FF
-      */
       --accent: #B6FF3B;
-
       --bg: #070807;
       --bg-soft: #0f110f;
       --bg-card: #121512;
@@ -43,9 +25,8 @@
       --muted-2: #6f766d;
       --line: rgba(244, 244, 239, 0.12);
       --line-strong: rgba(182, 255, 59, 0.38);
-      --danger-soft: rgba(255, 255, 255, 0.06);
       --max: 1120px;
-      --radius: 28px;
+      --radius: 24px;
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
       --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
       --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -62,8 +43,8 @@
     body {
       margin: 0;
       background:
-        radial-gradient(circle at 70% 8%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 26rem),
-        radial-gradient(circle at 12% 16%, rgba(255,255,255,0.08), transparent 20rem),
+        radial-gradient(circle at 72% 10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 27rem),
+        radial-gradient(circle at 10% 18%, rgba(255,255,255,0.08), transparent 22rem),
         var(--bg);
       color: var(--text);
       font-family: var(--sans);
@@ -89,6 +70,10 @@
       text-decoration: none;
     }
 
+    img {
+      max-width: 100%;
+    }
+
     .wrap {
       width: min(var(--max), calc(100% - 40px));
       margin: 0 auto;
@@ -99,7 +84,7 @@
       top: 0;
       z-index: 50;
       backdrop-filter: blur(18px);
-      background: rgba(7, 8, 7, 0.72);
+      background: rgba(7, 8, 7, 0.74);
       border-bottom: 1px solid var(--line);
     }
 
@@ -112,11 +97,11 @@
     }
 
     .brand {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 12px;
-      font-weight: 800;
-      letter-spacing: -0.04em;
+      font-weight: 850;
+      letter-spacing: 0;
     }
 
     .brand-mark {
@@ -124,15 +109,11 @@
       height: 34px;
       display: grid;
       place-items: center;
-      border: 0;
-      border-radius: 0;
-      background: transparent;
-      overflow: hidden;
       flex: 0 0 auto;
     }
 
     .brand-mark img,
-    .avatar img {
+    .mini-mark img {
       width: 100%;
       height: 100%;
       display: block;
@@ -156,20 +137,20 @@
       background: var(--accent);
       padding: 10px 14px;
       border-radius: 999px;
-      font-weight: 800;
+      font-weight: 850;
     }
 
     .hero {
       min-height: calc(100vh - 72px);
       display: grid;
       align-items: center;
-      padding: 88px 0 80px;
+      padding: 84px 0 76px;
     }
 
     .hero-grid {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 56px;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 54px;
       align-items: center;
     }
 
@@ -177,10 +158,10 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      margin-bottom: 24px;
+      margin-bottom: 22px;
       color: var(--accent);
       font-family: var(--mono);
-      font-size: 0.86rem;
+      font-size: 0.84rem;
       text-transform: uppercase;
       letter-spacing: 0.12em;
     }
@@ -194,24 +175,33 @@
       box-shadow: 0 0 22px var(--accent);
     }
 
+    h1,
+    h2,
+    h3,
+    p {
+      overflow-wrap: anywhere;
+    }
+
     h1 {
       margin: 0;
-      font-size: clamp(4rem, 12vw, 10.5rem);
-      line-height: 0.82;
-      letter-spacing: -0.095em;
-      text-transform: uppercase;
+      max-width: 870px;
+      font-size: clamp(3rem, 6vw, 5rem);
+      line-height: 0.94;
+      letter-spacing: 0;
     }
 
     .hero-copy {
       margin: 30px 0 0;
-      max-width: 680px;
+      max-width: 710px;
       color: var(--muted);
       font-size: clamp(1.1rem, 1.8vw, 1.35rem);
     }
 
-    .hero-copy strong {
+    .hero-copy strong,
+    .lead strong,
+    .why-list strong {
       color: var(--text);
-      font-weight: 750;
+      font-weight: 780;
     }
 
     .button-row {
@@ -225,11 +215,10 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
       min-height: 48px;
       padding: 0 20px;
       border-radius: 999px;
-      font-weight: 800;
+      font-weight: 850;
       border: 1px solid var(--line);
       transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
     }
@@ -255,82 +244,96 @@
       background: rgba(255,255,255,0.08);
     }
 
-    .terminal-card {
+    .campaign-card {
       border: 1px solid var(--line);
+      border-radius: var(--radius);
       background:
         linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)),
         var(--bg-card);
-      border-radius: var(--radius);
-      overflow: hidden;
       box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
-    .terminal-bar {
+    .campaign-top {
       min-height: 48px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      justify-content: space-between;
+      gap: 14px;
       padding: 0 18px;
       border-bottom: 1px solid var(--line);
       background: rgba(255,255,255,0.03);
-    }
-
-    .dot {
-      width: 11px;
-      height: 11px;
-      border-radius: 99px;
-      background: var(--muted-2);
-    }
-
-    .terminal-body {
-      padding: 28px;
-      min-height: 330px;
-      font-family: var(--mono);
-    }
-
-    .terminal-small {
       color: var(--muted-2);
-      font-size: 0.9rem;
-      margin-bottom: 20px;
+      font-family: var(--mono);
+      font-size: 0.82rem;
     }
 
-    .type-line {
-      display: block;
-      min-height: 2.1em;
-      color: var(--text);
-      font-size: clamp(1.35rem, 3vw, 2.45rem);
-      line-height: 1.18;
-      letter-spacing: -0.04em;
-      white-space: nowrap;
+    .mini-mark {
+      width: 26px;
+      height: 26px;
+      display: grid;
+      place-items: center;
     }
 
-    .cursor {
-      display: inline-block;
-      width: 0.65em;
+    .campaign-body {
+      padding: 28px;
+    }
+
+    .logout-formula {
+      display: grid;
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .formula-step {
+      display: grid;
+      grid-template-columns: 78px 1fr;
+      gap: 18px;
+      align-items: start;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(0,0,0,0.18);
+    }
+
+    .formula-step span {
       color: var(--accent);
-      animation: blink 850ms steps(1) infinite;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding-top: 4px;
     }
 
-    @keyframes blink {
-      50% { opacity: 0; }
+    .formula-step strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+      line-height: 1.05;
     }
 
-    .terminal-note {
-      margin-top: 34px;
+    .formula-step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .campaign-note {
+      margin: 20px 0 0;
       padding: 16px;
       border: 1px solid var(--line-strong);
       border-radius: 18px;
       background: color-mix(in srgb, var(--accent) 8%, transparent);
       color: var(--muted);
-      font-size: 0.95rem;
     }
 
-    .terminal-note strong {
+    .campaign-note strong {
       color: var(--text);
     }
 
     section {
-      padding: 92px 0;
+      padding: 88px 0;
       border-top: 1px solid var(--line);
     }
 
@@ -353,238 +356,268 @@
 
     h2 {
       margin: 0;
-      font-size: clamp(2.2rem, 5vw, 5rem);
-      line-height: 0.95;
-      letter-spacing: -0.07em;
+      font-size: clamp(2.15rem, 5vw, 4.9rem);
+      line-height: 0.98;
+      letter-spacing: 0;
     }
 
     .lead {
       margin: 0;
       color: var(--muted);
-      font-size: clamp(1.05rem, 1.8vw, 1.28rem);
-      max-width: 720px;
+      font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+      max-width: 740px;
     }
 
-    .lead strong {
-      color: var(--text);
-    }
-
-    .manifesto {
-      padding: 38px;
-      border-radius: var(--radius);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025)),
-        var(--bg-soft);
-      border: 1px solid var(--line);
-    }
-
-    .manifesto p {
-      margin: 0 0 18px;
-      max-width: 920px;
-      font-size: clamp(1.35rem, 3vw, 2.35rem);
-      line-height: 1.13;
-      letter-spacing: -0.055em;
-    }
-
-    .manifesto p:last-child {
-      margin-bottom: 0;
-      color: var(--accent);
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-      margin-top: 30px;
-    }
-
-    .card {
-      padding: 24px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      background: rgba(255,255,255,0.035);
-    }
-
-    .card-number {
-      color: var(--accent);
-      font-family: var(--mono);
-      font-size: 0.84rem;
-      margin-bottom: 24px;
-    }
-
-    h3 {
-      margin: 0 0 10px;
-      font-size: 1.25rem;
-      letter-spacing: -0.035em;
-    }
-
-    .card p {
-      margin: 0;
-      color: var(--muted);
-    }
-
-    .plan {
+    .steps {
       display: grid;
       gap: 14px;
-      counter-reset: plan;
+      counter-reset: steps;
     }
 
-    .plan-item {
-      counter-increment: plan;
+    .step {
+      counter-increment: steps;
       display: grid;
       grid-template-columns: 80px 1fr;
       gap: 20px;
       padding: 24px;
       border: 1px solid var(--line);
-      border-radius: 24px;
+      border-radius: 22px;
       background: rgba(255,255,255,0.035);
     }
 
-    .plan-item::before {
-      content: "0" counter(plan);
+    .step::before {
+      content: "0" counter(steps);
       color: var(--accent);
       font-family: var(--mono);
-      font-size: 1rem;
-      padding-top: 3px;
+      padding-top: 4px;
     }
 
-    .plan-item p {
+    .step h3,
+    .reason h3,
+    .guide-day h3,
+    .template-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      letter-spacing: 0;
+    }
+
+    .step p,
+    .reason p,
+    .guide-day p,
+    .template-card p {
+      margin: 0;
       color: var(--muted);
-      margin: 6px 0 0;
-      max-width: 850px;
     }
 
-    .ethics-box {
+    .why-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 0.95fr 1.05fr;
       gap: 18px;
-      margin-top: 28px;
-    }
-
-    .yes-no {
-      padding: 28px;
-      border-radius: 24px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.035);
-    }
-
-    .yes-no h3 {
-      color: var(--accent);
-    }
-
-    .yes-no ul {
-      margin: 18px 0 0;
-      padding: 0;
-      list-style: none;
-      color: var(--muted);
-    }
-
-    .yes-no li {
-      display: flex;
-      gap: 10px;
-      margin: 10px 0;
-    }
-
-    .yes-no li::before {
-      content: ">";
-      color: var(--accent);
-      font-family: var(--mono);
-    }
-
-    .roadmap {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
-      margin-top: 28px;
-    }
-
-    .roadmap-step {
-      min-height: 220px;
-      padding: 22px;
-      border-radius: 24px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.035);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .tag {
-      align-self: flex-start;
-      color: var(--bg);
-      background: var(--accent);
-      font-family: var(--mono);
-      font-weight: 800;
-      font-size: 0.72rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 6px 9px;
-      border-radius: 999px;
-    }
-
-    .support-panel {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 24px;
       align-items: stretch;
-      padding: 36px;
+    }
+
+    .why-list {
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .why-list p {
+      margin: 0 0 18px;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .why-list p:last-child {
+      margin-bottom: 0;
+    }
+
+    .reasons {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .reason {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .reason-number {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      margin-bottom: 18px;
+    }
+
+    .guide-panel {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 24px;
+      align-items: start;
+      padding: 34px;
+      border: 1px solid var(--line-strong);
       border-radius: var(--radius);
       background:
-        radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--accent) 19%, transparent), transparent 20rem),
+        radial-gradient(circle at 90% 10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 22rem),
         var(--bg-soft);
-      border: 1px solid var(--line-strong);
       box-shadow: var(--shadow);
     }
 
-    .support-list {
-      margin: 24px 0 0;
-      padding: 0;
-      list-style: none;
-      color: var(--muted);
+    .guide-days {
+      display: grid;
+      gap: 10px;
+      margin-top: 26px;
     }
 
-    .support-list li {
-      margin: 12px 0;
-    }
-
-    .support-list strong {
-      color: var(--text);
-    }
-
-    .pledge-card {
-      border-radius: 24px;
+    .guide-day {
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 14px;
+      padding: 16px;
       border: 1px solid var(--line);
-      background: rgba(0,0,0,0.28);
-      padding: 24px;
-      font-family: var(--mono);
+      border-radius: 18px;
+      background: rgba(0,0,0,0.2);
     }
 
-    .pledge-card p {
+    .guide-day span {
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      padding-top: 3px;
+    }
+
+    .signup-card {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(0,0,0,0.28);
+    }
+
+    .signup-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.35rem;
+    }
+
+    .signup-card p {
+      margin: 0 0 18px;
       color: var(--muted);
+    }
+
+    .signup-form {
+      display: grid;
+      gap: 12px;
+    }
+
+    .signup-form label {
+      color: var(--muted-2);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .signup-form input {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      font: inherit;
+      padding: 0 14px;
+    }
+
+    .signup-form input::placeholder {
+      color: var(--muted-2);
+    }
+
+    .signup-form button {
+      min-height: 48px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--accent);
+      color: var(--bg);
+      font: inherit;
+      font-weight: 850;
+      cursor: not-allowed;
+      opacity: 0.78;
+    }
+
+    .form-note {
+      margin: 8px 0 0;
+      color: var(--muted-2);
+      font-size: 0.9rem;
+    }
+
+    .templates {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .template-card {
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .template-card p {
+      color: var(--text);
+      font-size: 1.05rem;
+    }
+
+    .template-card span {
+      color: var(--muted-2);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .manifesto {
+      padding: 38px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.025)),
+        var(--bg-soft);
+    }
+
+    .manifesto p {
+      margin: 0;
+      max-width: 960px;
+      font-size: clamp(1.35rem, 3vw, 2.25rem);
+      line-height: 1.16;
+      letter-spacing: 0;
     }
 
     .about-grid {
       display: grid;
-      grid-template-columns: 0.85fr 1.15fr;
+      grid-template-columns: 0.82fr 1.18fr;
       gap: 28px;
       align-items: start;
     }
 
     .avatar {
       aspect-ratio: 1 / 1;
-      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      padding: clamp(30px, 7vw, 72px);
       border: 1px solid var(--line);
+      border-radius: var(--radius);
       background:
         radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 12rem),
         linear-gradient(135deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
-      display: grid;
-      place-items: center;
-      font-family: var(--mono);
-      color: var(--accent);
-      font-size: clamp(3rem, 9vw, 7rem);
       box-shadow: var(--shadow);
-      overflow: hidden;
-      padding: clamp(28px, 7vw, 72px);
     }
 
     .about-text {
@@ -621,14 +654,9 @@
 
       .hero-grid,
       .section-head,
-      .support-panel,
-      .about-grid,
-      .ethics-box {
-        grid-template-columns: 1fr;
-      }
-
-      .cards,
-      .roadmap {
+      .why-grid,
+      .guide-panel,
+      .about-grid {
         grid-template-columns: 1fr;
       }
 
@@ -636,31 +664,45 @@
         padding-top: 64px;
       }
 
-      .type-line {
-        white-space: normal;
+      .reasons,
+      .templates {
+        grid-template-columns: 1fr;
       }
 
-      .terminal-body {
-        min-height: 290px;
+      .formula-step,
+      .step,
+      .guide-day {
+        grid-template-columns: 1fr;
       }
 
       section {
-        padding: 72px 0;
+        padding: 70px 0;
       }
 
-      .manifesto,
-      .support-panel {
+      .campaign-body,
+      .guide-panel,
+      .manifesto {
         padding: 24px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .wrap {
+        width: min(var(--max), calc(100% - 28px));
+      }
+
+      h1 {
+        font-size: clamp(3rem, 16vw, 4.2rem);
+      }
+
+      .btn {
+        width: 100%;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
       html {
         scroll-behavior: auto;
-      }
-
-      .cursor {
-        animation: none;
       }
 
       .btn {
@@ -681,10 +723,10 @@
       </a>
 
       <nav class="nav-links" aria-label="Main navigation">
-        <a href="#manifesto">Manifesto</a>
-        <a href="#plan">Plan</a>
-        <a href="#ethics">Ethics</a>
-        <a href="#support" class="nav-cta">Support</a>
+        <a href="#how">How it works</a>
+        <a href="#why">Why leave</a>
+        <a href="#guide">7-day guide</a>
+        <a href="#guide" class="nav-cta">Start</a>
       </nav>
     </div>
   </header>
@@ -693,41 +735,285 @@
     <section class="hero">
       <div class="wrap hero-grid">
         <div>
-          <div class="eyebrow">A collective exit from addictive social media</div>
-          <h1>The Great Logout</h1>
+          <div class="eyebrow">A public exit from addictive social media</div>
+          <h1>Post why you're leaving. Then leave.</h1>
 
           <p class="hero-copy">
-            Social media promised <strong>connection</strong>.
-            It delivered addiction, outrage, comparison, and surveillance.
-            We are building tools, resources, and a public campaign to help people leave the feed together.
+            The Great Logout is simple: <strong>post for 1 to 7 days</strong>, say why you are leaving, tell people where to reach you, then log out. Not silently. Not someday. Visibly. Now.
           </p>
 
           <div class="button-row">
-            <!-- Replace these mailto links once you have real pledge/support pages. -->
-            <a class="btn btn-primary email-link" href="#" data-email-subject="I want to join The Great Logout">Join the Pledge</a>
-            <a class="btn btn-secondary" href="#support">Support the Project</a>
-            <a class="btn btn-secondary" href="#manifesto">Read the Manifesto</a>
+            <a class="btn btn-primary" href="#guide">Start the 7-day logout</a>
+            <a class="btn btn-secondary" href="#how">See how it works</a>
           </div>
         </div>
 
-        <aside class="terminal-card" aria-label="Typing animation">
-          <div class="terminal-bar">
-            <span class="dot"></span>
-            <span class="dot"></span>
-            <span class="dot"></span>
+        <aside class="campaign-card" aria-label="The Great Logout campaign in three steps">
+          <div class="campaign-top">
+            <span>/logout/sequence</span>
+            <span class="mini-mark" aria-hidden="true">
+              <img src="assets/the-great-logout-mark.svg" alt="" decoding="async" />
+            </span>
           </div>
-          <div class="terminal-body">
-            <div class="terminal-small">/public-message/final-post.txt</div>
-            <span class="type-line" id="typeLineOne"></span>
-            <span class="type-line" id="typeLineTwo"></span>
-            <span class="cursor" aria-hidden="true">█</span>
+          <div class="campaign-body">
+            <ol class="logout-formula">
+              <li class="formula-step">
+                <span>Day 1-7</span>
+                <div>
+                  <strong>Post your reasons.</strong>
+                  <p>One reason a day. Short is fine. Honest is better.</p>
+                </div>
+              </li>
+              <li class="formula-step">
+                <span>Before exit</span>
+                <div>
+                  <strong>Leave a way back to you.</strong>
+                  <p>Email, phone, website, Signal, real life. Whatever you choose.</p>
+                </div>
+              </li>
+              <li class="formula-step">
+                <span>Final post</span>
+                <div>
+                  <strong>Log out.</strong>
+                  <p>Delete the apps, deactivate, or stop posting. Make the exit real.</p>
+                </div>
+              </li>
+            </ol>
 
-            <div class="terminal-note">
-              <strong>We do not quit each other.</strong><br />
-              We quit the platforms.
-            </div>
+            <p class="campaign-note">
+              <strong>The point is visibility.</strong> People see the decision before you disappear from the platforms.
+            </p>
           </div>
         </aside>
+      </div>
+    </section>
+
+    <section id="how">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">How it works</div>
+            <h2>One small public exit plan.</h2>
+          </div>
+          <p class="lead">
+            You do not need a grand speech. You need a few clear posts, a place people can reach you, and a date when you stop feeding the feed.
+          </p>
+        </div>
+
+        <div class="steps">
+          <article class="step">
+            <div>
+              <h3>Choose 1, 3, or 7 days.</h3>
+              <p>Pick a length you can actually finish. Seven days gives people time to notice.</p>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <h3>Post one reason each day.</h3>
+              <p>Write like a person. Say what the feed has cost you, and what you want back.</p>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <h3>Tell people where to reach you.</h3>
+              <p>Do not vanish from people you care about. Move the relationship outside the platform.</p>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <h3>Delete the apps or deactivate.</h3>
+              <p>Make it harder to drift back in. Remove the shortcut. Break the reflex.</p>
+            </div>
+          </article>
+
+          <article class="step">
+            <div>
+              <h3>Stay out, and help others do the same.</h3>
+              <p>If someone asks why you left, tell them plainly. That is how the signal spreads.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="why">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Why leave</div>
+            <h2>The feed is not just a habit.</h2>
+          </div>
+          <p class="lead">
+            This is not only about screen time. A few companies now shape what billions of people see, want, fear, and argue about. They do it for profit, and they do it at scale.
+          </p>
+        </div>
+
+        <div class="why-grid">
+          <div class="why-list">
+            <p><strong>Addictive feeds</strong> keep us scrolling long after we meant to stop.</p>
+            <p><strong>Attention extraction</strong> turns spare minutes, outrage, grief, jokes, and friendships into engagement.</p>
+            <p><strong>Algorithmic pressure</strong> decides what rises, what disappears, and what mood the room is in.</p>
+            <p><strong>Big Tech power</strong> is now cultural and political power. Refusing to feed it is a small act, but it is not nothing.</p>
+          </div>
+
+          <div class="reasons">
+            <article class="reason">
+              <div class="reason-number">01</div>
+              <h3>Your attention is not raw material.</h3>
+              <p>The platforms need your time, reactions, and relationships. Leaving cuts off the supply.</p>
+            </article>
+
+            <article class="reason">
+              <div class="reason-number">02</div>
+              <h3>The pressure is real.</h3>
+              <p>Comparison, outrage, and the need to perform leave marks. We should say that without making it soft.</p>
+            </article>
+
+            <article class="reason">
+              <div class="reason-number">03</div>
+              <h3>Silence is easy to miss.</h3>
+              <p>If you just disappear, the platform absorbs it. A public exit is harder to ignore.</p>
+            </article>
+
+            <article class="reason">
+              <div class="reason-number">04</div>
+              <h3>You can still be reachable.</h3>
+              <p>The goal is not isolation. The goal is to stop letting platforms sit between you and everyone else.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="guide">
+      <div class="wrap">
+        <div class="guide-panel">
+          <div>
+            <div class="kicker">7-day guide</div>
+            <h2>A week of posts. Then the logout.</h2>
+            <p class="lead">
+              The guide gives you one clear prompt per day. Use it as written, change it, or ignore half of it. The point is to finish.
+            </p>
+
+            <div class="guide-days">
+              <article class="guide-day">
+                <span>Day 0</span>
+                <div>
+                  <h3>Prepare your logout</h3>
+                  <p>Save contacts, choose your last day, and decide where people can reach you.</p>
+                </div>
+              </article>
+
+              <article class="guide-day">
+                <span>Day 1</span>
+                <div>
+                  <h3>Why I am leaving</h3>
+                  <p>Start plainly. Say this is intentional.</p>
+                </div>
+              </article>
+
+              <article class="guide-day">
+                <span>Day 2</span>
+                <div>
+                  <h3>What the feed did to my attention</h3>
+                  <p>Name the pull, the drift, the time you want back.</p>
+                </div>
+              </article>
+
+              <article class="guide-day">
+                <span>Day 3</span>
+                <div>
+                  <h3>What I want back</h3>
+                  <p>More quiet. More focus. More actual people. Your reason is yours.</p>
+                </div>
+              </article>
+
+              <article class="guide-day">
+                <span>Day 4</span>
+                <div>
+                  <h3>Why Big Tech has too much power</h3>
+                  <p>Say what you do not want a handful of companies deciding for you.</p>
+                </div>
+              </article>
+
+              <article class="guide-day">
+                <span>Day 5</span>
+                <div>
+                  <h3>Where to reach me</h3>
+                  <p>Give people another path. Keep the connection. Drop the platform.</p>
+                </div>
+              </article>
+
+              <article class="guide-day">
+                <span>Day 6</span>
+                <div>
+                  <h3>Invite others</h3>
+                  <p>No pressure. Just make the door visible.</p>
+                </div>
+              </article>
+
+              <article class="guide-day">
+                <span>Day 7</span>
+                <div>
+                  <h3>Final post and logout</h3>
+                  <p>Post the last message. Delete the apps. Leave.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <aside class="signup-card" aria-labelledby="signup-title">
+            <h3 id="signup-title">Get the logout guide</h3>
+            <p>We are preparing the email version: one prompt a day, no feed, no fluff.</p>
+
+            <!-- TODO: Connect this placeholder form to the newsletter backend when one exists. -->
+            <form class="signup-form" action="#" method="post">
+              <label for="email">Email address</label>
+              <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" />
+              <button type="button" aria-disabled="true">Email guide coming soon</button>
+            </form>
+            <p class="form-note">Placeholder only for now. No signup is sent yet.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section id="templates">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Post templates</div>
+            <h2>Say it without making it fancy.</h2>
+          </div>
+          <p class="lead">
+            Use these as starting points. Short posts are easier to finish, easier to understand, and harder to turn into content.
+          </p>
+        </div>
+
+        <div class="templates">
+          <article class="template-card">
+            <p>"I'm leaving because my attention is not a resource for platforms to mine."</p>
+            <span>Reason</span>
+          </article>
+
+          <article class="template-card">
+            <p>"I don't want a handful of companies deciding what I see every day."</p>
+            <span>Power</span>
+          </article>
+
+          <article class="template-card">
+            <p>"You can still reach me here: ..."</p>
+            <span>Contact</span>
+          </article>
+
+          <article class="template-card">
+            <p>"This is my last post. I'm logging out."</p>
+            <span>Final post</span>
+          </article>
+        </div>
       </div>
     </section>
 
@@ -736,233 +1022,15 @@
         <div class="section-head">
           <div>
             <div class="kicker">Manifesto</div>
-            <h2>Leave visibly. Leave together.</h2>
+            <h2>We are not quitting each other.</h2>
           </div>
           <p class="lead">
-            This is not a project against technology. It is a project against addiction by design.
-            The goal is not isolation. The goal is to reclaim attention, connection, and public life.
+            We are quitting the systems that turn attention into a business model and call it connection.
           </p>
         </div>
 
         <div class="manifesto">
-          <p>We are not leaving because we hate the internet.</p>
-          <p>We are leaving because our attention is not their property.</p>
-          <p>We refuse platforms that profit from addiction, outrage, loneliness, and manipulation.</p>
-          <p>We do not help people disappear. We help them leave visibly — so every exit becomes a signal.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="problem">
-      <div class="wrap">
-        <div class="section-head">
-          <div>
-            <div class="kicker">Why this matters</div>
-            <h2>The feed is not neutral.</h2>
-          </div>
-          <p class="lead">
-            The problem is not weak willpower. The problem is infrastructure built to capture behavior,
-            shape attention, and turn social life into measurable engagement.
-          </p>
-        </div>
-
-        <div class="cards">
-          <article class="card">
-            <div class="card-number">01</div>
-            <h3>Addiction by design</h3>
-            <p>Platforms are optimized to keep us scrolling, reacting, refreshing, and returning.</p>
-          </article>
-
-          <article class="card">
-            <div class="card-number">02</div>
-            <h3>Outrage as infrastructure</h3>
-            <p>Conflict, comparison, and fear are not accidental side effects. They are profitable patterns.</p>
-          </article>
-
-          <article class="card">
-            <div class="card-number">03</div>
-            <h3>Connection turned into extraction</h3>
-            <p>Our friendships, creativity, grief, joy, and politics have become assets inside someone else’s machine.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="plan">
-      <div class="wrap">
-        <div class="section-head">
-          <div>
-            <div class="kicker">What we are building</div>
-            <h2>An exit infrastructure.</h2>
-          </div>
-          <p class="lead">
-            The Great Logout starts with a public campaign and a safe prototype.
-            Not a hack. Not a scam. Not an account takeover.
-            A voluntary, transparent, collective way to leave.
-          </p>
-        </div>
-
-        <div class="plan">
-          <article class="plan-item">
-            <div>
-              <h3>The Pledge</h3>
-              <p>A public commitment page for people who want to leave addictive social media and show that they are not alone.</p>
-            </div>
-          </article>
-
-          <article class="plan-item">
-            <div>
-              <h3>The Final Post Generator</h3>
-              <p>A simple tool that helps people write clear, personal final posts about why they are leaving and where friends can reach them instead.</p>
-            </div>
-          </article>
-
-          <article class="plan-item">
-            <div>
-              <h3>The 7-Day Exit Sequence</h3>
-              <p>A guided process to prepare the exit: save contacts, inform friends, choose alternatives, reduce friction, and make the decision visible.</p>
-            </div>
-          </article>
-
-          <article class="plan-item">
-            <div>
-              <h3>The Resource Hub</h3>
-              <p>Templates, guides, alternative communication channels, reading lists, and practical support for people, parents, schools, and organizations.</p>
-            </div>
-          </article>
-
-          <article class="plan-item">
-            <div>
-              <h3>The Safe Prototype</h3>
-              <p>An early demo flow that shows how a visible exit could work without password manipulation, hidden automation, or irreversible lockout.</p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="ethics">
-      <div class="wrap">
-        <div class="section-head">
-          <div>
-            <div class="kicker">Safety & ethics</div>
-            <h2>Radical, not reckless.</h2>
-          </div>
-          <p class="lead">
-            A digital exit tool must protect people first. The project is designed around consent,
-            reversibility, clarity, and public accountability.
-          </p>
-        </div>
-
-        <div class="ethics-box">
-          <article class="yes-no">
-            <h3>What this project will do</h3>
-            <ul>
-              <li>Help people leave visibly and voluntarily.</li>
-              <li>Make the exit hard enough to matter, but never coercive.</li>
-              <li>Offer warnings, checkpoints, and recovery options.</li>
-              <li>Build public pressure through collective action.</li>
-            </ul>
-          </article>
-
-          <article class="yes-no">
-            <h3>What this project will not do</h3>
-            <ul>
-              <li>No hidden account access.</li>
-              <li>No irreversible lockout without recovery.</li>
-              <li>No manipulation of users into leaving.</li>
-              <li>No selling attention back to another platform.</li>
-            </ul>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="roadmap">
-      <div class="wrap">
-        <div class="section-head">
-          <div>
-            <div class="kicker">Roadmap</div>
-            <h2>From signal to movement.</h2>
-          </div>
-          <p class="lead">
-            The first goal is not to promise a finished product. The first goal is to show a credible path:
-            strong message, safe prototype, early supporters, then crowdfunding.
-          </p>
-        </div>
-
-        <div class="roadmap">
-          <article class="roadmap-step">
-            <span class="tag">Now</span>
-            <div>
-              <h3>Manifesto & landing page</h3>
-              <p class="card p">Define the message, publish the campaign, and make the project visible.</p>
-            </div>
-          </article>
-
-          <article class="roadmap-step">
-            <span class="tag">Next</span>
-            <div>
-              <h3>Prototype</h3>
-              <p>Build the pledge page, final post generator, and 7-day exit sequence.</p>
-            </div>
-          </article>
-
-          <article class="roadmap-step">
-            <span class="tag">Then</span>
-            <div>
-              <h3>Supporters</h3>
-              <p>Contact journalists, researchers, educators, parents, activists, and digital wellbeing voices.</p>
-            </div>
-          </article>
-
-          <article class="roadmap-step">
-            <span class="tag">Later</span>
-            <div>
-              <h3>Crowdfunding</h3>
-              <p>Raise funds for development, resources, outreach, workshops, and public campaigning.</p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="support">
-      <div class="wrap">
-        <div class="support-panel">
-          <div>
-            <div class="kicker">Support the project</div>
-            <h2>Help build the exit infrastructure.</h2>
-            <p class="lead">
-              The Great Logout is currently an early-stage independent project.
-              Support helps us build the first prototype, publish resources, and create a public campaign around leaving addictive social media.
-            </p>
-
-            <ul class="support-list">
-              <li><strong>€5</strong> — Supporter of the movement</li>
-              <li><strong>€15</strong> — Name on the supporter page</li>
-              <li><strong>€30</strong> — Early prototype access</li>
-              <li><strong>€50</strong> — Exit kit with templates, guides, and final post examples</li>
-              <li><strong>€100+</strong> — Supporter circle and community calls</li>
-            </ul>
-
-            <div class="button-row">
-              <!-- Replace with Stripe Payment Link, Open Collective, Ko-fi, GitHub Sponsors, or crowdfunding URL. -->
-              <a class="btn btn-primary email-link" href="#" data-email-subject="I want to support The Great Logout">Support the Project</a>
-              <a class="btn btn-secondary email-link" href="#" data-email-subject="I want to help with The Great Logout">Contact us</a>
-            </div>
-          </div>
-
-          <div class="pledge-card">
-            <div class="terminal-small">/pledge/draft</div>
-            <h3>I joined The Great Logout.</h3>
-            <p>
-              I am leaving addictive social media because my attention, relationships, and time should not be owned by platforms built for extraction.
-            </p>
-            <p>
-              I am not disappearing. I am choosing different ways to connect.
-            </p>
-          </div>
+          <p>We are not leaving because we hate the internet. We are leaving because the platforms changed. They became machines for addiction, outrage, surveillance, and control. The Great Logout is a refusal to keep feeding them with our time, our anger, our friendships, and our attention.</p>
         </div>
       </div>
     </section>
@@ -978,10 +1046,10 @@
             <h2>Independent, open, accountable.</h2>
             <div class="about-text">
               <p>
-                <strong>The Great Logout was initiated by Daniel Netzl, an Austrian AI student and data scientist concerned with the social, political, and psychological harms of addictive platform design.</strong>
+                <strong>The Great Logout was initiated by Daniel Netzl, an Austrian data scientist concerned with the social, political, and psychological harms of addictive platform design.</strong>
               </p>
               <p>
-                The project is meant to become larger than one person: a public-interest campaign with supporters, researchers, designers, developers, educators, parents, and people who want out.
+                The project is meant to grow beyond one person: supporters, researchers, designers, developers, educators, parents, and people who want out.
               </p>
               <p>
                 We are not affiliated with Instagram, TikTok, Meta, X, or any social media platform.
@@ -995,72 +1063,15 @@
 
   <footer class="footer">
     <div class="wrap footer-inner">
-      <div>© <span id="year"></span> The Great Logout</div>
+      <div>© 2026 The Great Logout</div>
       <div>
-        <a href="#manifesto">Manifesto</a>
+        <a href="#how">How it works</a>
         ·
-        <a href="#plan">Plan</a>
+        <a href="#guide">7-day guide</a>
         ·
-        <a href="#support">Support</a>
+        <a href="#templates">Templates</a>
       </div>
     </div>
   </footer>
-
-  <script>
-    /*
-      Typewriter animation.
-      The requested line is split into two visual lines:
-      "Millions logged in."
-      "Now we log out."
-    */
-    const lineOne = "Millions logged in.";
-    const lineTwo = "Now we log out.";
-
-    const targetOne = document.getElementById("typeLineOne");
-    const targetTwo = document.getElementById("typeLineTwo");
-
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    function sleep(ms) {
-      return new Promise(resolve => setTimeout(resolve, ms));
-    }
-
-    async function typeInto(target, text, delay = 46) {
-      for (const char of text) {
-        target.textContent += char;
-        await sleep(delay);
-      }
-    }
-
-    async function runTypewriter() {
-      if (prefersReducedMotion) {
-        targetOne.textContent = lineOne;
-        targetTwo.textContent = lineTwo;
-        return;
-      }
-
-      await sleep(520);
-      await typeInto(targetOne, lineOne);
-      await sleep(380);
-      await typeInto(targetTwo, lineTwo);
-    }
-
-    // Build the contact address only at runtime to reduce basic email scraping.
-    const contactLocal = ["he", "llo"].join("");
-    const contactDomain = ["thegreatlogout", "org"].join(".");
-    const contactAddress = `${contactLocal}${String.fromCharCode(64)}${contactDomain}`;
-
-    document.querySelectorAll(".email-link").forEach(link => {
-      link.addEventListener("click", event => {
-        event.preventDefault();
-        const subject = link.getAttribute("data-email-subject") || "The Great Logout";
-        const mailto = `mailto:${contactAddress}?subject=${encodeURIComponent(subject)}`;
-        window.location.href = mailto;
-      });
-    });
-
-    document.getElementById("year").textContent = new Date().getFullYear();
-    runTypewriter();
-  </script>
 </body>
 </html>
