@@ -20,6 +20,8 @@
   <meta property="og:description" content="A collective exit from addictive social media." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="og-image.png" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/favicon.svg" />
 
   <style>
     :root {
@@ -122,12 +124,19 @@
       height: 34px;
       display: grid;
       place-items: center;
-      border: 1px solid var(--line-strong);
-      border-radius: 11px;
-      background: color-mix(in srgb, var(--accent) 16%, transparent);
-      color: var(--accent);
-      font-family: var(--mono);
-      box-shadow: 0 0 30px color-mix(in srgb, var(--accent) 20%, transparent);
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .brand-mark img,
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
     }
 
     .nav-links {
@@ -574,6 +583,8 @@
       color: var(--accent);
       font-size: clamp(3rem, 9vw, 7rem);
       box-shadow: var(--shadow);
+      overflow: hidden;
+      padding: clamp(28px, 7vw, 72px);
     }
 
     .about-text {
@@ -663,7 +674,9 @@
   <header class="site-header">
     <div class="wrap nav">
       <a class="brand" href="#top" aria-label="The Great Logout home">
-        <span class="brand-mark">⎋</span>
+        <span class="brand-mark" aria-hidden="true">
+          <img src="assets/the-great-logout-mark.svg" alt="" decoding="async" />
+        </span>
         <span>The Great Logout</span>
       </a>
 
@@ -957,7 +970,9 @@
     <section id="about">
       <div class="wrap">
         <div class="about-grid">
-          <div class="avatar" aria-hidden="true">⎋</div>
+          <div class="avatar" aria-hidden="true">
+            <img src="assets/the-great-logout-mark.svg" alt="" decoding="async" />
+          </div>
           <div>
             <div class="kicker">About</div>
             <h2>Independent, open, accountable.</h2>
