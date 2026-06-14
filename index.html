@@ -4,11 +4,11 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>The Great Logout - Post why you're leaving. Then leave.</title>
-  <meta name="description" content="The Great Logout is a public exit from addictive social media. Post your reasons for 1 to 7 days. Then log out." />
+  <title>The Great Logout - A public campaign for leaving social media together.</title>
+  <meta name="description" content="The Great Logout is a public campaign for a mass exit from addictive social media. Post your reasons for 1 to 7 days. Then log out." />
 
   <meta property="og:title" content="The Great Logout" />
-  <meta property="og:description" content="Post why you're leaving. Then leave." />
+  <meta property="og:description" content="A public campaign for a mass exit from addictive social media." />
   <meta property="og:type" content="website" />
   <meta property="og:image" content="og-image.png" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
@@ -143,7 +143,7 @@
     .hero {
       min-height: calc(100vh - 72px);
       display: grid;
-      align-items: center;
+      align-items: start;
       padding: 84px 0 76px;
     }
 
@@ -151,7 +151,7 @@
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
       gap: 54px;
-      align-items: center;
+      align-items: start;
     }
 
     .eyebrow {
@@ -277,6 +277,45 @@
 
     .campaign-body {
       padding: 28px;
+    }
+
+    .type-panel {
+      margin-bottom: 18px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(0,0,0,0.22);
+      font-family: var(--mono);
+    }
+
+    .type-label {
+      margin-bottom: 12px;
+      color: var(--muted-2);
+      font-size: 0.78rem;
+    }
+
+    .type-line {
+      display: block;
+      min-height: 1.4em;
+      color: var(--text);
+      font-size: clamp(1.2rem, 2vw, 1.75rem);
+      line-height: 1.18;
+    }
+
+    .cursor {
+      display: inline-block;
+      visibility: hidden;
+      width: 0.65em;
+      color: var(--accent);
+      animation: blink 850ms steps(1) infinite;
+    }
+
+    .cursor.is-visible {
+      visibility: visible;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
     }
 
     .logout-formula {
@@ -583,6 +622,185 @@
       letter-spacing: 0.1em;
     }
 
+    .generator-panel {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .quote-carousel {
+      display: grid;
+      grid-auto-flow: column;
+      grid-auto-columns: minmax(240px, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      scrollbar-color: var(--accent) transparent;
+      scroll-behavior: smooth;
+      scroll-snap-type: x proximity;
+    }
+
+    .quote-card {
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.02)),
+        var(--bg-card);
+      scroll-snap-align: start;
+    }
+
+    .quote-card p {
+      margin: 0;
+      color: var(--text);
+      font-size: 1.2rem;
+      line-height: 1.2;
+    }
+
+    .quote-card button {
+      align-self: flex-start;
+      min-height: 38px;
+      margin-top: 22px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .generator-controls,
+    .generator-preview {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,0.035);
+    }
+
+    .control-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+
+    .field label,
+    .control-label {
+      color: var(--muted-2);
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .field textarea,
+    .field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(0,0,0,0.24);
+      color: var(--text);
+      font: inherit;
+      padding: 13px 14px;
+    }
+
+    .field textarea {
+      min-height: 170px;
+      resize: vertical;
+      line-height: 1.35;
+    }
+
+    .color-options {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(0,0,0,0.2);
+    }
+
+    .color-options label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      padding: 0;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      cursor: pointer;
+    }
+
+    .color-options input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .color-options label:has(input:checked) {
+      border-color: var(--line-strong);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+    }
+
+    .swatch-white {
+      background: var(--text);
+    }
+
+    .swatch-green {
+      background: var(--accent);
+    }
+
+    .download-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .download-row button {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+    }
+
+    .download-row button:hover,
+    .quote-card button:hover {
+      border-color: var(--line-strong);
+      background: rgba(255,255,255,0.08);
+    }
+
+    .generator-preview canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: var(--bg);
+    }
+
     .manifesto {
       padding: 38px;
       border: 1px solid var(--line);
@@ -629,6 +847,12 @@
       color: var(--text);
     }
 
+    .about-text a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
     .footer {
       padding: 44px 0;
       border-top: 1px solid var(--line);
@@ -656,6 +880,7 @@
       .section-head,
       .why-grid,
       .guide-panel,
+      .generator-panel,
       .about-grid {
         grid-template-columns: 1fr;
       }
@@ -667,6 +892,10 @@
       .reasons,
       .templates {
         grid-template-columns: 1fr;
+      }
+
+      .download-row {
+        grid-template-columns: repeat(2, 1fr);
       }
 
       .formula-step,
@@ -681,6 +910,8 @@
 
       .campaign-body,
       .guide-panel,
+      .generator-controls,
+      .generator-preview,
       .manifesto {
         padding: 24px;
       }
@@ -698,6 +929,10 @@
       .btn {
         width: 100%;
       }
+
+      .download-row {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -707,6 +942,10 @@
 
       .btn {
         transition: none;
+      }
+
+      .cursor {
+        animation: none;
       }
     }
   </style>
@@ -726,6 +965,7 @@
         <a href="#how">How it works</a>
         <a href="#why">Why leave</a>
         <a href="#guide">7-day guide</a>
+        <a href="#generator">Post generator</a>
         <a href="#guide" class="nav-cta">Start</a>
       </nav>
     </div>
@@ -735,16 +975,16 @@
     <section class="hero">
       <div class="wrap hero-grid">
         <div>
-          <div class="eyebrow">A public exit from addictive social media</div>
+          <div class="eyebrow">A public campaign for mass social media exit</div>
           <h1>Post why you're leaving. Then leave.</h1>
 
           <p class="hero-copy">
-            The Great Logout is simple: <strong>post for 1 to 7 days</strong>, say why you are leaving, tell people where to reach you, then log out. Not silently. Not someday. Visibly. Now.
+            The Great Logout is a public campaign for leaving addictive social media together. <strong>Post for 1 to 7 days</strong>, say why you are leaving, tell people where to reach you, then log out. Not silently. Visibly.
           </p>
 
           <div class="button-row">
             <a class="btn btn-primary" href="#guide">Start the 7-day logout</a>
-            <a class="btn btn-secondary" href="#how">See how it works</a>
+            <a class="btn btn-secondary" href="#generator">Make a post</a>
           </div>
         </div>
 
@@ -756,6 +996,13 @@
             </span>
           </div>
           <div class="campaign-body">
+            <div class="type-panel" aria-label="Campaign message">
+              <div class="type-label">/public-message/final-post.txt</div>
+              <span class="type-line" id="typeLineOne"></span>
+              <span class="type-line" id="typeLineTwo"></span>
+              <span class="cursor" aria-hidden="true">█</span>
+            </div>
+
             <ol class="logout-formula">
               <li class="formula-step">
                 <span>Day 1-7</span>
@@ -981,38 +1228,67 @@
       </div>
     </section>
 
-    <section id="templates">
+    <section id="generator">
       <div class="wrap">
         <div class="section-head">
           <div>
-            <div class="kicker">Post templates</div>
-            <h2>Say it without making it fancy.</h2>
+            <div class="kicker">Post generator</div>
+            <h2>Make your exit visible.</h2>
           </div>
           <p class="lead">
-            Use these as starting points. Short posts are easier to finish, easier to understand, and harder to turn into content.
+            Pick a line, edit it, choose a format, and download a post for Instagram, stories, reels, or TikTok. The message stays simple: why you are leaving, and where people can find you next.
           </p>
         </div>
 
-        <div class="templates">
-          <article class="template-card">
-            <p>"I'm leaving because my attention is not a resource for platforms to mine."</p>
-            <span>Reason</span>
-          </article>
+        <div class="quote-carousel" id="quoteCarousel" aria-label="Example logout posts"></div>
 
-          <article class="template-card">
-            <p>"I don't want a handful of companies deciding what I see every day."</p>
-            <span>Power</span>
-          </article>
+        <div class="generator-panel">
+          <div class="generator-controls">
+            <div class="control-grid">
+              <div class="field">
+                <label for="postPreset">Post idea</label>
+                <select id="postPreset"></select>
+              </div>
 
-          <article class="template-card">
-            <p>"You can still reach me here: ..."</p>
-            <span>Contact</span>
-          </article>
+              <div class="field">
+                <label for="postText">Edit text</label>
+                <textarea id="postText">Attention is their currency.
+Don't go broke for them.</textarea>
+              </div>
 
-          <article class="template-card">
-            <p>"This is my last post. I'm logging out."</p>
-            <span>Final post</span>
-          </article>
+              <div class="field">
+                <label for="postFormat">Format</label>
+                <select id="postFormat">
+                  <option value="instagram-post">Instagram post - 1080 x 1080</option>
+                  <option value="instagram-story">Instagram story - 1080 x 1920</option>
+                  <option value="instagram-reel">Instagram reel - 1080 x 1920</option>
+                  <option value="tiktok">TikTok - 1080 x 1920</option>
+                </select>
+              </div>
+
+              <div class="color-options" aria-label="Font color">
+                  <label title="White text" aria-label="White text">
+                    <input type="radio" name="postColor" value="#f4f4ef" checked />
+                    <span class="swatch swatch-white"></span>
+                  </label>
+                  <label title="Green text" aria-label="Green text">
+                    <input type="radio" name="postColor" value="#B6FF3B" />
+                    <span class="swatch swatch-green"></span>
+                  </label>
+              </div>
+
+              <div class="download-row" aria-label="Download generated post">
+                <button type="button" data-download="png">PNG</button>
+                <button type="button" data-download="jpg">JPG</button>
+                <button type="button" data-download="svg">SVG</button>
+                <button type="button" data-download="pdf">PDF</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="generator-preview">
+            <canvas id="postCanvas" width="1080" height="1080" aria-label="Generated social media post preview"></canvas>
+          </div>
         </div>
       </div>
     </section>
@@ -1046,7 +1322,7 @@
             <h2>Independent, open, accountable.</h2>
             <div class="about-text">
               <p>
-                <strong>The Great Logout was initiated by Daniel Netzl, an Austrian data scientist concerned with the social, political, and psychological harms of addictive platform design.</strong>
+                <strong>The Great Logout was initiated by <a href="https://www.danielnetzl.at" target="_blank" rel="noopener">Daniel Netzl</a>, an Austrian data scientist concerned with the social, political, and psychological harms of addictive platform design.</strong>
               </p>
               <p>
                 The project is meant to grow beyond one person: supporters, researchers, designers, developers, educators, parents, and people who want out.
@@ -1069,9 +1345,521 @@
         ·
         <a href="#guide">7-day guide</a>
         ·
-        <a href="#templates">Templates</a>
+        <a href="#generator">Post generator</a>
       </div>
     </div>
   </footer>
+
+  <script>
+    const typeLineOne = "Millions logged in.";
+    const typeLineTwo = "Now we log out.";
+    const typeTargetOne = document.getElementById("typeLineOne");
+    const typeTargetTwo = document.getElementById("typeLineTwo");
+    const typeCursor = document.querySelector(".cursor");
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const postIdeas = [
+      "What do you really think?\nI bet you don't know.",
+      "Attention is their currency.\nDon't go broke for them.",
+      "They call it connection.\nBut you feel alone.",
+      "Get back your time.\nIt was never theirs.",
+      "I chose real friends.\nWhen do you?",
+      "Still searching for common sense?\nTry logging out.",
+      "The feed knows what keeps you weak.\nThat's why it keeps coming.",
+      "You don't owe a platform your life.",
+      "They sell your attention.\nThen sell you the cure.",
+      "You are not lazy.\nYou are being designed against.",
+      "You are the extraction site.",
+      "Less scrolling.\nMore living.",
+      "Your mind is not a marketplace.",
+      "They made loneliness profitable.",
+      "If it makes you angry, tired, jealous, and numb -\nwhy is it still on your phone?",
+      "You can't hear yourself\nwhile the feed is shouting.",
+      "I'm not disappearing.\nI'm returning.",
+      "Offline is not empty.\nIt's where life was waiting.",
+      "This is not a detox.\nIt's a refusal.",
+      "The algorithm doesn't know you.\nIt knows your weaknesses.",
+      "I don't want my thoughts pre-selected.",
+      "Real life has no infinite scroll.",
+      "I'm leaving the feed\nbefore it eats the rest of me.",
+      "They don't want your happiness.\nThey want your return.",
+      "My attention is not for sale.",
+      "The exit is the message.",
+      "I logged out\nto come back to myself.",
+      "What if your boredom\nwas trying to save you?",
+      "You are not missing out.\nYou are being pulled in.",
+      "Keep your friends.\nLose the feed.",
+      "This is my last post here.\nFind me in real life."
+    ];
+
+    const formats = {
+      "instagram-post": { width: 1080, height: 1080, label: "instagram-post" },
+      "instagram-story": { width: 1080, height: 1920, label: "instagram-story" },
+      "instagram-reel": { width: 1080, height: 1920, label: "instagram-reel" },
+      tiktok: { width: 1080, height: 1920, label: "tiktok" }
+    };
+
+    const markSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><g fill="none" stroke="#B6FF3B" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"><path d="M152 48H78C61.43 48 48 61.43 48 78v100c0 16.57 13.43 30 30 30h74"/><path d="M92 84v88"/><path d="M108 128h96"/><path d="M170 94l34 34-34 34"/></g></svg>`;
+    const logoImage = new Image();
+    logoImage.src = "assets/the-great-logout-mark.svg";
+
+    const postPreset = document.getElementById("postPreset");
+    const postText = document.getElementById("postText");
+    const postFormat = document.getElementById("postFormat");
+    const postCanvas = document.getElementById("postCanvas");
+    const quoteCarousel = document.getElementById("quoteCarousel");
+    const context = postCanvas.getContext("2d");
+    let carouselTimer = null;
+    let carouselIndex = 0;
+    let carouselStoppedByUser = false;
+    let carouselCardCount = 0;
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function typeInto(target, text, delay = 46) {
+      for (const char of text) {
+        target.textContent += char;
+        await sleep(delay);
+      }
+    }
+
+    async function runTypewriter() {
+      if (!typeTargetOne || !typeTargetTwo) return;
+
+      if (prefersReducedMotion) {
+        typeTargetOne.textContent = typeLineOne;
+        typeTargetTwo.textContent = typeLineTwo;
+        typeCursor?.classList.add("is-visible");
+        return;
+      }
+
+      await sleep(420);
+      await typeInto(typeTargetOne, typeLineOne);
+      await sleep(320);
+      await typeInto(typeTargetTwo, typeLineTwo);
+      typeCursor?.classList.add("is-visible");
+    }
+
+    function formatQuoteHtml(quote) {
+      return quote
+        .split("\n")
+        .map(line => escapeXml(line))
+        .join("<br>");
+    }
+
+    function renderQuoteCarousel() {
+      if (!quoteCarousel) return;
+
+      quoteCarousel.innerHTML = "";
+      const shuffledIdeas = [...postIdeas].sort(() => Math.random() - 0.5);
+      const visibleIdeas = [...shuffledIdeas, shuffledIdeas[0]];
+      carouselCardCount = shuffledIdeas.length;
+
+      visibleIdeas.forEach((idea, index) => {
+        const card = document.createElement("article");
+        card.className = "quote-card";
+        card.dataset.carouselIndex = String(index);
+
+        const text = document.createElement("p");
+        text.innerHTML = formatQuoteHtml(idea);
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.dataset.quote = idea;
+        button.textContent = "Use this";
+
+        card.append(text, button);
+        quoteCarousel.appendChild(card);
+      });
+    }
+
+    function moveCarouselTo(index, behavior = "smooth") {
+      if (!quoteCarousel) return;
+
+      const cards = quoteCarousel.querySelectorAll(".quote-card");
+      if (!cards.length) return;
+
+      carouselIndex = index;
+      const target = cards[carouselIndex];
+      quoteCarousel.scrollTo({
+        left: target.offsetLeft - quoteCarousel.offsetLeft,
+        behavior: prefersReducedMotion ? "auto" : behavior
+      });
+    }
+
+    function stopCarousel() {
+      if (!quoteCarousel || prefersReducedMotion) return;
+
+      carouselStoppedByUser = true;
+      window.clearInterval(carouselTimer);
+      carouselTimer = null;
+    }
+
+    function setupCarousel() {
+      if (!quoteCarousel || prefersReducedMotion) return;
+
+      carouselTimer = window.setInterval(() => {
+        if (carouselStoppedByUser) return;
+        moveCarouselTo(carouselIndex + 1);
+      }, 5000);
+
+      quoteCarousel.addEventListener("pointerdown", stopCarousel);
+      quoteCarousel.addEventListener("wheel", stopCarousel, { passive: true });
+      quoteCarousel.addEventListener("touchstart", stopCarousel, { passive: true });
+      quoteCarousel.addEventListener("scroll", () => {
+        const cards = Array.from(quoteCarousel.querySelectorAll(".quote-card"));
+        const left = quoteCarousel.scrollLeft;
+        const nearest = cards.reduce((best, card, index) => {
+          const distance = Math.abs((card.offsetLeft - quoteCarousel.offsetLeft) - left);
+          return distance < best.distance ? { index, distance } : best;
+        }, { index: carouselIndex, distance: Infinity });
+        carouselIndex = nearest.index;
+
+        if (!carouselStoppedByUser && carouselCardCount && carouselIndex >= carouselCardCount) {
+          window.setTimeout(() => {
+            if (!carouselStoppedByUser && carouselIndex >= carouselCardCount) {
+              moveCarouselTo(0, "auto");
+            }
+          }, 420);
+        }
+      }, { passive: true });
+    }
+
+    function populatePresets() {
+      postPreset.innerHTML = "";
+
+      postIdeas.forEach((idea, index) => {
+        const option = document.createElement("option");
+        option.value = String(index);
+        option.textContent = idea.replace(/\s+/g, " ").slice(0, 72);
+        postPreset.appendChild(option);
+      });
+
+      const custom = document.createElement("option");
+      custom.value = "custom";
+      custom.textContent = "Custom text";
+      postPreset.appendChild(custom);
+    }
+
+    function getSelectedColor() {
+      return document.querySelector("input[name='postColor']:checked")?.value || "#f4f4ef";
+    }
+
+    function wrapCanvasText(ctx, text, maxWidth) {
+      const lines = [];
+      const rawLines = text.split("\n");
+
+      rawLines.forEach(rawLine => {
+        const words = rawLine.trim().split(/\s+/).filter(Boolean);
+        if (!words.length) {
+          lines.push("");
+          return;
+        }
+
+        let line = "";
+        words.forEach(word => {
+          const testLine = line ? `${line} ${word}` : word;
+          if (ctx.measureText(testLine).width <= maxWidth || !line) {
+            line = testLine;
+          } else {
+            lines.push(line);
+            line = word;
+          }
+        });
+        lines.push(line);
+      });
+
+      return lines;
+    }
+
+    function drawLogo(ctx, x, y, size) {
+      if (logoImage.complete && logoImage.naturalWidth > 0) {
+        ctx.drawImage(logoImage, x, y, size, size);
+        return;
+      }
+
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size / 256, size / 256);
+      ctx.strokeStyle = "#B6FF3B";
+      ctx.lineWidth = 18;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.beginPath();
+      ctx.moveTo(152, 48);
+      ctx.lineTo(78, 48);
+      ctx.quadraticCurveTo(48, 48, 48, 78);
+      ctx.lineTo(48, 178);
+      ctx.quadraticCurveTo(48, 208, 78, 208);
+      ctx.lineTo(152, 208);
+      ctx.moveTo(92, 84);
+      ctx.lineTo(92, 172);
+      ctx.moveTo(108, 128);
+      ctx.lineTo(204, 128);
+      ctx.moveTo(170, 94);
+      ctx.lineTo(204, 128);
+      ctx.lineTo(170, 162);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    function drawPost() {
+      const format = formats[postFormat.value] || formats["instagram-post"];
+      const text = postText.value.trim() || "The exit is the message.";
+      const color = getSelectedColor();
+      postCanvas.width = format.width;
+      postCanvas.height = format.height;
+
+      const w = postCanvas.width;
+      const h = postCanvas.height;
+      const margin = Math.round(w * 0.1);
+      const footerSpace = Math.round(h * 0.16);
+      const maxTextHeight = h - footerSpace - margin * 2;
+
+      context.fillStyle = "#070807";
+      context.fillRect(0, 0, w, h);
+
+      context.strokeStyle = "rgba(244,244,239,0.055)";
+      context.lineWidth = 2;
+      const grid = Math.round(w / 9);
+      for (let x = grid; x < w; x += grid) {
+        context.beginPath();
+        context.moveTo(x, 0);
+        context.lineTo(x, h);
+        context.stroke();
+      }
+      for (let y = grid; y < h; y += grid) {
+        context.beginPath();
+        context.moveTo(0, y);
+        context.lineTo(w, y);
+        context.stroke();
+      }
+
+      let fontSize = Math.round(w * 0.096);
+      let lines = [];
+      let lineHeight = 0;
+      do {
+        context.font = `800 ${fontSize}px Inter, Arial, sans-serif`;
+        lines = wrapCanvasText(context, text, w - margin * 2);
+        lineHeight = Math.round(fontSize * 1.12);
+        if (lines.length * lineHeight <= maxTextHeight) break;
+        fontSize -= 4;
+      } while (fontSize > 42);
+
+      const textHeight = lines.length * lineHeight;
+      let y = Math.round((h - footerSpace - textHeight) / 2) + lineHeight * 0.82;
+
+      context.fillStyle = color;
+      context.textAlign = "center";
+      context.textBaseline = "alphabetic";
+      context.font = `800 ${fontSize}px Inter, Arial, sans-serif`;
+      lines.forEach(line => {
+        context.fillText(line, w / 2, y);
+        y += lineHeight;
+      });
+
+      const logoSize = Math.round(w * 0.085);
+      const footerY = h - margin - logoSize;
+      drawLogo(context, margin, footerY, logoSize);
+
+      context.textAlign = "left";
+      context.fillStyle = "#f4f4ef";
+      context.font = `800 ${Math.round(w * 0.026)}px Inter, Arial, sans-serif`;
+      context.fillText("The Great Logout", margin + logoSize + 22, footerY + Math.round(logoSize * 0.38));
+      context.fillStyle = "#a4aaa1";
+      context.font = `500 ${Math.round(w * 0.021)}px Inter, Arial, sans-serif`;
+      context.fillText("A collective social media exit", margin + logoSize + 22, footerY + Math.round(logoSize * 0.7));
+
+      context.textAlign = "right";
+      context.fillStyle = "#B6FF3B";
+      context.font = `700 ${Math.round(w * 0.022)}px Inter, Arial, sans-serif`;
+      context.fillText("thegreatlogout.org", w - margin, footerY + Math.round(logoSize * 0.7));
+    }
+
+    function escapeXml(value) {
+      return value
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function wrapSvgText(text, maxChars) {
+      const lines = [];
+      text.split("\n").forEach(rawLine => {
+        const words = rawLine.trim().split(/\s+/).filter(Boolean);
+        if (!words.length) {
+          lines.push("");
+          return;
+        }
+
+        let line = "";
+        words.forEach(word => {
+          const test = line ? `${line} ${word}` : word;
+          if (test.length <= maxChars || !line) {
+            line = test;
+          } else {
+            lines.push(line);
+            line = word;
+          }
+        });
+        lines.push(line);
+      });
+      return lines;
+    }
+
+    function buildSvg() {
+      const format = formats[postFormat.value] || formats["instagram-post"];
+      const color = getSelectedColor();
+      const text = postText.value.trim() || "The exit is the message.";
+      const maxChars = format.width === format.height ? 19 : 16;
+      const lines = wrapSvgText(text, maxChars);
+      const fontSize = Math.max(54, Math.min(110, Math.floor(format.width / Math.max(9, Math.max(...lines.map(line => line.length || 1)) * 0.58))));
+      const lineHeight = Math.round(fontSize * 1.14);
+      const textHeight = lines.length * lineHeight;
+      const startY = Math.round((format.height - format.height * 0.16 - textHeight) / 2 + fontSize);
+      const tspans = lines.map((line, index) => `<tspan x="50%" y="${startY + index * lineHeight}">${escapeXml(line)}</tspan>`).join("");
+      const logoSize = Math.round(format.width * 0.085);
+      const margin = Math.round(format.width * 0.1);
+      const footerY = format.height - margin - logoSize;
+
+      return `<svg xmlns="http://www.w3.org/2000/svg" width="${format.width}" height="${format.height}" viewBox="0 0 ${format.width} ${format.height}">
+  <rect width="100%" height="100%" fill="#070807"/>
+  <defs>
+    <pattern id="grid" width="${Math.round(format.width / 9)}" height="${Math.round(format.width / 9)}" patternUnits="userSpaceOnUse">
+      <path d="M ${Math.round(format.width / 9)} 0 L 0 0 0 ${Math.round(format.width / 9)}" fill="none" stroke="rgba(244,244,239,0.055)" stroke-width="2"/>
+    </pattern>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+  <text text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="${fontSize}" font-weight="800" fill="${color}">${tspans}</text>
+  <g transform="translate(${margin} ${footerY}) scale(${logoSize / 256})">${markSvg.replace(/<svg[^>]*>|<\/svg>/g, "")}</g>
+  <text x="${margin + logoSize + 22}" y="${footerY + Math.round(logoSize * 0.38)}" font-family="Inter, Arial, sans-serif" font-size="${Math.round(format.width * 0.026)}" font-weight="800" fill="#f4f4ef">The Great Logout</text>
+  <text x="${margin + logoSize + 22}" y="${footerY + Math.round(logoSize * 0.7)}" font-family="Inter, Arial, sans-serif" font-size="${Math.round(format.width * 0.021)}" font-weight="500" fill="#a4aaa1">A collective social media exit</text>
+  <text x="${format.width - margin}" y="${footerY + Math.round(logoSize * 0.7)}" text-anchor="end" font-family="Inter, Arial, sans-serif" font-size="${Math.round(format.width * 0.022)}" font-weight="700" fill="#B6FF3B">thegreatlogout.org</text>
+</svg>`;
+    }
+
+    function downloadBlob(blob, filename) {
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(link.href);
+    }
+
+    function downloadCanvas(type) {
+      const format = formats[postFormat.value] || formats["instagram-post"];
+      const mime = type === "jpg" ? "image/jpeg" : "image/png";
+      postCanvas.toBlob(blob => {
+        if (blob) downloadBlob(blob, `great-logout-${format.label}.${type}`);
+      }, mime, 0.94);
+    }
+
+    function binaryFromBase64(base64) {
+      const raw = atob(base64);
+      let binary = "";
+      for (let index = 0; index < raw.length; index += 1) {
+        binary += String.fromCharCode(raw.charCodeAt(index));
+      }
+      return binary;
+    }
+
+    function buildPdf() {
+      const jpegData = postCanvas.toDataURL("image/jpeg", 0.92).split(",")[1];
+      const imageBinary = binaryFromBase64(jpegData);
+      const pageWidth = 612;
+      const pageHeight = Math.round(pageWidth * (postCanvas.height / postCanvas.width));
+      const content = `q\n${pageWidth} 0 0 ${pageHeight} 0 0 cm\n/Im0 Do\nQ\n`;
+      const objects = [
+        "<< /Type /Catalog /Pages 2 0 R >>",
+        "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+        `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${pageWidth} ${pageHeight}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`,
+        `<< /Type /XObject /Subtype /Image /Width ${postCanvas.width} /Height ${postCanvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBinary.length} >>\nstream\n${imageBinary}\nendstream`,
+        `<< /Length ${content.length} >>\nstream\n${content}endstream`
+      ];
+
+      let pdf = "%PDF-1.3\n%\xFF\xFF\xFF\xFF\n";
+      const offsets = [0];
+      objects.forEach((object, index) => {
+        offsets.push(pdf.length);
+        pdf += `${index + 1} 0 obj\n${object}\nendobj\n`;
+      });
+
+      const xrefOffset = pdf.length;
+      pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+      offsets.slice(1).forEach(offset => {
+        pdf += `${String(offset).padStart(10, "0")} 00000 n \n`;
+      });
+      pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xrefOffset}\n%%EOF`;
+
+      return new Blob([Uint8Array.from(pdf, char => char.charCodeAt(0))], { type: "application/pdf" });
+    }
+
+    function setupGenerator() {
+      if (!postPreset || !postText || !postFormat || !postCanvas) return;
+
+      renderQuoteCarousel();
+      populatePresets();
+      drawPost();
+
+      postPreset.addEventListener("change", () => {
+        if (postPreset.value !== "custom") {
+          postText.value = postIdeas[Number(postPreset.value)];
+          drawPost();
+        }
+      });
+
+      postText.addEventListener("input", () => {
+        postPreset.value = "custom";
+        drawPost();
+      });
+
+      postFormat.addEventListener("change", drawPost);
+      document.querySelectorAll("input[name='postColor']").forEach(input => {
+        input.addEventListener("change", drawPost);
+      });
+
+      document.querySelectorAll("[data-quote]").forEach(button => {
+        button.addEventListener("click", () => {
+          postText.value = button.getAttribute("data-quote");
+          postPreset.value = "custom";
+          drawPost();
+          stopCarousel();
+          document.getElementById("postText").focus();
+        });
+      });
+
+      document.querySelectorAll("[data-download]").forEach(button => {
+        button.addEventListener("click", () => {
+          const type = button.getAttribute("data-download");
+          const format = formats[postFormat.value] || formats["instagram-post"];
+
+          if (type === "png" || type === "jpg") {
+            downloadCanvas(type);
+            return;
+          }
+
+          if (type === "svg") {
+            downloadBlob(new Blob([buildSvg()], { type: "image/svg+xml" }), `great-logout-${format.label}.svg`);
+            return;
+          }
+
+          if (type === "pdf") {
+            downloadBlob(buildPdf(), `great-logout-${format.label}.pdf`);
+          }
+        });
+      });
+
+      logoImage.addEventListener("load", drawPost);
+      setupCarousel();
+    }
+
+    runTypewriter();
+    setupGenerator();
+  </script>
 </body>
 </html>
