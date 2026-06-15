@@ -6,13 +6,24 @@
 
   <title>The Great Logout - A public campaign for leaving social media together.</title>
   <meta name="description" content="The Great Logout is a public campaign for a mass exit from addictive social media. Post your reasons for 1 to 7 days. Then log out." />
+  <link rel="canonical" href="https://www.thegreatlogout.org/" />
 
   <meta property="og:title" content="The Great Logout" />
   <meta property="og:description" content="A public campaign for a mass exit from addictive social media." />
   <meta property="og:type" content="website" />
-  <meta property="og:image" content="og-image.png" />
+  <meta property="og:url" content="https://www.thegreatlogout.org/" />
+  <meta property="og:image" content="https://www.thegreatlogout.org/assets/og-image.png" />
+  <meta property="og:image:secure_url" content="https://www.thegreatlogout.org/assets/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="The Great Logout - Post why you're leaving. Then leave." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="The Great Logout" />
+  <meta name="twitter:description" content="A public campaign for a mass exit from addictive social media." />
+  <meta name="twitter:image" content="https://www.thegreatlogout.org/assets/og-image.png" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="assets/favicon.svg" />
+  <link rel="shortcut icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
 
   <style>
     :root {
@@ -551,7 +562,8 @@
       gap: 12px;
     }
 
-    .signup-form label {
+    .signup-form label,
+    .checkbox-field {
       color: var(--muted-2);
       font-family: var(--mono);
       font-size: 0.78rem;
@@ -559,7 +571,8 @@
       letter-spacing: 0.12em;
     }
 
-    .signup-form input {
+    .signup-form input,
+    .signup-form select {
       width: 100%;
       min-height: 48px;
       border: 1px solid var(--line);
@@ -574,6 +587,22 @@
       color: var(--muted-2);
     }
 
+    .checkbox-field {
+      display: flex;
+      align-items: start;
+      gap: 10px;
+      line-height: 1.35;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    .checkbox-field input {
+      width: auto;
+      min-height: auto;
+      margin-top: 3px;
+      accent-color: var(--accent);
+    }
+
     .signup-form button {
       min-height: 48px;
       border: 0;
@@ -582,14 +611,26 @@
       color: var(--bg);
       font: inherit;
       font-weight: 850;
-      cursor: not-allowed;
-      opacity: 0.78;
+      cursor: pointer;
+    }
+
+    .signup-form button:disabled {
+      cursor: wait;
+      opacity: 0.72;
     }
 
     .form-note {
       margin: 8px 0 0;
       color: var(--muted-2);
       font-size: 0.9rem;
+    }
+
+    .form-note[data-state="success"] {
+      color: var(--accent);
+    }
+
+    .form-note[data-state="error"] {
+      color: #ff8f8f;
     }
 
     .templates {
@@ -976,10 +1017,10 @@
       <div class="wrap hero-grid">
         <div>
           <div class="eyebrow">A public campaign for mass social media exit</div>
-          <h1>Post why you're leaving. Then leave.</h1>
+          <h1>Leave social media. Loudly.</h1>
 
           <p class="hero-copy">
-            The Great Logout is a public campaign for leaving addictive social media together. <strong>Post for 1 to 7 days</strong>, say why you are leaving, tell people where to reach you, then log out. Not silently. Visibly.
+            The Great Logout is a public campaign for leaving addictive social media collectively. <strong>Post pithy messages for 1 to 7 days</strong>, say why you are leaving, tell people where to reach you, then log out. Not silently. Visibly.
           </p>
 
           <div class="button-row">
@@ -1214,15 +1255,27 @@
 
           <aside class="signup-card" aria-labelledby="signup-title">
             <h3 id="signup-title">Get the logout guide</h3>
-            <p>We are preparing the email version: one prompt a day, no feed, no fluff.</p>
+            <p>One prompt a day for the first week. Then a few check-ins after the noise gets quiet.</p>
 
-            <!-- TODO: Connect this placeholder form to the newsletter backend when one exists. -->
-            <form class="signup-form" action="#" method="post">
+            <!-- Set data-endpoint to your deployed Worker URL, for example https://api.thegreatlogout.org/subscribe. -->
+            <form class="signup-form" id="guideSignupForm" data-endpoint="https://api.thegreatlogout.org/subscribe">
               <label for="email">Email address</label>
-              <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" />
-              <button type="button" aria-disabled="true">Email guide coming soon</button>
+              <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
+
+              <label for="firstName">First name <span aria-hidden="true">(optional)</span></label>
+              <input id="firstName" name="firstName" type="text" placeholder="Daniel" autocomplete="given-name" />
+
+              <label for="logoutDate">Planned logout date <span aria-hidden="true">(optional)</span></label>
+              <input id="logoutDate" name="logoutDate" type="date" />
+
+              <label class="checkbox-field">
+                <input id="emailConsent" name="consent" type="checkbox" required />
+                <span>Email me the logout guide and a few follow-up check-ins. No feed, no spam.</span>
+              </label>
+
+              <button type="submit">Start the email guide</button>
             </form>
-            <p class="form-note">Placeholder only for now. No signup is sent yet.</p>
+            <p class="form-note" id="signupStatus">You can unsubscribe from every email.</p>
           </aside>
         </div>
       </div>
@@ -1359,8 +1412,11 @@ Don't go broke for them.</textarea>
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const postIdeas = [
-      "What do you really think?\nI bet you don't know.",
       "Attention is their currency.\nDon't go broke for them.",
+      "I am preparing to leave this platform.\nI am not disappearing.",
+      "I am leaving this platform.\nFor the next few days I will post why.",
+      "I am moving my attention and my relationships somewhere else.",
+      "What do you really think?\nI bet you don't know.",
       "They call it connection.\nBut you feel alone.",
       "Get back your time.\nIt was never theirs.",
       "I chose real friends.\nWhen do you?",
@@ -1372,22 +1428,28 @@ Don't go broke for them.</textarea>
       "You are the extraction site.",
       "Less scrolling.\nMore living.",
       "Your mind is not a marketplace.",
+      "I don't want a handful of companies deciding what I see every day.",
       "They made loneliness profitable.",
       "If it makes you angry, tired, jealous, and numb -\nwhy is it still on your phone?",
       "You can't hear yourself\nwhile the feed is shouting.",
       "I'm not disappearing.\nI'm returning.",
+      "I am not disappearing.\nI am returning.",
       "Offline is not empty.\nIt's where life was waiting.",
       "This is not a detox.\nIt's a refusal.",
       "The algorithm doesn't know you.\nIt knows your weaknesses.",
       "I don't want my thoughts pre-selected.",
       "Real life has no infinite scroll.",
       "I'm leaving the feed\nbefore it eats the rest of me.",
+      "I am leaving the feed,\nnot the people.",
+      "You can still reach me here: ...",
       "They don't want your happiness.\nThey want your return.",
       "My attention is not for sale.",
       "The exit is the message.",
       "I logged out\nto come back to myself.",
       "What if your boredom\nwas trying to save you?",
       "You are not missing out.\nYou are being pulled in.",
+      "If the feed is taking more than it gives,\nyou can leave too.",
+      "Post why.\nTell people where to find you.\nThen log out.",
       "Keep your friends.\nLose the feed.",
       "This is my last post here.\nFind me in real life."
     ];
@@ -1408,6 +1470,8 @@ Don't go broke for them.</textarea>
     const postFormat = document.getElementById("postFormat");
     const postCanvas = document.getElementById("postCanvas");
     const quoteCarousel = document.getElementById("quoteCarousel");
+    const guideSignupForm = document.getElementById("guideSignupForm");
+    const signupStatus = document.getElementById("signupStatus");
     const context = postCanvas.getContext("2d");
     let carouselTimer = null;
     let carouselIndex = 0;
@@ -1541,6 +1605,11 @@ Don't go broke for them.</textarea>
       custom.value = "custom";
       custom.textContent = "Custom text";
       postPreset.appendChild(custom);
+    }
+
+    function selectPresetForText(text) {
+      const index = postIdeas.findIndex(idea => idea.trim() === text.trim());
+      postPreset.value = index >= 0 ? String(index) : "custom";
     }
 
     function getSelectedColor() {
@@ -1804,6 +1873,13 @@ Don't go broke for them.</textarea>
 
       renderQuoteCarousel();
       populatePresets();
+      const initialPost = getInitialPostText();
+      if (initialPost) {
+        postText.value = initialPost.slice(0, 500);
+        selectPresetForText(postText.value);
+      } else {
+        selectPresetForText(postText.value);
+      }
       drawPost();
 
       postPreset.addEventListener("change", () => {
@@ -1826,7 +1902,7 @@ Don't go broke for them.</textarea>
       document.querySelectorAll("[data-quote]").forEach(button => {
         button.addEventListener("click", () => {
           postText.value = button.getAttribute("data-quote");
-          postPreset.value = "custom";
+          selectPresetForText(postText.value);
           drawPost();
           stopCarousel();
           document.getElementById("postText").focus();
@@ -1858,8 +1934,73 @@ Don't go broke for them.</textarea>
       setupCarousel();
     }
 
+    function getInitialPostText() {
+      const queryPost = new URLSearchParams(window.location.search).get("post");
+      if (queryPost) return queryPost;
+
+      const hash = window.location.hash || "";
+      const hashQueryIndex = hash.indexOf("?");
+      if (hashQueryIndex < 0) return "";
+
+      return new URLSearchParams(hash.slice(hashQueryIndex + 1)).get("post") || "";
+    }
+
+    function setupGuideSignup() {
+      if (!guideSignupForm || !signupStatus) return;
+
+      guideSignupForm.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const endpoint = guideSignupForm.dataset.endpoint;
+        if (!endpoint) {
+          signupStatus.textContent = "Signup is not connected yet.";
+          signupStatus.dataset.state = "error";
+          return;
+        }
+
+        const submitButton = guideSignupForm.querySelector("button[type='submit']");
+        const formData = new FormData(guideSignupForm);
+        const payload = {
+          email: String(formData.get("email") || "").trim(),
+          firstName: String(formData.get("firstName") || "").trim(),
+          logoutDate: String(formData.get("logoutDate") || "").trim(),
+          guideLength: Number(formData.get("guideLength") || 7),
+          consent: formData.get("consent") === "on"
+        };
+
+        submitButton.disabled = true;
+        signupStatus.textContent = "Adding you to the guide...";
+        signupStatus.dataset.state = "";
+
+        try {
+          const response = await fetch(endpoint, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+          });
+
+          const result = await response.json().catch(() => ({}));
+          if (!response.ok) {
+            throw new Error(result.error || "Signup failed.");
+          }
+
+          guideSignupForm.reset();
+          signupStatus.textContent = "You're in. Check your inbox for the first email.";
+          signupStatus.dataset.state = "success";
+        } catch (error) {
+          signupStatus.textContent = error.message || "Something went wrong. Please try again.";
+          signupStatus.dataset.state = "error";
+        } finally {
+          submitButton.disabled = false;
+        }
+      });
+    }
+
     runTypewriter();
     setupGenerator();
+    setupGuideSignup();
   </script>
 </body>
 </html>

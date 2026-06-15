@@ -1,0 +1,26 @@
+name = "thegreatlogout-email"
+main = "src/index.js"
+compatibility_date = "2026-06-15"
+
+# Deploy this Worker behind api.thegreatlogout.org.
+# Required secret:
+#   wrangler secret put POSTMARK_SERVER_TOKEN
+#
+# Required D1 database binding:
+#   wrangler d1 create thegreatlogout-email
+# Then paste the returned database_id below.
+
+[[d1_databases]]
+binding = "DB"
+database_name = "thegreatlogout-email"
+database_id = "d020d394-38f7-4bc1-be50-a92648e76ac6"
+
+[vars]
+FROM_EMAIL = "hello@thegreatlogout.org"
+FROM_NAME = "The Great Logout"
+PUBLIC_SITE_URL = "https://www.thegreatlogout.org"
+API_BASE_URL = "https://api.thegreatlogout.org"
+ALLOWED_ORIGIN = "https://www.thegreatlogout.org"
+
+[triggers]
+crons = ["*/15 * * * *"]
