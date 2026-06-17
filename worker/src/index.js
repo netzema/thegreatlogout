@@ -5,11 +5,11 @@ export default {
     const url = new URL(request.url);
 
     if (request.method === "OPTIONS") {
-      return corsResponse(null, env, 204);
+      return corsResponse(null, env, 204, request);
     }
 
     if (request.method === "GET" && url.pathname === "/health") {
-      return corsResponse({ ok: true }, env);
+      return corsResponse({ ok: true }, env, 200, request);
     }
 
     if (request.method === "GET" && url.pathname === "/post.svg") {
@@ -24,7 +24,7 @@ export default {
       return handleSubscribe(request, env);
     }
 
-    return corsResponse({ error: "Not found." }, env, 404);
+    return corsResponse({ error: "Not found." }, env, 404, request);
   },
 
   async scheduled(_event, env, ctx) {
@@ -42,11 +42,11 @@ async function handleSubscribe(request, env) {
   const unsubscribeToken = crypto.randomUUID();
 
   if (!email) {
-    return corsResponse({ error: "Please enter a valid email address." }, env, 400);
+    return corsResponse({ error: "Please enter a valid email address." }, env, 400, request);
   }
 
   if (!consent) {
-    return corsResponse({ error: "Please confirm that you want to receive the guide." }, env, 400);
+    return corsResponse({ error: "Please confirm that you want to receive the guide." }, env, 400, request);
   }
 
   const now = new Date();
@@ -64,8 +64,9 @@ async function handleSubscribe(request, env) {
 
   const subscriber = await env.DB.prepare("SELECT id FROM subscribers WHERE email = ?").bind(email).first();
   await scheduleEmails(env, subscriber.id, now, guideLength);
+  await sendWelcomeEmail(env, subscriber.id, email, firstName);
 
-  return corsResponse({ ok: true }, env);
+  return corsResponse({ ok: true }, env, 200, request);
 }
 
 async function scheduleEmails(env, subscriberId, startDate, guideLength) {
@@ -117,6 +118,38 @@ async function sendDueEmails(env) {
         .bind(String(error.message || error).slice(0, 500), row.id)
         .run();
     }
+  }
+}
+
+async function sendWelcomeEmail(env, subscriberId, emailAddress, firstName) {
+  const row = await env.DB.prepare(`
+    SELECT id
+    FROM email_sends
+    WHERE subscriber_id = ?
+      AND sequence_key = 'day-0'
+      AND sent_at IS NULL
+    LIMIT 1
+  `).bind(subscriberId).first();
+
+  if (!row) return;
+
+  const subscriber = await env.DB.prepare("SELECT unsubscribe_token FROM subscribers WHERE id = ?")
+    .bind(subscriberId)
+    .first();
+  const email = EMAIL_SEQUENCE.find(item => item.key === "day-0");
+  if (!email || !subscriber?.unsubscribe_token) return;
+
+  try {
+    const result = await sendPostmarkEmail(env, emailAddress, firstName, subscriber.unsubscribe_token, email);
+    await env.DB.prepare(`
+      UPDATE email_sends
+      SET sent_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), postmark_message_id = ?, error = NULL
+      WHERE id = ?
+    `).bind(result.MessageID || null, row.id).run();
+  } catch (error) {
+    await env.DB.prepare("UPDATE email_sends SET error = ? WHERE id = ?")
+      .bind(String(error.message || error).slice(0, 500), row.id)
+      .run();
   }
 }
 
@@ -427,11 +460,19 @@ function wrapSvgText(text, maxChars) {
   return lines;
 }
 
-function corsResponse(body, env, status = 200) {
+function corsResponse(body, env, status = 200, request = null) {
+  const origin = request?.headers?.get("Origin") || "";
+  const allowedOrigins = String(env.ALLOWED_ORIGINS || env.ALLOWED_ORIGIN || "https://www.thegreatlogout.org")
+    .split(",")
+    .map(item => item.trim())
+    .filter(Boolean);
+  const allowedOrigin = allowedOrigins.includes(origin) ? origin : allowedOrigins[0];
+
   const headers = {
-    "Access-Control-Allow-Origin": env.ALLOWED_ORIGIN || "https://www.thegreatlogout.org",
+    "Access-Control-Allow-Origin": allowedOrigin,
     "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
+    "Vary": "Origin",
     "Content-Type": "application/json"
   };
 

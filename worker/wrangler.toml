@@ -21,6 +21,7 @@ FROM_NAME = "The Great Logout"
 PUBLIC_SITE_URL = "https://www.thegreatlogout.org"
 API_BASE_URL = "https://api.thegreatlogout.org"
 ALLOWED_ORIGIN = "https://www.thegreatlogout.org"
+ALLOWED_ORIGINS = "https://www.thegreatlogout.org,https://thegreatlogout.org"
 
 [triggers]
 crons = ["*/15 * * * *"]
