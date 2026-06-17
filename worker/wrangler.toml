@@ -2,6 +2,10 @@ name = "thegreatlogout-email"
 main = "src/index.js"
 compatibility_date = "2026-06-15"
 
+routes = [
+  { pattern = "api.thegreatlogout.org", custom_domain = true }
+]
+
 # Deploy this Worker behind api.thegreatlogout.org.
 # Required secret:
 #   wrangler secret put POSTMARK_SERVER_TOKEN
@@ -20,7 +24,6 @@ FROM_EMAIL = "hello@thegreatlogout.org"
 FROM_NAME = "The Great Logout"
 PUBLIC_SITE_URL = "https://www.thegreatlogout.org"
 API_BASE_URL = "https://api.thegreatlogout.org"
-ALLOWED_ORIGIN = "https://www.thegreatlogout.org"
 ALLOWED_ORIGINS = "https://www.thegreatlogout.org,https://thegreatlogout.org"
 
 [triggers]

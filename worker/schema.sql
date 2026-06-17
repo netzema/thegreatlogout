@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS subscribers (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  email TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL,
   first_name TEXT,
   guide_length INTEGER NOT NULL DEFAULT 7,
   planned_logout_date TEXT,

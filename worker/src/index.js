@@ -51,18 +51,21 @@ async function handleSubscribe(request, env) {
 
   const now = new Date();
   await env.DB.prepare(`
+    UPDATE subscribers
+    SET status = 'unsubscribed',
+      unsubscribed_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+    WHERE email = ?
+      AND status = 'active'
+  `).bind(email).run();
+
+  await env.DB.prepare(`
     INSERT INTO subscribers (email, first_name, guide_length, planned_logout_date, unsubscribe_token, status)
     VALUES (?, ?, ?, ?, ?, 'active')
-    ON CONFLICT(email) DO UPDATE SET
-      first_name = excluded.first_name,
-      guide_length = excluded.guide_length,
-      planned_logout_date = excluded.planned_logout_date,
-      unsubscribe_token = COALESCE(subscribers.unsubscribe_token, excluded.unsubscribe_token),
-      status = 'active',
-      unsubscribed_at = NULL
   `).bind(email, firstName || null, guideLength, plannedLogoutDate || null, unsubscribeToken).run();
 
-  const subscriber = await env.DB.prepare("SELECT id FROM subscribers WHERE email = ?").bind(email).first();
+  const subscriber = await env.DB.prepare("SELECT id FROM subscribers WHERE unsubscribe_token = ?")
+    .bind(unsubscribeToken)
+    .first();
   await scheduleEmails(env, subscriber.id, now, guideLength);
   await sendWelcomeEmail(env, subscriber.id, email, firstName);
 
@@ -243,7 +246,8 @@ function renderEmailText(env, firstName, unsubscribeToken, email) {
     `Post option ${index + 1}:`,
     post,
     `Open in generator: ${buildGeneratorLink(env, post)}`,
-    `Download SVG: ${buildPostSvgLink(env, post)}`,
+    `Download square SVG: ${buildPostSvgLink(env, post, "square")}`,
+    `Download vertical SVG: ${buildPostSvgLink(env, post, "vertical")}`,
     ""
   ]);
   const reflectionLines = (email.reflectionPrompts || []).flatMap((prompt, index) => [
@@ -296,7 +300,9 @@ function renderPostOptionsHtml(env, posts) {
       <div style="margin-top:14px;">
         <a href="${buildGeneratorLink(env, post)}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">Open in generator</a>
         <span style="color:#6f766d;"> &nbsp;|&nbsp; </span>
-        <a href="${buildPostSvgLink(env, post)}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">Download SVG</a>
+        <a href="${buildPostSvgLink(env, post, "square")}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">Square SVG</a>
+        <span style="color:#6f766d;"> &nbsp;|&nbsp; </span>
+        <a href="${buildPostSvgLink(env, post, "vertical")}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">Vertical SVG</a>
       </div>
     </div>
   `).join("");
@@ -340,9 +346,10 @@ function buildGeneratorLink(env, post) {
   return `${siteUrl}/?post=${encodeURIComponent(post)}#generator`;
 }
 
-function buildPostSvgLink(env, post) {
+function buildPostSvgLink(env, post, format = "square") {
   const apiBaseUrl = normalizeUrl(env.API_BASE_URL || "https://api.thegreatlogout.org");
-  return `${apiBaseUrl}/post.svg?text=${encodeURIComponent(post)}`;
+  const formatParam = format === "vertical" ? "&format=vertical" : "";
+  return `${apiBaseUrl}/post.svg?text=${encodeURIComponent(post)}${formatParam}`;
 }
 
 function buildUnsubscribeLink(env, token) {
@@ -396,23 +403,26 @@ async function handleUnsubscribe(url, env) {
 function handlePostSvg(url) {
   const text = cleanText(url.searchParams.get("text") || "The exit is the message.", 280);
   const color = url.searchParams.get("color") === "green" ? "#B6FF3B" : "#f4f4ef";
-  const svg = buildSocialPostSvg(text, color);
+  const format = url.searchParams.get("format") === "vertical" ? "vertical" : "square";
+  const svg = buildSocialPostSvg(text, color, format);
+  const filename = format === "vertical" ? "great-logout-vertical.svg" : "great-logout-square.svg";
 
   return new Response(svg, {
     headers: {
       "Content-Type": "image/svg+xml; charset=utf-8",
-      "Content-Disposition": "attachment; filename=\"great-logout-post.svg\""
+      "Content-Disposition": `attachment; filename="${filename}"`
     }
   });
 }
 
-function buildSocialPostSvg(text, color) {
+function buildSocialPostSvg(text, color, format = "square") {
   const width = 1080;
-  const height = 1080;
+  const height = format === "vertical" ? 1920 : 1080;
   const lines = wrapSvgText(text, 18);
   const fontSize = Math.max(54, Math.min(108, Math.floor(width / Math.max(9, Math.max(...lines.map(line => line.length || 1)) * 0.58))));
   const lineHeight = Math.round(fontSize * 1.14);
-  const startY = Math.round((height - 180 - lines.length * lineHeight) / 2 + fontSize);
+  const footerTop = height - 200;
+  const startY = Math.round((footerTop - lines.length * lineHeight) / 2 + fontSize);
   const tspans = lines.map((line, index) => `<tspan x="50%" y="${startY + index * lineHeight}">${escapeHtml(line)}</tspan>`).join("");
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
@@ -424,15 +434,15 @@ function buildSocialPostSvg(text, color) {
   </defs>
   <rect width="100%" height="100%" fill="url(#grid)"/>
   <text text-anchor="middle" font-family="Arial, sans-serif" font-size="${fontSize}" font-weight="800" fill="${color}">${tspans}</text>
-  <g transform="translate(108 880) scale(.36)" fill="none" stroke="#B6FF3B" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+  <g transform="translate(108 ${height - 200}) scale(.36)" fill="none" stroke="#B6FF3B" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
     <path d="M152 48H78C61.43 48 48 61.43 48 78v100c0 16.57 13.43 30 30 30h74"/>
     <path d="M92 84v88"/>
     <path d="M108 128h96"/>
     <path d="M170 94l34 34-34 34"/>
   </g>
-  <text x="208" y="924" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#f4f4ef">The Great Logout</text>
-  <text x="208" y="956" font-family="Arial, sans-serif" font-size="23" fill="#a4aaa1">A collective social media exit</text>
-  <text x="972" y="956" text-anchor="end" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#B6FF3B">thegreatlogout.org</text>
+  <text x="208" y="${height - 156}" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#f4f4ef">The Great Logout</text>
+  <text x="208" y="${height - 124}" font-family="Arial, sans-serif" font-size="23" fill="#a4aaa1">A collective social media exit</text>
+  <text x="972" y="${height - 124}" text-anchor="end" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#B6FF3B">thegreatlogout.org</text>
 </svg>`;
 }
 

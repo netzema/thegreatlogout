@@ -309,7 +309,8 @@ def render_post_options_html(posts: list[str], site_url: str, api_base_url: str)
     cards = []
     for index, post in enumerate(posts, start=1):
         generator_link = f"{site_url}/?post={urllib.parse.quote(post)}#generator"
-        svg_link = f"{api_base_url}/post.svg?text={urllib.parse.quote(post)}"
+        square_svg_link = f"{api_base_url}/post.svg?text={urllib.parse.quote(post)}"
+        vertical_svg_link = f"{api_base_url}/post.svg?text={urllib.parse.quote(post)}&format=vertical"
         cards.append(f"""
           <div style="border:1px solid rgba(244,244,239,.14);border-radius:16px;background:#121512;padding:16px;margin:12px 0;">
             <div style="color:#B6FF3B;font-family:Consolas,monospace;font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Post option {index}</div>
@@ -317,7 +318,9 @@ def render_post_options_html(posts: list[str], site_url: str, api_base_url: str)
             <div style="margin-top:14px;">
               <a href="{generator_link}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">Open in generator</a>
               <span style="color:#6f766d;"> &nbsp;|&nbsp; </span>
-              <a href="{svg_link}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">Download SVG</a>
+              <a href="{square_svg_link}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">Square SVG</a>
+              <span style="color:#6f766d;"> &nbsp;|&nbsp; </span>
+              <a href="{vertical_svg_link}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">Vertical SVG</a>
             </div>
           </div>
         """)
@@ -366,7 +369,8 @@ def render_text(email: dict[str, Any], first_name: str, site_url: str, api_base_
                 f"Post option {index}:",
                 post,
                 f"Open in generator: {site_url}/?post={urllib.parse.quote(post)}#generator",
-                f"Download SVG: {api_base_url}/post.svg?text={urllib.parse.quote(post)}",
+                f"Download square SVG: {api_base_url}/post.svg?text={urllib.parse.quote(post)}",
+                f"Download vertical SVG: {api_base_url}/post.svg?text={urllib.parse.quote(post)}&format=vertical",
                 "",
             ])
 

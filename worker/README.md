@@ -19,13 +19,14 @@ Each email includes:
 - the guide text
 - three ready-to-use post options
 - links to open each option in the website post generator
-- direct SVG download links for each option
+- direct square and vertical SVG download links for each option
 - an unsubscribe link
 
 The direct SVG endpoint is:
 
 ```txt
 https://api.thegreatlogout.org/post.svg?text=...
+https://api.thegreatlogout.org/post.svg?text=...&format=vertical
 ```
 
 ## Setup
