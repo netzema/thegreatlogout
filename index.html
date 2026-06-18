@@ -1838,18 +1838,19 @@ Don't go broke for them.</textarea>
     }
 
     function getPostLayout(format) {
+      const isCover = format.width > format.height * 1.8;
       const shortestSide = Math.min(format.width, format.height);
-      const margin = Math.round(shortestSide * 0.12);
+      const margin = isCover ? Math.round(shortestSide * 0.12) : Math.round(format.width * 0.1);
       const footerSpace = Math.round(format.height * 0.16);
-      const logoSize = Math.round(shortestSide * 0.09);
+      const logoSize = isCover ? Math.round(shortestSide * 0.09) : Math.round(format.width * 0.085);
 
       return {
         margin,
         footerSpace,
         logoSize,
-        brandFontSize: Math.round(shortestSide * 0.04),
-        infoFontSize: Math.round(shortestSide * 0.032),
-        urlFontSize: Math.round(shortestSide * 0.034)
+        brandFontSize: isCover ? Math.round(shortestSide * 0.04) : Math.round(format.width * 0.026),
+        infoFontSize: isCover ? Math.round(shortestSide * 0.032) : Math.round(format.width * 0.021),
+        urlFontSize: isCover ? Math.round(shortestSide * 0.034) : Math.round(format.width * 0.022)
       };
     }
 
@@ -2006,11 +2007,24 @@ Don't go broke for them.</textarea>
       URL.revokeObjectURL(link.href);
     }
 
-    function downloadCanvas(type) {
+    function getDownloadName(extension) {
       const format = formats[postFormat.value] || formats["instagram-post"];
+      const slogan = postText.value.trim() || "The exit is the message.";
+      const slug = slogan
+        .toLowerCase()
+        .replace(/&/g, " and ")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "")
+        .slice(0, 44)
+        .replace(/-+$/g, "") || "post";
+
+      return `great-logout-${format.label}-${slug}.${extension}`;
+    }
+
+    function downloadCanvas(type) {
       const mime = type === "jpg" ? "image/jpeg" : "image/png";
       postCanvas.toBlob(blob => {
-        if (blob) downloadBlob(blob, `great-logout-${format.label}.${type}`);
+        if (blob) downloadBlob(blob, getDownloadName(type));
       }, mime, 0.94);
     }
 
@@ -2106,12 +2120,12 @@ Don't go broke for them.</textarea>
           }
 
           if (type === "svg") {
-            downloadBlob(new Blob([buildSvg()], { type: "image/svg+xml" }), `great-logout-${format.label}.svg`);
+            downloadBlob(new Blob([buildSvg()], { type: "image/svg+xml" }), getDownloadName("svg"));
             return;
           }
 
           if (type === "pdf") {
-            downloadBlob(buildPdf(), `great-logout-${format.label}.pdf`);
+            downloadBlob(buildPdf(), getDownloadName("pdf"));
           }
         });
       });
