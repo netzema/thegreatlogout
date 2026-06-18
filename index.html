@@ -1475,6 +1475,7 @@ Don't go broke for them.</textarea>
               </label>
 
               <button type="submit">Start the 7-day guide</button>
+              <p class="form-note" id="signupStatus" aria-live="polite"></p>
             </form>
           </aside>
         </div>
@@ -2152,7 +2153,7 @@ Don't go broke for them.</textarea>
     }
 
     function setupGuideSignup() {
-      if (!guideSignupForm || !signupStatus) return;
+      if (!guideSignupForm) return;
 
       const logoutDateInput = guideSignupForm.querySelector("#logoutDate");
       if (logoutDateInput && !logoutDateInput.value) {
@@ -2164,8 +2165,10 @@ Don't go broke for them.</textarea>
 
         const endpoint = guideSignupForm.dataset.endpoint;
         if (!endpoint) {
-          signupStatus.textContent = "Signup is not connected yet.";
-          signupStatus.dataset.state = "error";
+          if (signupStatus) {
+            signupStatus.textContent = "Signup is not connected yet.";
+            signupStatus.dataset.state = "error";
+          }
           return;
         }
 
@@ -2180,8 +2183,10 @@ Don't go broke for them.</textarea>
         };
 
         submitButton.disabled = true;
-        signupStatus.textContent = "Adding you to the guide...";
-        signupStatus.dataset.state = "";
+        if (signupStatus) {
+          signupStatus.textContent = "Adding you to the guide...";
+          signupStatus.dataset.state = "";
+        }
 
         try {
           const response = await fetch(endpoint, {
@@ -2201,11 +2206,15 @@ Don't go broke for them.</textarea>
           if (logoutDateInput) {
             logoutDateInput.value = getDateInputValue(8);
           }
-          signupStatus.textContent = "You're in. Check your inbox for the first email.";
-          signupStatus.dataset.state = "success";
+          if (signupStatus) {
+            signupStatus.textContent = "You're in. Check your inbox for the first email.";
+            signupStatus.dataset.state = "success";
+          }
         } catch (error) {
-          signupStatus.textContent = error.message || "Something went wrong. Please try again.";
-          signupStatus.dataset.state = "error";
+          if (signupStatus) {
+            signupStatus.textContent = error.message || "Something went wrong. Please try again.";
+            signupStatus.dataset.state = "error";
+          }
         } finally {
           submitButton.disabled = false;
         }
