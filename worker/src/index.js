@@ -209,7 +209,6 @@ function renderEmailHtml(env, firstName, unsubscribeToken, email) {
                 <div style="color:#f4f4ef;font-size:18px;line-height:1.1;font-weight:bold;">The Great Logout</div>
                 <div style="color:#a4aaa1;font-size:13px;margin-top:5px;">A collective social media exit</div>
               </td>
-              <td align="right" style="vertical-align:middle;color:#B6FF3B;font-size:30px;font-weight:bold;">-&gt;</td>
             </tr>
           </table>
         </div>

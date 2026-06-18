@@ -2,11 +2,14 @@ const BASE_EMAIL_SEQUENCE = [
   {
     key: "day-0",
     delayDays: 0,
-    subject: "Day 0: Prepare your logout",
-    title: "Prepare your logout",
+    subject: "Welcome to The Great Logout",
+    title: "You are in. Now make the exit visible.",
     body: [
-      "Before you leave, make the exit practical.",
-      "A public logout works best when people can see what is happening before you disappear from the platform. That means you need a few simple things ready: your last day, a place people can reach you, and a clear reason you can repeat without turning it into a debate.",
+      "Thank you for joining The Great Logout.",
+      "This is a public exit from addictive social media. Not a quiet detox. Not another private attempt to be more disciplined. For the next few days, you make the decision visible before you leave.",
+      "That matters. When people disappear silently, the feed absorbs the absence. When people leave publicly, others see that logging out is possible, deliberate, and social. One person leaving can become a signal. Many people leaving can become pressure.",
+      "The goal is simple: post why you are leaving, tell people where they can reach you, then log out. You do not need a perfect argument. You do not need to convince everyone. You only need to make the exit real.",
+      "Day 0 is preparation. Before you post, make the exit practical.",
       "Save the contacts you would miss. Write down the people you actually want to keep in your life. Send a few direct messages if you need to. Choose your replacement channel: email, Signal, phone, website, newsletter, real life. Whatever is honest for you.",
       "You do not need to make the perfect argument. You do not need to announce a new identity. You are allowed to say: this place is taking more from me than it gives back, so I am leaving.",
       "Today's task: choose your final logout date and decide where people can reach you.",
@@ -36,7 +39,7 @@ const BASE_EMAIL_SEQUENCE = [
       "The feed is designed to pull you back.",
       "That sentence matters because many people blame themselves first. They think they are lazy, weak, distracted, or bad at discipline. Sometimes discipline helps. But discipline is not the whole story when the thing in your pocket is engineered by teams of people to interrupt you, reward you, irritate you, and bring you back.",
       "The reflex to check is not random. The endless scroll is not random. Notifications, likes, outrage, short videos, recommendations, and the tiny promise of something new are all part of the machinery.",
-      "Today, write about attention. What has the feed taken from your day? What does it interrupt? What did you used to do when you were bored, waiting, tired, or alone?",
+      "Today, write about attention. What has the feed taken from your day? What does it interrupt? What did you use to do when you were bored, waiting, tired, or alone?",
       "Today's task: name one specific way the feed changed your attention.",
       "Possible post: My attention is not a resource for platforms to mine. I am leaving because I want it back."
     ]
@@ -49,7 +52,7 @@ const BASE_EMAIL_SEQUENCE = [
     body: [
       "Leaving is not only a negative act.",
       "Yes, it is a refusal. But it is also a return. You are not just removing an app. You are making room for something else to become possible again.",
-      "Maybe you want your mornings back. Maybe you want to read without checking your phone every few minutes. Maybe you want boredom, because boredom is where thoughts start forming before the feed interrupts them. Maybe you want to stop comparing your real life to someone else's edited moment.",
+      "Maybe you want your mornings back. Maybe you want to read without checking your phone every few minutes. Maybe you want enough quiet to be bored again, because boredom is often where your own thoughts return. Maybe you want to stop comparing your real life to someone else's edited moment.",
       "Do not make this abstract. The more concrete your reason is, the more human it feels. Time with friends. A quieter mind. Better sleep. Less anger. Less jealousy. Less numbness. More attention for one thing at a time.",
       "Today's task: post what you want back.",
       "Possible post: I am leaving because I want my time, my quiet, and my attention back."
@@ -77,6 +80,7 @@ const BASE_EMAIL_SEQUENCE = [
     body: [
       "Today is practical again.",
       "A lot of people stay because leaving feels like disappearing. That fear is real. Many friendships, loose ties, invitations, jokes, and updates have been pushed into platforms that were never designed to care about the relationships themselves.",
+      "But look at the exchange honestly. Spending hours in the feed so you might send one real message is a strange bargain. It is like standing in a shopping mall all day because one friend might walk past. If the relationship matters, give it a direct path.",
       "So leave a door open. Tell people where they can reach you. Make it easy enough that the people who matter can follow. You do not need to be available everywhere. You only need one or two honest channels that are not built around the feed.",
       "This is the heart of the campaign: keep your friends, lose the feed.",
       "Today's task: post your new contact path.",
@@ -122,6 +126,7 @@ const BASE_EMAIL_SEQUENCE = [
       "Some people expect freedom to feel clean and dramatic. Sometimes it does. More often, it feels uneven. You may feel relief, boredom, restlessness, fear of missing out, or the urge to reinstall just to check one thing.",
       "That does not mean the logout failed. It means the reflex is still fading. Your attention is used to being pulled. When the pulling stops, the empty space can feel suspicious.",
       "Try not to fill every empty space too quickly. Go for a walk without turning it into content. Message one person directly. Read a page. Cook something. Sit somewhere without recording it. Let life be unposted for a while.",
+      "By now you may have met a kind of boredom the feed used to cover up. Do not rush to escape it. A wandering mind is not wasted time. It is where ideas connect, where plans begin, where you notice what you actually want to do next. Some of your clearest thoughts may arrive when nothing is trying to keep you entertained.",
       "Question for today: what did you notice this week that the feed usually covered up?",
       "If you want, reply and tell us. We are collecting real experiences from people who left, because the website should eventually show more than slogans. It should show what changes, what gets easier, and what stays difficult."
     ]
@@ -144,14 +149,15 @@ const BASE_EMAIL_SEQUENCE = [
     key: "month-6",
     delayDays: 183,
     subject: "Six months later: don't drift back by accident",
-    title: "Staying out",
+    title: "Do not quietly re-enter",
     body: [
-      "Most people do not return with a plan. They drift back.",
-      "One link. One login. One reinstall. One account you need for one event. Then the feed is in your pocket again, acting like it never left.",
-      "If you choose to go back, choose it consciously. Decide what you are using, why you are using it, and where the line is. If you do not choose it, the platform will choose for you.",
-      "A good question: what would make rejoining worth the cost? If the answer is vague, be careful.",
+      "Six months is long enough for the old pull to get polite.",
+      "It may not arrive as a dramatic relapse. It may arrive as one link, one login, one account you need for one event, one app you install again because everybody else still uses it. Then the feed is back in your pocket, acting like nothing happened.",
+      "This campaign was never about trying a detox and then sliding back into the same machine. It is about making exit visible, real, and durable. The point is not to prove discipline. The point is to stop feeding platforms that turn attention, anger, loneliness, and habit into power.",
+      "If you drifted back, be honest. Not to punish yourself. To see the mechanism clearly. What pulled you in? Convenience? Fear of missing out? Work? Friends? Boredom? Once you name the door, you can close it again.",
+      "If you stayed out, protect that choice. Keep the shortcuts removed. Keep direct contact alive. Keep refusing the idea that participation is automatic.",
       "You do not owe the feed another chance just because it kept your account warm.",
-      "If you have stayed out, drifted back, or found a middle path, you can reply and tell us what happened. Those stories are useful. They make the exit real for other people."
+      "If you have stayed out or drifted back and left again, reply and tell us what happened. Those stories are useful. They make the exit real for other people."
     ]
   },
   {
@@ -228,9 +234,9 @@ const REFLECTION_PROMPTS_BY_KEY = {
     "What would you tell someone starting today?"
   ],
   "month-6": [
-    "Did you stay out, drift back, or find a middle path?",
-    "What almost pulled you back in?",
-    "What boundary helped most?"
+    "What tried to pull you back in?",
+    "Which shortcut needs to disappear again?",
+    "What boundary needs to be stronger now?"
   ],
   "year-1": [
     "What changed after one year?",
