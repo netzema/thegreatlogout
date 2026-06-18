@@ -138,6 +138,54 @@ const BASE_EMAIL_SEQUENCE = [
     ]
   },
   {
+    key: "reason-1",
+    delayDays: 60,
+    subject: "Reason 1: attention is being extracted",
+    title: "Your attention is not raw material",
+    body: [
+      "your attention is not a small thing.",
+      "It is how you build a life. It is how you listen, learn, love, think, notice, create, grieve, organize, and change.",
+      "The feed treats that attention as raw material. Your pauses, anger, curiosity, loneliness, and late-night weakness all become signals. The system learns from them and uses them to keep you longer.",
+      "This is why leaving matters. You are not just saving time. You are refusing to be mined."
+    ]
+  },
+  {
+    key: "reason-2",
+    delayDays: 90,
+    subject: "Reason 2: the feed is designed to win",
+    title: "It was built to keep you returning",
+    body: [
+      "the feed is not a neutral room.",
+      "It is a ranking machine. It decides what appears, what vanishes, what repeats, and what becomes the mood of the day.",
+      "The business model is plain. Keep people watching. Keep people reacting. Keep people returning. More attention means more data. More data means better targeting. Better targeting means more money.",
+      "If stopping felt harder than it should, that does not mean you were weak. It means the system was doing its job."
+    ]
+  },
+  {
+    key: "reason-3",
+    delayDays: 120,
+    subject: "Reason 3: Big Tech has too much power",
+    title: "A private layer over public life",
+    body: [
+      "a few companies now shape what billions of people see.",
+      "They influence news, culture, politics, relationships, beauty standards, language, humor, outrage, and the feeling of what everyone else is supposedly thinking.",
+      "This power does not need to look like a government to matter. It decides what rises, what gets buried, what conflict stays alive, and what kind of person gets rewarded with attention.",
+      "No company should quietly tune public life in order to sell ads."
+    ]
+  },
+  {
+    key: "reason-4",
+    delayDays: 150,
+    subject: "Reason 4: outrage is rewarded",
+    title: "Anger travels well",
+    body: [
+      "algorithms do not need to invent every conflict.",
+      "They only need to find what keeps people engaged and push it harder. Anger is useful. Certainty is useful. Tribal contempt is useful. Nuance is usually too slow.",
+      "Over time, people stop sharing a common ground. Everyone sees a different world, tuned to their fears, tastes, wounds, and weaknesses.",
+      "Leaving the feed is one way to stop letting your nervous system become part of that business model."
+    ]
+  },
+  {
     key: "month-6",
     delayDays: 183,
     subject: "Six months later: don't drift back by accident",
@@ -153,6 +201,78 @@ const BASE_EMAIL_SEQUENCE = [
     ]
   },
   {
+    key: "reason-5",
+    delayDays: 210,
+    subject: "Reason 5: boredom is being colonized",
+    title: "Boredom is not failure",
+    body: [
+      "boredom used to be part of being alive.",
+      "Waiting. Walking. Sitting on a train. Standing in a line. Letting the mind move without assignment.",
+      "Those moments are often where ideas connect, where plans begin, and where you notice what you actually want to do next.",
+      "The feed attacks that space. It trains you to reach for stimulation before thought has time to form."
+    ]
+  },
+  {
+    key: "reason-6",
+    delayDays: 240,
+    subject: "Reason 6: comparison became normal",
+    title: "The feed manufactures lack",
+    body: [
+      "comparison works even when you know the image is edited.",
+      "The feed shows bodies, homes, relationships, holidays, routines, careers, and lives arranged to create a feeling of lack.",
+      "Repetition works below the level of argument. It changes the room inside your head.",
+      "Leaving is a way to stop measuring your real life against performances that never stop."
+    ]
+  },
+  {
+    key: "reason-7",
+    delayDays: 270,
+    subject: "Reason 7: loneliness is profitable",
+    title: "Contact is not the same as closeness",
+    body: [
+      "platforms promise connection.",
+      "Much of the time they deliver contact without closeness. You can watch hundreds of people and still feel alone. You can be reachable all day and still not be known.",
+      "Loneliness keeps people scrolling. So does the fear of disappearing.",
+      "The goal is not isolation. The goal is to move relationships back into channels that do not depend on addiction to survive."
+    ]
+  },
+  {
+    key: "reason-8",
+    delayDays: 300,
+    subject: "Reason 8: politics became performance",
+    title: "Reaction is not the same as action",
+    body: [
+      "a like can feel like a position.",
+      "A repost can feel like courage. A comment can feel like action. Sometimes these things help. Often they become a substitute for doing anything outside the platform.",
+      "A society can be angry all day and still remain still.",
+      "We need people in rooms, streets, groups, workplaces, schools, and neighborhoods. Not only people reacting alone to a feed."
+    ]
+  },
+  {
+    key: "reason-9",
+    delayDays: 330,
+    subject: "Reason 9: culture gets flattened",
+    title: "Fast is not the same as good",
+    body: [
+      "the feed is not good at depth.",
+      "It is good at spread. Whatever travels fastest starts to look like what matters most.",
+      "That changes art, language, humor, music, politics, and even personality. People begin to shape themselves for the system that rewards them.",
+      "Culture needs friction, memory, patience, and rooms where not everything is measured immediately."
+    ]
+  },
+  {
+    key: "reason-10",
+    delayDays: 360,
+    subject: "Reason 10: people are kept passive",
+    title: "The world needs more than spectators",
+    body: [
+      "the feed fragments our common horizon.",
+      "Each person receives a private version of reality, tuned for engagement and short-term emotion. Shared problems begin to feel too large, too confusing, or too hopeless.",
+      "Climate breakdown, inequality, loneliness, war, democratic decay, and technological power will not be solved by people trained to escape discomfort every few seconds.",
+      "Logging out is a way to return attention to the places where change can actually happen."
+    ]
+  },
+  {
     key: "year-1",
     delayDays: 365,
     subject: "One year later",
@@ -163,6 +283,42 @@ const BASE_EMAIL_SEQUENCE = [
       "Maybe you stayed out completely. Maybe you came back in some limited way. Maybe you left one platform and kept another. The useful question is not whether you were perfect. The useful question is whether you became more deliberate.",
       "If you want, reply and tell us what changed. The Great Logout should be built from real stories, not polished slogans. We may later ask whether we can share a short version on the website.",
       "Thank you for making the exit visible."
+    ]
+  },
+  {
+    key: "reason-11",
+    delayDays: 390,
+    subject: "Reason 11: desire is manufactured",
+    title: "The feed sells restlessness",
+    body: [
+      "the feed does not need you to be happy.",
+      "It needs you to be restless enough to keep returning. One purchase away. One trip away. One upgrade away. One better version of yourself away.",
+      "That restlessness drives consumption, waste, comparison, debt, and ecological damage.",
+      "A trend that lives for two weeks can leave damage that lasts much longer."
+    ]
+  },
+  {
+    key: "reason-12",
+    delayDays: 420,
+    subject: "Reason 12: relationships deserve better",
+    title: "Friendship needs a direct path",
+    body: [
+      "many people stay because leaving feels like disappearing.",
+      "That fear is real. Platforms have inserted themselves between friends, families, artists, organizers, customers, and communities.",
+      "But spending hours in the feed so you might send one real message is a strange bargain. It is like standing in a shopping mall all day because one friend might walk past.",
+      "If the relationship matters, give it a direct path."
+    ]
+  },
+  {
+    key: "reason-13",
+    delayDays: 450,
+    subject: "Reason 13: visible exits matter",
+    title: "The exit is the message",
+    body: [
+      "leaving quietly is good for the person who leaves.",
+      "Leaving publicly is useful for everyone else. If you simply disappear, the platform absorbs your absence. Nothing changes in the room. The feed moves on.",
+      "But when you post why you are leaving, people see an exit. They see someone naming the system. They see that logging out can be public, deliberate, and social.",
+      "You do not need a perfect argument. Say why you are leaving. Tell people where they can reach you. Then leave."
     ]
   }
 ];
