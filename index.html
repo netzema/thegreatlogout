@@ -459,48 +459,22 @@
       color: var(--muted);
     }
 
-    .why-grid {
-      display: grid;
-      grid-template-columns: 0.95fr 1.05fr;
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .why-list {
+    .why-case {
+      max-width: 780px;
       padding: 28px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: rgba(255,255,255,0.035);
     }
 
-    .why-list p {
+    .why-case p {
       margin: 0 0 18px;
       color: var(--muted);
       font-size: 1.08rem;
     }
 
-    .why-list p:last-child {
-      margin-bottom: 0;
-    }
-
-    .reasons {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px;
-    }
-
-    .reason {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: rgba(255,255,255,0.035);
-    }
-
-    .reason-number {
-      color: var(--accent);
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      margin-bottom: 18px;
+    .why-case .btn {
+      margin-top: 10px;
     }
 
     .guide-panel {
@@ -978,7 +952,6 @@
 
       .hero-grid,
       .section-head,
-      .why-grid,
       .guide-panel,
       .generator-panel,
       .support-grid,
@@ -990,7 +963,6 @@
         padding-top: 64px;
       }
 
-      .reasons,
       .templates {
         grid-template-columns: 1fr;
       }
@@ -1065,9 +1037,10 @@
       <nav class="nav-links" aria-label="Main navigation">
         <a href="#how">How it works</a>
         <a href="#why">Why leave</a>
-        <a href="essay.html">Essay</a>
+        <a href="essay.html">Deeper case</a>
         <a href="#guide">7-day guide</a>
         <a href="#generator">Post generator</a>
+        <a href="#support">Support</a>
         <a href="#guide" class="nav-cta">Start</a>
       </nav>
     </div>
@@ -1193,99 +1166,17 @@
         <div class="section-head">
           <div>
             <div class="kicker">Why leave</div>
-            <h2>13 reasons to log out.</h2>
+            <h2>The deeper case for logging out.</h2>
           </div>
           <p class="lead">
             This is not only about screen time. The feed changes what we notice, what we want, how we argue, how we compare, and how passive we become when the world needs action.
           </p>
         </div>
 
-        <div class="why-grid">
-          <div class="why-list">
-            <p><strong>The Great Logout is a public refusal.</strong> Not because every part of the internet is bad. Because the dominant platforms have become too addictive, too powerful, and too normal.</p>
-            <p>The point is simple: stop feeding systems that turn attention, anger, loneliness, insecurity, and habit into profit.</p>
-            <p><a href="essay.html">Read the full essay</a> for the deeper argument.</p>
-          </div>
-
-          <div class="reasons">
-            <article class="reason">
-              <div class="reason-number">01</div>
-              <h3>Your attention is being extracted.</h3>
-              <p>Your time, reactions, pauses, anger, and curiosity are the raw material.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">02</div>
-              <h3>The feed is designed to keep you returning.</h3>
-              <p>If it feels hard to stop, that is not an accident.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">03</div>
-              <h3>A few companies shape what billions see.</h3>
-              <p>That is cultural and political power, even when it looks like entertainment.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">04</div>
-              <h3>Outrage is rewarded.</h3>
-              <p>Anger travels well because anger keeps people engaged.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">05</div>
-              <h3>Your boredom is being colonized.</h3>
-              <p>Quiet used to be where thoughts arrived. Now it gets filled on command.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">06</div>
-              <h3>Comparison became normal.</h3>
-              <p>The feed turns other people's edited moments into pressure inside your own life.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">07</div>
-              <h3>Loneliness is profitable.</h3>
-              <p>Platforms promise connection, then keep people scrolling alone.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">08</div>
-              <h3>Politics becomes performance.</h3>
-              <p>Public life turns into posture, rage, and applause instead of action.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">09</div>
-              <h3>Culture gets flattened.</h3>
-              <p>Whatever spreads fastest starts to look like what matters most.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">10</div>
-              <h3>People are kept passive.</h3>
-              <p>A society can react all day and still not move from the couch to the street.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">11</div>
-              <h3>Desire is manufactured.</h3>
-              <p>The feed sells the feeling that fulfillment is one purchase or trip away.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">12</div>
-              <h3>Relationships get routed through machines.</h3>
-              <p>Friendship should not depend on systems built to harvest engagement.</p>
-            </article>
-
-            <article class="reason">
-              <div class="reason-number">13</div>
-              <h3>A visible exit gives others permission.</h3>
-              <p>If you leave publicly, the feed briefly shows an exit instead of another performance.</p>
-            </article>
-          </div>
+        <div class="why-case">
+          <p><strong>The Great Logout is a public refusal.</strong> Not because every part of the internet is bad. Because the dominant platforms have become too addictive, too powerful, and too normal.</p>
+          <p>The point is simple: stop feeding systems that turn attention, anger, loneliness, insecurity, and habit into profit. If you want the full argument, read the deeper case.</p>
+          <a class="btn btn-secondary" href="essay.html">Read the deeper case for logging out</a>
         </div>
       </div>
     </section>
@@ -1498,7 +1389,7 @@ Don't go broke for them.</textarea>
               A longer argument for why leaving social media is not only a private choice. It is a refusal to keep feeding systems that shape what people see, want, fear, buy, and believe.
             </p>
             <div class="support-actions">
-              <a class="btn btn-secondary" href="essay.html">Read the essay</a>
+              <a class="btn btn-secondary" href="essay.html">Read the deeper case</a>
             </div>
           </article>
 
@@ -1558,7 +1449,7 @@ Don't go broke for them.</textarea>
         ·
         <a href="#generator">Post generator</a>
         &middot;
-        <a href="essay.html">Essay</a>
+        <a href="essay.html">Deeper case</a>
         &middot;
         <a href="#support">Support</a>
       </div>
