@@ -169,6 +169,7 @@ const BASE_EMAIL_SEQUENCE = [
     body: [
       "a few companies now shape what billions of people see.",
       "They influence news, culture, politics, relationships, beauty standards, language, humor, outrage, and the feeling of what everyone else is supposedly thinking.",
+      "A few companies now sit between billions of people and reality. That is too much power.",
       "This power does not need to look like a government to matter. It decides what rises, what gets buried, what conflict stays alive, and what kind of person gets rewarded with attention.",
       "No company should quietly tune public life in order to sell ads."
     ]
@@ -244,8 +245,8 @@ const BASE_EMAIL_SEQUENCE = [
     body: [
       "a like can feel like a position.",
       "A repost can feel like courage. A comment can feel like action. Sometimes these things help. Often they become a substitute for doing anything outside the platform.",
-      "A society can be angry all day and still remain still.",
-      "We need people in rooms, streets, groups, workplaces, schools, and neighborhoods. Not only people reacting alone to a feed."
+      "A society can be angry all day and still remain still. People can watch injustice, react to it, argue about it, and then keep scrolling.",
+      "This is one of the quietest harms of the feed. It turns public life into a stream of reactions while bodies stay at home, alone, tired, and convinced they already participated."
     ]
   },
   {
@@ -267,9 +268,10 @@ const BASE_EMAIL_SEQUENCE = [
     title: "The world needs more than spectators",
     body: [
       "the feed fragments our common horizon.",
-      "Each person receives a private version of reality, tuned for engagement and short-term emotion. Shared problems begin to feel too large, too confusing, or too hopeless.",
+      "Each person receives a private version of reality, tuned for engagement and short-term emotion. Shared problems begin to feel too large, too confusing, or too hopeless to touch.",
       "Climate breakdown, inequality, loneliness, war, democratic decay, and technological power will not be solved by people trained to escape discomfort every few seconds.",
-      "Logging out is a way to return attention to the places where change can actually happen."
+      "We need active communities, not only informed spectators. We need people who can sit together, disagree, plan, protest, care for each other, and build alternatives.",
+      "Logging out is a way to return attention and energy to the places where change can actually happen."
     ]
   },
   {
@@ -318,7 +320,7 @@ const BASE_EMAIL_SEQUENCE = [
       "leaving quietly is good for the person who leaves.",
       "Leaving publicly is useful for everyone else. If you simply disappear, the platform absorbs your absence. Nothing changes in the room. The feed moves on.",
       "But when you post why you are leaving, people see an exit. They see someone naming the system. They see that logging out can be public, deliberate, and social.",
-      "You do not need a perfect argument. Say why you are leaving. Tell people where they can reach you. Then leave."
+      "You do not need a perfect argument. The deeper case matters, but the action stays simple: say why you are leaving, tell people where they can reach you, then leave."
     ]
   }
 ];

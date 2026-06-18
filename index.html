@@ -152,13 +152,14 @@
     }
 
     .hero {
-      min-height: calc(100vh - 72px);
       display: grid;
       align-items: start;
-      padding: 84px 0 76px;
+      padding: 84px 0 42px;
+      overflow: visible;
     }
 
     .hero-grid {
+      position: relative;
       display: grid;
       grid-template-columns: 1.05fr 0.95fr;
       gap: 54px;
@@ -220,6 +221,10 @@
       flex-wrap: wrap;
       gap: 14px;
       margin-top: 34px;
+    }
+
+    .compact-row {
+      margin-top: 22px;
     }
 
     .btn {
@@ -370,12 +375,13 @@
     }
 
     .campaign-note {
-      margin: 20px 0 0;
-      padding: 16px;
-      border: 1px solid var(--line-strong);
-      border-radius: 18px;
-      background: color-mix(in srgb, var(--accent) 8%, transparent);
+      margin: 34px auto 0;
+      padding: 22px 4px 0;
+      width: min(100%, 640px);
+      border-top: 1px solid var(--line);
       color: var(--muted);
+      text-align: center;
+      font-size: 1.05rem;
     }
 
     .campaign-note strong {
@@ -383,13 +389,21 @@
     }
 
     section {
-      padding: 88px 0;
+      padding: 42px 0;
       border-top: 1px solid var(--line);
+    }
+
+    #start-guide {
+      scroll-margin-top: 96px;
+    }
+
+    #how {
+      padding-top: 72px;
     }
 
     .section-head {
       display: grid;
-      grid-template-columns: 0.8fr 1.2fr;
+      grid-template-columns: 1.8fr 1.0fr;
       gap: 40px;
       align-items: start;
       margin-bottom: 34px;
@@ -429,7 +443,7 @@
       display: grid;
       grid-template-columns: 80px 1fr;
       gap: 20px;
-      padding: 24px;
+      padding: 18px 24px;
       border: 1px solid var(--line);
       border-radius: 22px;
       background: rgba(255,255,255,0.035);
@@ -553,6 +567,7 @@
       border-radius: 14px;
       background: rgba(255,255,255,0.06);
       color: var(--text);
+      color-scheme: dark;
       font: inherit;
       padding: 0 14px;
     }
@@ -605,6 +620,52 @@
 
     .form-note[data-state="error"] {
       color: #ff8f8f;
+    }
+
+    .guide-signup {
+      border-color: var(--line-strong);
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--accent) 10%, transparent), rgba(255,255,255,0.025)),
+        rgba(0,0,0,0.28);
+    }
+
+    .signup-link {
+      margin-top: -6px;
+      font-size: 0.96rem;
+    }
+
+    .signup-link a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      font-weight: 780;
+    }
+
+    .mobile-sequence-cta {
+      display: none;
+      margin-top: 18px;
+    }
+
+    .how-cta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 22px;
+      margin-top: 22px;
+      padding: 22px;
+      border: 1px solid var(--line-strong);
+      border-radius: 20px;
+      background: color-mix(in srgb, var(--accent) 8%, transparent);
+    }
+
+    .how-cta h3 {
+      margin: 0 0 6px;
+      font-size: 1.2rem;
+    }
+
+    .how-cta p {
+      margin: 0;
+      color: var(--muted);
     }
 
     .templates {
@@ -726,8 +787,36 @@
       border-radius: 14px;
       background: rgba(0,0,0,0.24);
       color: var(--text);
+      color-scheme: dark;
       font: inherit;
       padding: 13px 14px;
+    }
+
+    .field select,
+    .signup-form select {
+      background-color: var(--bg-card);
+      cursor: pointer;
+    }
+
+    .field select:focus,
+    .signup-form select:focus,
+    .signup-form input:focus,
+    .field textarea:focus {
+      outline: 2px solid color-mix(in srgb, var(--accent) 70%, transparent);
+      outline-offset: 2px;
+      border-color: var(--line-strong);
+    }
+
+    .field select option,
+    .signup-form select option {
+      background: var(--bg-card);
+      color: var(--text);
+    }
+
+    .field select option:checked,
+    .signup-form select option:checked {
+      background: var(--accent);
+      color: var(--bg);
     }
 
     .field textarea {
@@ -838,6 +927,10 @@
       grid-template-columns: 1.08fr 0.92fr;
       gap: 18px;
       align-items: stretch;
+    }
+
+    .support-grid-single {
+      grid-template-columns: minmax(0, 760px);
     }
 
     .support-card {
@@ -963,8 +1056,34 @@
         padding-top: 64px;
       }
 
+      .campaign-card {
+        position: static;
+        width: auto;
+      }
+
       .templates {
         grid-template-columns: 1fr;
+      }
+
+      .generator-preview {
+        order: -1;
+      }
+
+      .type-panel {
+        display: none;
+      }
+
+      .mobile-sequence-cta {
+        display: block;
+      }
+
+      .mobile-sequence-cta .btn,
+      .how-cta .btn {
+        width: 100%;
+      }
+
+      .how-cta {
+        display: none;
       }
 
       .download-row {
@@ -978,7 +1097,11 @@
       }
 
       section {
-        padding: 70px 0;
+        padding: 58px 0;
+      }
+
+      #how {
+        padding-top: 58px;
       }
 
       .campaign-body,
@@ -1036,12 +1159,11 @@
 
       <nav class="nav-links" aria-label="Main navigation">
         <a href="#how">How it works</a>
-        <a href="#why">Why leave</a>
-        <a href="essay.html">Deeper case</a>
-        <a href="#guide">7-day guide</a>
+        <a href="#why">Deeper case</a>
         <a href="#generator">Post generator</a>
+        <a href="#guide">7-day guide</a>
         <a href="#support">Support</a>
-        <a href="#guide" class="nav-cta">Start</a>
+        <a href="#start-guide" class="nav-cta">Start</a>
       </nav>
     </div>
   </header>
@@ -1058,9 +1180,13 @@
           </p>
 
           <div class="button-row">
-            <a class="btn btn-primary" href="#guide">Start the 7-day logout</a>
+            <a class="btn btn-primary" href="#start-guide">Start the 7-day guide</a>
             <a class="btn btn-secondary" href="#generator">Make a post</a>
           </div>
+
+          <p class="campaign-note">
+            <strong>The point is visibility.</strong> People see the decision before you disappear from the platforms.
+          </p>
         </div>
 
         <aside class="campaign-card" aria-label="The Great Logout campaign in three steps">
@@ -1083,28 +1209,28 @@
                 <span>Day 1-7</span>
                 <div>
                   <strong>Post your reasons.</strong>
-                  <p>One reason a day. Short is fine. Honest is better.</p>
+                  <p>We help you post one reason a day. Short is fine. Honest is better.</p>
                 </div>
               </li>
               <li class="formula-step">
                 <span>Before exit</span>
                 <div>
                   <strong>Leave a way back to you.</strong>
-                  <p>Email, phone, website, Signal, real life. Whatever you choose.</p>
+                  <p>Email, phone, website, real life. Whatever you choose.</p>
                 </div>
               </li>
               <li class="formula-step">
                 <span>Final post</span>
                 <div>
                   <strong>Log out.</strong>
-                  <p>Delete the apps, deactivate, or stop posting. Make the exit real.</p>
+                  <p>Delete the apps, deactivate, or stop posting.</p>
                 </div>
               </li>
             </ol>
 
-            <p class="campaign-note">
-              <strong>The point is visibility.</strong> People see the decision before you disappear from the platforms.
-            </p>
+            <div class="mobile-sequence-cta">
+              <a class="btn btn-primary" href="#start-guide">Start your exit today</a>
+            </div>
           </div>
         </aside>
       </div>
@@ -1117,9 +1243,6 @@
             <div class="kicker">How it works</div>
             <h2>One small public exit plan.</h2>
           </div>
-          <p class="lead">
-            You do not need a grand speech. You need a few clear posts, a place people can reach you, and a date when you stop feeding the feed.
-          </p>
         </div>
 
         <div class="steps">
@@ -1158,6 +1281,14 @@
             </div>
           </article>
         </div>
+
+        <div class="how-cta">
+          <div>
+            <h3>Ready to make it concrete?</h3>
+            <p>The guide gives you the first prompts, the planned date, and the follow-up check-ins.</p>
+          </div>
+          <a class="btn btn-primary" href="#start-guide">Start your exit today</a>
+        </div>
       </div>
     </section>
 
@@ -1165,18 +1296,82 @@
       <div class="wrap">
         <div class="section-head">
           <div>
-            <div class="kicker">Why leave</div>
+            <div class="kicker">Lost in the scroll</div>
             <h2>The deeper case for logging out.</h2>
           </div>
-          <p class="lead">
-            This is not only about screen time. The feed changes what we notice, what we want, how we argue, how we compare, and how passive we become when the world needs action.
-          </p>
         </div>
 
         <div class="why-case">
           <p><strong>The Great Logout is a public refusal.</strong> Not because every part of the internet is bad. Because the dominant platforms have become too addictive, too powerful, and too normal.</p>
-          <p>The point is simple: stop feeding systems that turn attention, anger, loneliness, insecurity, and habit into profit. If you want the full argument, read the deeper case.</p>
-          <a class="btn btn-secondary" href="essay.html">Read the deeper case for logging out</a>
+          <p>The full essay brings the 13 reasons together: addictive feeds, algorithmic power, Big Tech, consumer pressure, passive communities, loneliness, politics, culture, and the quiet theft of attention.</p>
+          <p>The point is simple: stop feeding systems that turn attention, anger, loneliness, insecurity, and habit into profit.</p>
+          <div class="button-row compact-row">
+            <a class="btn btn-secondary" href="essay.html">Read the deeper case for logging out</a>
+            <a class="btn btn-primary" href="#generator">Explore post ideas</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="generator">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Post generator</div>
+            <h2>Make your exit visible.</h2>
+          </div>
+        </div>
+
+        <div class="quote-carousel" id="quoteCarousel" aria-label="Example logout posts"></div>
+
+        <div class="generator-panel">
+          <div class="generator-controls">
+            <div class="control-grid">
+              <div class="field">
+                <label for="postPreset">Post idea</label>
+                <select id="postPreset"></select>
+              </div>
+
+              <div class="field">
+                <label for="postText">Edit text</label>
+                <textarea id="postText">Attention is their currency.
+Don't go broke for them.</textarea>
+              </div>
+
+              <div class="field">
+                <label for="postFormat">Format</label>
+                <select id="postFormat">
+                  <option value="instagram-post">Instagram post - 1080 x 1080</option>
+                  <option value="instagram-story">Instagram story - 1080 x 1920</option>
+                  <option value="instagram-reel">Instagram reel - 1080 x 1920</option>
+                  <option value="tiktok">TikTok - 1080 x 1920</option>
+                  <option value="cover">Cover image - 1500 x 500</option>
+                </select>
+              </div>
+
+              <div class="color-options" aria-label="Font color">
+                  <label title="White text" aria-label="White text">
+                    <input type="radio" name="postColor" value="#f4f4ef" checked />
+                    <span class="swatch swatch-white"></span>
+                  </label>
+                  <label title="Green text" aria-label="Green text">
+                    <input type="radio" name="postColor" value="#B6FF3B" />
+                    <span class="swatch swatch-green"></span>
+                  </label>
+              </div>
+
+              <div class="download-row" aria-label="Download generated post">
+                <button type="button" data-download="png">PNG</button>
+                <button type="button" data-download="jpg">JPG</button>
+                <button type="button" data-download="svg">SVG</button>
+                <button type="button" data-download="pdf">PDF</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="generator-preview">
+            <canvas id="postCanvas" width="1080" height="1080" aria-label="Generated social media post preview"></canvas>
+          </div>
         </div>
       </div>
     </section>
@@ -1258,9 +1453,10 @@
             </div>
           </div>
 
-          <aside class="signup-card" aria-labelledby="signup-title">
-            <h3 id="signup-title">Get the logout guide</h3>
-            <p>One prompt a day for the first week. Then a few check-ins after the noise gets quiet.</p>
+          <aside class="signup-card guide-signup" id="start-guide" aria-labelledby="signup-title">
+            <h3 id="signup-title">Start your logout today</h3>
+            <p>Post for 1 to 7 days. Then log out.</p>
+            <p class="signup-link">Need a post first? <a href="#generator">Explore our post generator.</a></p>
 
             <!-- Set data-endpoint to your deployed Worker URL, for example https://api.thegreatlogout.org/subscribe. -->
             <form class="signup-form" id="guideSignupForm" data-endpoint="https://api.thegreatlogout.org/subscribe">
@@ -1268,7 +1464,7 @@
               <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
 
               <label for="firstName">First name <span aria-hidden="true">(optional)</span></label>
-              <input id="firstName" name="firstName" type="text" placeholder="Daniel" autocomplete="given-name" />
+              <input id="firstName" name="firstName" type="text" autocomplete="given-name" />
 
               <label for="logoutDate">Planned logout date <span aria-hidden="true">(optional)</span></label>
               <input id="logoutDate" name="logoutDate" type="date" />
@@ -1278,76 +1474,9 @@
                 <span>Email me the logout guide and a few follow-up check-ins. No feed, no spam.</span>
               </label>
 
-              <button type="submit">Start the email guide</button>
+              <button type="submit">Start the 7-day guide</button>
             </form>
-            <p class="form-note" id="signupStatus">You can unsubscribe from every email.</p>
           </aside>
-        </div>
-      </div>
-    </section>
-
-    <section id="generator">
-      <div class="wrap">
-        <div class="section-head">
-          <div>
-            <div class="kicker">Post generator</div>
-            <h2>Make your exit visible.</h2>
-          </div>
-          <p class="lead">
-            Pick a line, edit it, choose a format, and download a post for Instagram, stories, reels, TikTok, or a 3:1 cover image. The message stays simple: why you are leaving, and where people can find you next.
-          </p>
-        </div>
-
-        <div class="quote-carousel" id="quoteCarousel" aria-label="Example logout posts"></div>
-
-        <div class="generator-panel">
-          <div class="generator-controls">
-            <div class="control-grid">
-              <div class="field">
-                <label for="postPreset">Post idea</label>
-                <select id="postPreset"></select>
-              </div>
-
-              <div class="field">
-                <label for="postText">Edit text</label>
-                <textarea id="postText">Attention is their currency.
-Don't go broke for them.</textarea>
-              </div>
-
-              <div class="field">
-                <label for="postFormat">Format</label>
-                <select id="postFormat">
-                  <option value="instagram-post">Instagram post - 1080 x 1080</option>
-                  <option value="instagram-story">Instagram story - 1080 x 1920</option>
-                  <option value="instagram-reel">Instagram reel - 1080 x 1920</option>
-                  <option value="tiktok">TikTok - 1080 x 1920</option>
-                  <option value="cover">Cover image - 1500 x 500</option>
-                </select>
-              </div>
-
-              <div class="color-options" aria-label="Font color">
-                  <label title="White text" aria-label="White text">
-                    <input type="radio" name="postColor" value="#f4f4ef" checked />
-                    <span class="swatch swatch-white"></span>
-                  </label>
-                  <label title="Green text" aria-label="Green text">
-                    <input type="radio" name="postColor" value="#B6FF3B" />
-                    <span class="swatch swatch-green"></span>
-                  </label>
-              </div>
-
-              <div class="download-row" aria-label="Download generated post">
-                <button type="button" data-download="png">PNG</button>
-                <button type="button" data-download="jpg">JPG</button>
-                <button type="button" data-download="svg">SVG</button>
-                <button type="button" data-download="pdf">PDF</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="generator-preview">
-            <canvas id="postCanvas" width="1080" height="1080" aria-label="Generated social media post preview"></canvas>
-          </div>
         </div>
       </div>
     </section>
@@ -1359,9 +1488,6 @@ Don't go broke for them.</textarea>
             <div class="kicker">Manifesto</div>
             <h2>We are not quitting each other.</h2>
           </div>
-          <p class="lead">
-            We are quitting the systems that turn attention into a business model and call it connection.
-          </p>
         </div>
 
         <div class="manifesto">
@@ -1374,29 +1500,16 @@ Don't go broke for them.</textarea>
       <div class="wrap">
         <div class="section-head">
           <div>
-            <div class="kicker">Read and support</div>
-            <h2>The deeper case for logging out.</h2>
+            <div class="kicker">Support</div>
+            <h2>Help keep the exit visible.</h2>
           </div>
-          <p class="lead">
-            The homepage gives you the action. The essay explains the reason: addictive feeds, algorithmic power, Big Tech, consumer pressure, politics, culture, and the quiet theft of attention.
-          </p>
         </div>
 
-        <div class="support-grid">
-          <article class="support-card">
-            <h3>Lost in the Scroll</h3>
-            <p>
-              A longer argument for why leaving social media is not only a private choice. It is a refusal to keep feeding systems that shape what people see, want, fear, buy, and believe.
-            </p>
-            <div class="support-actions">
-              <a class="btn btn-secondary" href="essay.html">Read the deeper case</a>
-            </div>
-          </article>
-
+        <div class="support-grid support-grid-single">
           <article class="support-card" data-emphasis="strong">
-            <h3>Help keep the exit visible.</h3>
+            <h3>Support the campaign.</h3>
             <p>
-              The Great Logout does not run on ads, tracking, or platform money. Voluntary contributions help cover email delivery, website tools, writing, design, and public campaign material.
+              Contributions help cover email delivery, website tools, writing, design, outreach, and public campaign material.
             </p>
             <ul class="support-list" aria-label="Contribution use">
               <li>Email infrastructure</li>
@@ -1415,10 +1528,6 @@ Don't go broke for them.</textarea>
 
     <section id="about">
       <div class="wrap">
-        <div class="about-grid">
-          <div class="avatar" aria-hidden="true">
-            <img src="assets/the-great-logout-mark.svg" alt="" decoding="async" />
-          </div>
           <div>
             <div class="kicker">About</div>
             <h2>Independent, open, accountable.</h2>
@@ -1430,11 +1539,13 @@ Don't go broke for them.</textarea>
                 The project is meant to grow beyond one person: supporters, researchers, designers, developers, educators, parents, and people who want out.
               </p>
               <p>
+                For now, the campaign is run and financially covered by Netzl Data Solutions, the company behind the project infrastructure.
+              </p>
+              <p>
                 We are not affiliated with Instagram, TikTok, Meta, X, or any social media platform.
               </p>
             </div>
           </div>
-        </div>
       </div>
     </section>
   </main>
@@ -1648,7 +1759,11 @@ Don't go broke for them.</textarea>
     function populatePresets() {
       postPreset.innerHTML = "";
 
-      postIdeas.forEach((idea, index) => {
+      const sortedPostIdeas = postIdeas
+        .map((idea, index) => ({ idea, index }))
+        .sort((a, b) => a.idea.localeCompare(b.idea, undefined, { sensitivity: "base" }));
+
+      sortedPostIdeas.forEach(({ idea, index }) => {
         const option = document.createElement("option");
         option.value = String(index);
         option.textContent = idea.replace(/\s+/g, " ").slice(0, 72);
@@ -2083,6 +2198,9 @@ Don't go broke for them.</textarea>
           }
 
           guideSignupForm.reset();
+          if (logoutDateInput) {
+            logoutDateInput.value = getDateInputValue(8);
+          }
           signupStatus.textContent = "You're in. Check your inbox for the first email.";
           signupStatus.dataset.state = "success";
         } catch (error) {
