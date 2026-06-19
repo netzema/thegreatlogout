@@ -341,7 +341,7 @@ ${altLinks({ en: "/", de: "/de/" })}
       <div class="wrap hero-grid">
         <div>
           <div class="eyebrow">Eine Kampagne für den sichtbaren Social-Media-Ausstieg</div>
-          <h1>Raus aus Social Media. Nicht heimlich.</h1>
+          <h1>Raus aus Social Media. Sichtbar.</h1>
 
           <p class="hero-copy">
             The Great Logout hilft dir, süchtig machende soziale Medien bewusst und sichtbar zu verlassen. <strong>Teile 1 bis 7 Tage lang kurze Ausstiegs-Posts</strong>, erklär warum du gehst, sag wo man dich weiterhin erreicht und log dich dann aus. Nicht still. Sondern so, dass andere merken: Man kann gehen.
