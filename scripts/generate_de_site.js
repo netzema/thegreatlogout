@@ -23,10 +23,10 @@ function between(source, start, end) {
 }
 
 function ensureLanguageCss(style) {
-  if (style.includes(".language-switch")) return style;
-  return style.replace(
-    /(\s+\.nav-cta[\s\S]*?\n\s+\})/,
-    `$1
+  if (!style.includes(".language-switch")) {
+    style = style.replace(
+      /(\s+\.nav-cta[\s\S]*?\n\s+\})/,
+      `$1
 
     .language-switch {
       color: var(--accent);
@@ -36,7 +36,147 @@ function ensureLanguageCss(style) {
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }`
-  );
+    );
+  }
+
+  if (style.includes(".menu-toggle")) return style;
+
+  const menuCss = `
+
+    .site-header .nav {
+      position: relative;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    .menu-toggle[aria-expanded="true"] span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded="true"] span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-toggle[aria-expanded="true"] span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    @media (max-width: 900px) {
+      .menu-toggle {
+        display: inline-flex;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        left: auto;
+        width: min(320px, calc(100vw - 40px));
+        display: none;
+        align-items: stretch;
+        gap: 0;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(15, 17, 15, 0.98);
+        box-shadow: var(--shadow, 0 24px 80px rgba(0, 0, 0, 0.45));
+      }
+
+      .site-header.is-menu-open .nav-links {
+        display: grid;
+      }
+
+      .nav-links a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 12px;
+      }
+
+      .nav-links a:hover {
+        background: rgba(255,255,255,0.06);
+      }
+
+      .nav-links .nav-cta {
+        margin-top: 6px;
+        text-align: center;
+      }
+    }`;
+
+  return style.replace(/\n\s+@media \(max-width:/, `${menuCss}\n\n    @media (max-width:`);
+}
+
+function mobileMenuButton(label = "Menu") {
+  return `      <button class="menu-toggle" type="button" aria-label="${label}" aria-controls="siteNav" aria-expanded="false" data-menu-toggle>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>`;
+}
+
+function mobileMenuScript() {
+  return `  <script>
+    (() => {
+      const header = document.querySelector(".site-header");
+      const toggle = document.querySelector("[data-menu-toggle]");
+      const nav = document.getElementById("siteNav");
+      if (!header || !toggle || !nav) return;
+
+      function setOpen(isOpen) {
+        header.classList.toggle("is-menu-open", isOpen);
+        toggle.setAttribute("aria-expanded", String(isOpen));
+      }
+
+      toggle.addEventListener("click", () => {
+        setOpen(toggle.getAttribute("aria-expanded") !== "true");
+      });
+
+      nav.addEventListener("click", event => {
+        if (event.target.closest("a")) setOpen(false);
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") setOpen(false);
+      });
+
+      window.matchMedia("(min-width: 901px)").addEventListener("change", event => {
+        if (event.matches) setOpen(false);
+      });
+    })();
+  </script>`;
+}
+
+function ensureMobileMenuMarkup(output, label = "Menu") {
+  output = output.replace(/\n\s*<button class="menu-toggle"[\s\S]*?<\/button>/g, "");
+  output = output.replace(/<nav class="nav-links"(?! id=)/g, '<nav class="nav-links" id="siteNav"');
+  output = output.replace(/<\/nav>(\s*<\/div>\s*<\/header>)/, `</nav>\n${mobileMenuButton(label)}$1`);
+  return output;
+}
+
+function ensureMobileMenuScript(output) {
+  output = output.replace(/\n\s*<script>\s*\(\(\) => \{\s*const header = document\.querySelector\("\.site-header"\);[\s\S]*?<\/script>/g, "");
+  return output.replace("</body>", `${mobileMenuScript()}\n</body>`);
 }
 
 function altLinks({ en, de }) {
@@ -69,6 +209,8 @@ function updateEnglishPage(file, counterpart) {
       ? match.replace("</p>", ` &middot; <a href="${deHref}" hreflang="de" lang="de">Deutsch</a></p>`)
       : `${match}\n        &middot;\n        <a href="${deHref}" hreflang="de" lang="de">Deutsch</a>`
   );
+  output = ensureMobileMenuMarkup(output, "Menu");
+  output = ensureMobileMenuScript(output);
   write(file, output);
 }
 
@@ -610,9 +752,9 @@ updateEnglishPage("privacy.html", "/de/privacy.html");
 updateEnglishPage("imprint.html", "/de/imprint.html");
 patchEnglishIndexPayload();
 
-write(path.join("de", "index.html"), deIndex());
-write(path.join("de", "essay.html"), deEssay());
-write(path.join("de", "privacy.html"), dePrivacy());
-write(path.join("de", "imprint.html"), deImprint());
+write(path.join("de", "index.html"), ensureMobileMenuScript(ensureMobileMenuMarkup(deIndex(), "Menü")));
+write(path.join("de", "essay.html"), ensureMobileMenuScript(ensureMobileMenuMarkup(deEssay(), "Menü")));
+write(path.join("de", "privacy.html"), ensureMobileMenuScript(ensureMobileMenuMarkup(dePrivacy(), "Menü")));
+write(path.join("de", "imprint.html"), ensureMobileMenuScript(ensureMobileMenuMarkup(deImprint(), "Menü")));
 
 console.log("Generated German site and updated language metadata.");

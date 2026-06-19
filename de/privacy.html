@@ -222,6 +222,87 @@
       color: var(--muted);
     }
 
+    .site-header .nav {
+      position: relative;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      flex-direction: column;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 18px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+      transition: transform 160ms ease, opacity 160ms ease;
+    }
+
+    .menu-toggle[aria-expanded="true"] span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .menu-toggle[aria-expanded="true"] span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .menu-toggle[aria-expanded="true"] span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    @media (max-width: 900px) {
+      .menu-toggle {
+        display: inline-flex;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: calc(100% + 10px);
+        right: 0;
+        left: auto;
+        width: min(320px, calc(100vw - 40px));
+        display: none;
+        align-items: stretch;
+        gap: 0;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: rgba(15, 17, 15, 0.98);
+        box-shadow: var(--shadow, 0 24px 80px rgba(0, 0, 0, 0.45));
+      }
+
+      .site-header.is-menu-open .nav-links {
+        display: grid;
+      }
+
+      .nav-links a {
+        display: block;
+        padding: 12px 14px;
+        border-radius: 12px;
+      }
+
+      .nav-links a:hover {
+        background: rgba(255,255,255,0.06);
+      }
+
+      .nav-links .nav-cta {
+        margin-top: 6px;
+        text-align: center;
+      }
+    }
+
     @media (max-width: 760px) {
       .nav-links {
         display: none;
@@ -234,7 +315,12 @@
   </style>
 </head>
 <body>
-  <header class="site-header"><div class="wrap nav"><a class="brand" href="index.html" aria-label="The Great Logout Startseite"><img src="../assets/the-great-logout-mark.svg" alt="" decoding="async" /><span>The Great Logout</span></a><nav class="nav-links" aria-label="Hauptnavigation"><a href="index.html#how">So geht es</a><a href="index.html#why">Warum?</a><a href="index.html#generator">Post-Generator</a><a href="index.html#support">Unterstützen</a><a class="language-switch" href="../privacy.html" hreflang="en" lang="en">EN</a><a href="index.html#start-guide" class="nav-cta">Start</a></nav></div></header>
+  <header class="site-header"><div class="wrap nav"><a class="brand" href="index.html" aria-label="The Great Logout Startseite"><img src="../assets/the-great-logout-mark.svg" alt="" decoding="async" /><span>The Great Logout</span></a><nav class="nav-links" id="siteNav" aria-label="Hauptnavigation"><a href="index.html#how">So geht es</a><a href="index.html#why">Warum?</a><a href="index.html#generator">Post-Generator</a><a href="index.html#support">Unterstützen</a><a class="language-switch" href="../privacy.html" hreflang="en" lang="en">EN</a><a href="index.html#start-guide" class="nav-cta">Start</a></nav>
+      <button class="menu-toggle" type="button" aria-label="Menü" aria-controls="siteNav" aria-expanded="false" data-menu-toggle>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button></div></header>
   <main>
     <section class="hero"><div class="wrap"><div class="kicker">Datenschutz</div><h1>Datenschutzerklärung</h1></div></section>
     <section class="wrap legal" aria-label="Datenschutzerklärung">
@@ -254,5 +340,34 @@
     </section>
   </main>
   <footer class="footer"><div class="wrap"><p>&copy; 2026 The Great Logout</p><p><a href="index.html">Zur Kampagne</a> &middot; <a href="imprint.html">Impressum</a> &middot; <a href="../privacy.html" hreflang="en" lang="en">English</a></p></div></footer>
+  <script>
+    (() => {
+      const header = document.querySelector(".site-header");
+      const toggle = document.querySelector("[data-menu-toggle]");
+      const nav = document.getElementById("siteNav");
+      if (!header || !toggle || !nav) return;
+
+      function setOpen(isOpen) {
+        header.classList.toggle("is-menu-open", isOpen);
+        toggle.setAttribute("aria-expanded", String(isOpen));
+      }
+
+      toggle.addEventListener("click", () => {
+        setOpen(toggle.getAttribute("aria-expanded") !== "true");
+      });
+
+      nav.addEventListener("click", event => {
+        if (event.target.closest("a")) setOpen(false);
+      });
+
+      document.addEventListener("keydown", event => {
+        if (event.key === "Escape") setOpen(false);
+      });
+
+      window.matchMedia("(min-width: 901px)").addEventListener("change", event => {
+        if (event.matches) setOpen(false);
+      });
+    })();
+  </script>
 </body>
 </html>
