@@ -215,61 +215,61 @@ function updateEnglishPage(file, counterpart) {
 }
 
 const dePostIdeas = [
-  "Aufmerksamkeit ist ihre Währung.\nGeh nicht für sie pleite.",
-  "Ich bereite mich darauf vor, diese Plattform zu verlassen.\nIch verschwinde nicht.",
-  "Ich verlasse diese Plattform.\nIn den nächsten Tagen poste ich warum.",
-  "Ich richte meine Aufmerksamkeit und meine Beziehungen woanders hin.",
-  "Was denkst du wirklich?\nIch wette, du weißt es kaum noch.",
-  "Sie nennen es Verbindung.\nAber du fühlst dich allein.",
-  "Hol dir deine Zeit zurück.\nSie gehörte nie ihnen.",
-  "Ich entscheide mich für echte Freunde.\nUnd du?",
-  "Suchst du den Hausverstand?\nVersuch es mit Ausloggen.",
-  "Der Feed weiß, was dich schwach hält.\nDarum kommt er immer wieder.",
-  "Du schuldest einer Plattform nicht dein Leben.",
-  "Sie verkaufen deine Aufmerksamkeit.\nUnd dann die Lösung dagegen.",
-  "Du bist nicht faul.\nDu wirst gegen dich selbst designt.",
-  "Du bist der Ort der Ausbeutung.",
+  "Aufmerksamkeit ist wertvoll.\nIch gebe sie nicht länger ab.",
+  "Ich bereite meinen Ausstieg vor.\nIch verschwinde nicht.",
+  "Ich verlasse diese Plattform.\nIn den nächsten Tagen erkläre ich warum.",
+  "Meine Aufmerksamkeit und meine Beziehungen gehören wieder mir.",
+  "Was denkst du eigentlich selbst?\nNicht der Feed. Du.",
+  "Sie nennen es Verbindung.\nOft fühlt es sich nach Einsamkeit an.",
+  "Ich hole mir meine Zeit zurück.\nSie war nie für den Feed bestimmt.",
+  "Ich entscheide mich für echte Nähe.\nNicht für endloses Scrollen.",
+  "Wenn alles nur noch rauscht,\nist Ausloggen ein Anfang.",
+  "Der Feed kennt deine Schwächen.\nGenau deshalb funktioniert er.",
+  "Du schuldest keiner Plattform dein Leben.",
+  "Erst verkaufen sie deine Aufmerksamkeit.\nDann verkaufen sie dir die Ablenkung zurück.",
+  "Du bist nicht undiszipliniert.\nDas System wurde gegen dich gebaut.",
+  "Ich bin kein Rohstoff.",
   "Weniger Scrollen.\nMehr Leben.",
-  "Deine Gedanken sind kein Marktplatz.",
-  "Ich will nicht, dass ein paar Firmen jeden Tag entscheiden, was ich sehe.",
-  "Sie haben Einsamkeit profitabel gemacht.",
-  "Wenn es dich wütend, müde, neidisch und taub macht:\nWarum ist es noch auf deinem Handy?",
-  "Du hörst dich selbst nicht,\nwährend der Feed schreit.",
-  "Ich verschwinde nicht.\nIch kehre zurück.",
-  "Offline ist nicht leer.\nOffline wartet das Leben.",
-  "Das ist kein Detox.\nDas ist eine Verweigerung.",
-  "Der Algorithmus kennt dich nicht.\nEr kennt deine Schwächen.",
+  "Mein Kopf ist kein Werbeplatz.",
+  "Ich will nicht, dass ein paar Konzerne meinen Alltag vorsortieren.",
+  "Einsamkeit ist für Plattformen ein Geschäftsmodell.",
+  "Wenn es dich wütend, müde und leer macht:\nWarum ist es noch auf deinem Handy?",
+  "Man hört sich selbst schlecht,\nwenn der Feed dauernd dazwischenredet.",
+  "Ich verschwinde nicht.\nIch bin nur nicht mehr hier.",
+  "Offline ist nicht leer.\nOffline ist das Leben.",
+  "Das ist kein Detox.\nDas ist eine Grenze.",
+  "Der Algorithmus kennt dich nicht.\nEr kennt nur deine Reaktionen.",
   "Ich will meine Gedanken nicht vorsortiert bekommen.",
-  "Das echte Leben hat keinen unendlichen Scroll.",
-  "Ich verlasse den Feed,\nbevor er den Rest von mir frisst.",
+  "Das echte Leben hat keinen endlosen Feed.",
+  "Ich gehe,\nbevor der Feed noch mehr von mir frisst.",
   "Ich verlasse den Feed,\nnicht die Menschen.",
   "Du erreichst mich weiterhin hier: ...",
-  "Sie wollen nicht dein Glück.\nSie wollen deine Rückkehr.",
+  "Sie wollen nicht, dass du glücklich bist.\nSie wollen, dass du zurückkommst.",
   "Meine Aufmerksamkeit steht nicht zum Verkauf.",
   "Der Ausstieg ist die Botschaft.",
-  "Ich habe mich ausgeloggt,\num zu mir zurückzukommen.",
-  "Was, wenn deine Langeweile\ndich retten wollte?",
-  "Es gibt nichts zu verpassen.\nDu wirst aktiv hineingezogen.",
-  "Wenn der Feed mehr nimmt als gibt,\nwieso gehst du nicht?",
-  "Poste warum.\nSag, wo man dich findet.\nDann log dich aus.",
-  "Behalte deine Freunde.\nVerlier den Feed.",
-  "Das ist mein letzter Post hier.\nFindet mich im echten Leben."
+  "Ich logge mich aus,\num wieder bei mir anzukommen.",
+  "Vielleicht ist Langeweile kein Problem.\nVielleicht ist sie ein Signal.",
+  "Du verpasst nicht alles.\nDu wirst in alles hineingezogen.",
+  "Wenn der Feed mehr nimmt als gibt,\ndarfst du gehen.",
+  "Sag warum.\nSag, wo man dich findet.\nDann log dich aus.",
+  "Behalte die Menschen.\nVerlier den Feed.",
+  "Das ist mein letzter Post hier.\nWir sehen uns im echten Leben."
 ];
 
 function deIndexScript() {
   let script = between(read("index.html"), "<script>", "</script>");
   script = script
-    .replace('const typeLineOne = "Millions logged in.";', 'const typeLineOne = "Millionen haben sich eingeloggt.";')
-    .replace('const typeLineTwo = "Now we log out.";', 'const typeLineTwo = "Jetzt loggen wir uns aus.";')
+    .replace('const typeLineOne = "Millions logged in.";', 'const typeLineOne = "Millionen sind eingeloggt.";')
+    .replace('const typeLineTwo = "Now we log out.";', 'const typeLineTwo = "Jetzt gehen wir raus.";')
     .replace(/const postIdeas = \[[\s\S]*?\];/, `const postIdeas = ${JSON.stringify(dePostIdeas, null, 6)};`)
     .replace('logoImage.src = "assets/the-great-logout-mark.svg";', 'logoImage.src = "../assets/the-great-logout-mark.svg";')
-    .replaceAll("A collective social media exit", "Ein gemeinsamer Social-Media-Ausstieg")
+    .replaceAll("A collective social media exit", "Gemeinsam raus aus Social Media")
     .replaceAll("The exit is the message.", "Der Ausstieg ist die Botschaft.")
     .replace('language: "en"', 'language: "de"')
     .replace('custom.textContent = "Custom text";', 'custom.textContent = "Eigener Text";')
     .replace('button.textContent = "Use this";', 'button.textContent = "Verwenden";')
     .replace('signupStatus.textContent = "Signup is not connected yet.";', 'signupStatus.textContent = "Die Anmeldung ist noch nicht verbunden.";')
-    .replace('signupStatus.textContent = "Adding you to the guide...";', 'signupStatus.textContent = "Du wirst zum Guide hinzugefügt...";')
+    .replace('signupStatus.textContent = "Adding you to the guide...";', 'signupStatus.textContent = "Deine Anmeldung wird eingetragen...";')
     .replace('throw new Error(result.error || "Signup failed.");', 'throw new Error(result.error || "Anmeldung fehlgeschlagen.");')
     .replace('signupStatus.textContent = "You\\\'re in. Check your inbox for the first email.";', 'signupStatus.textContent = "Du bist dabei. Die erste E-Mail ist unterwegs.";')
     .replace('signupStatus.textContent = error.message || "Something went wrong. Please try again.";','signupStatus.textContent = error.message || "Etwas ist schiefgelaufen. Bitte versuche es erneut.";');
@@ -289,23 +289,23 @@ function deIndex() {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-  <title>The Great Logout - Eine öffentliche Kampagne für den gemeinsamen Social-Media-Ausstieg.</title>
-  <meta name="description" content="The Great Logout ist eine öffentliche Kampagne für den Ausstieg aus süchtig machenden sozialen Medien. Poste deine Gründe für 1 bis 7 Tage. Dann log dich aus." />
+  <title>The Great Logout - Gemeinsam raus aus süchtig machenden sozialen Medien.</title>
+  <meta name="description" content="The Great Logout macht den Ausstieg aus süchtig machenden sozialen Medien sichtbar: Gründe posten, erreichbar bleiben, ausloggen." />
   <link rel="canonical" href="${site}/de/" />
 ${altLinks({ en: "/", de: "/de/" })}
 
   <meta property="og:title" content="The Great Logout" />
-  <meta property="og:description" content="Eine öffentliche Kampagne für den gemeinsamen Ausstieg aus süchtig machenden sozialen Medien." />
+  <meta property="og:description" content="Eine öffentliche Kampagne für alle, die süchtig machende soziale Medien sichtbar verlassen wollen." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="${site}/de/" />
   <meta property="og:image" content="${site}/assets/og-image.png" />
   <meta property="og:image:secure_url" content="${site}/assets/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="The Great Logout - Poste warum du gehst. Dann geh." />
+  <meta property="og:image:alt" content="The Great Logout - Sag, warum du gehst. Dann log dich aus." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="The Great Logout" />
-  <meta name="twitter:description" content="Eine öffentliche Kampagne für den gemeinsamen Ausstieg aus süchtig machenden sozialen Medien." />
+  <meta name="twitter:description" content="Eine öffentliche Kampagne für alle, die süchtig machende soziale Medien sichtbar verlassen wollen." />
   <meta name="twitter:image" content="${site}/assets/og-image.png" />
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
   <link rel="shortcut icon" href="../assets/favicon.svg" type="image/svg+xml" />
@@ -340,11 +340,11 @@ ${altLinks({ en: "/", de: "/de/" })}
     <section class="hero">
       <div class="wrap hero-grid">
         <div>
-          <div class="eyebrow">Eine öffentliche Kampagne für den Social-Media-Ausstieg</div>
-          <h1>Verlass Social Media. Sichtbar.</h1>
+          <div class="eyebrow">Eine Kampagne für den sichtbaren Social-Media-Ausstieg</div>
+          <h1>Raus aus Social Media. Nicht heimlich.</h1>
 
           <p class="hero-copy">
-            The Great Logout ist eine öffentliche Kampagne, um süchtig machende soziale Medien gemeinsam zu verlassen. <strong>Poste 1 bis 7 Tage lang klare Botschaften</strong>, sag warum du gehst, sag wo man dich erreicht, und log dich dann aus. Nicht leise. Sichtbar.
+            The Great Logout hilft dir, süchtig machende soziale Medien bewusst und sichtbar zu verlassen. <strong>Teile 1 bis 7 Tage lang kurze Ausstiegs-Posts</strong>, erklär warum du gehst, sag wo man dich weiterhin erreicht und log dich dann aus. Nicht still. Sondern so, dass andere merken: Man kann gehen.
           </p>
 
           <div class="button-row">
@@ -353,7 +353,7 @@ ${altLinks({ en: "/", de: "/de/" })}
           </div>
 
           <p class="campaign-note">
-            <strong>Es geht um Sichtbarkeit.</strong> Menschen sehen deine Entscheidung, bevor du von den Plattformen verschwindest.
+            <strong>Es geht um ein sichtbares Signal.</strong> Andere sehen deine Entscheidung, bevor du aus ihrem Feed verschwindest.
           </p>
         </div>
 
@@ -376,22 +376,22 @@ ${altLinks({ en: "/", de: "/de/" })}
               <li class="formula-step">
                 <span>Tag 1-7</span>
                 <div>
-                  <strong>Poste deine Gründe.</strong>
-                  <p>Ein Grund pro Tag. Kurz ist okay. Ehrlich ist besser.</p>
+                  <strong>Teile deine Gründe.</strong>
+                  <p>Ein Grund pro Tag. Kurz reicht. Ehrlich wirkt.</p>
                 </div>
               </li>
               <li class="formula-step">
                 <span>Vor dem Ausstieg</span>
                 <div>
-                  <strong>Lass einen Weg zu dir offen.</strong>
-                  <p>E-Mail, Telefon, Website, echtes Leben. Was zu dir passt.</p>
+                  <strong>Bleib erreichbar.</strong>
+                  <p>E-Mail, Telefon, Website, Messenger, echtes Leben. Hauptsache: nicht mehr über den Feed.</p>
                 </div>
               </li>
               <li class="formula-step">
                 <span>Letzter Post</span>
                 <div>
-                  <strong>Log dich aus.</strong>
-                  <p>Lösch die Apps, deaktiviere Accounts oder hör auf zu posten.</p>
+                  <strong>Dann log dich aus.</strong>
+                  <p>Lösch die Apps, deaktiviere Accounts oder nimm den Plattformen den automatischen Zugriff auf deinen Tag.</p>
                 </div>
               </li>
             </ol>
@@ -409,22 +409,22 @@ ${altLinks({ en: "/", de: "/de/" })}
         <div class="section-head">
           <div>
             <div class="kicker">So geht es</div>
-            <h2>Ein kleiner öffentlicher Ausstiegsplan.</h2>
+            <h2>Ein einfacher Plan für einen sichtbaren Ausstieg.</h2>
           </div>
         </div>
 
         <div class="steps">
-          <article class="step"><div><h3>Wähle 1, 3 oder 7 Tage.</h3><p>Nimm eine Länge, die du wirklich schaffst. Sieben Tage geben anderen Zeit, es zu bemerken.</p></div></article>
-          <article class="step"><div><h3>Poste jeden Tag einen Grund.</h3><p>Schreib wie ein Mensch. Sag, was dich der Feed gekostet hat und was du zurückhaben willst.</p></div></article>
-          <article class="step"><div><h3>Sag, wo man dich erreicht.</h3><p>Verschwinde nicht aus dem Leben von Menschen, die dir wichtig sind. Bring die Beziehung aus der Plattform heraus.</p></div></article>
-          <article class="step"><div><h3>Lösch die Apps oder deaktiviere.</h3><p>Mach den Rückfall schwerer. Entferne die Abkürzung. Brich den Reflex.</p></div></article>
-          <article class="step"><div><h3>Bleib draußen und hilf anderen dabei.</h3><p>Wenn jemand fragt, warum du gegangen bist, sag es einfach. So verbreitet sich das Signal.</p></div></article>
+          <article class="step"><div><h3>Wähle 1, 3 oder 7 Tage.</h3><p>Nimm dir eine Dauer vor, die du wirklich durchziehst. Sieben Tage geben anderen genug Zeit, deinen Ausstieg wahrzunehmen.</p></div></article>
+          <article class="step"><div><h3>Teile jeden Tag einen Grund.</h3><p>Schreib direkt und menschlich. Sag, was dir der Feed nimmt und was du dir zurückholen willst.</p></div></article>
+          <article class="step"><div><h3>Sag, wo man dich erreicht.</h3><p>Verschwinde nicht aus dem Leben der Menschen, die dir wichtig sind. Verlege die Beziehung aus der Plattform heraus.</p></div></article>
+          <article class="step"><div><h3>Lösch die Apps oder deaktiviere deine Accounts.</h3><p>Mach den Rückweg schwerer. Entferne die Abkürzung. Unterbrich den Reflex.</p></div></article>
+          <article class="step"><div><h3>Bleib draußen und mach es anderen leichter.</h3><p>Wenn dich jemand fragt, warum du gegangen bist, antworte klar. So wird aus einem privaten Schritt ein öffentliches Signal.</p></div></article>
         </div>
 
         <div class="how-cta">
           <div>
-            <h3>Bereit, es konkret zu machen?</h3>
-            <p>Der Guide gibt dir Prompts, ein Ausstiegsdatum und spätere Check-ins.</p>
+            <h3>Bereit, es wirklich zu machen?</h3>
+            <p>Der Guide gibt dir Tagesimpulse, ein konkretes Ausstiegsdatum und spätere Check-ins.</p>
           </div>
           <a class="btn btn-primary" href="#start-guide">Heute starten</a>
         </div>
@@ -433,11 +433,11 @@ ${altLinks({ en: "/", de: "/de/" })}
 
     <section id="why">
       <div class="wrap">
-        <div class="section-head"><div><div class="kicker">Verloren im Scrollen</div><h2>Warum Ausloggen mehr ist als weniger Handyzeit.</h2></div></div>
+        <div class="section-head"><div><div class="kicker">Mehr als Bildschirmzeit</div><h2>Warum Ausloggen ein öffentliches Nein sein kann.</h2></div></div>
         <div class="why-case">
-          <p><strong>The Great Logout ist eine öffentliche Verweigerung.</strong> Nicht weil jeder Teil des Internets schlecht ist. Sondern weil die dominanten Plattformen zu süchtig machend, zu mächtig und zu normal geworden sind.</p>
-          <p>Der Essay bündelt 13 Gründe: süchtig machende Feeds, algorithmische Macht, Big Tech, Konsumdruck, passive Öffentlichkeit, Einsamkeit, Politik, Kultur und den leisen Diebstahl von Aufmerksamkeit.</p>
-          <p>Der Punkt ist einfach: Hör auf, Systeme zu füttern, die Aufmerksamkeit, Wut, Einsamkeit, Unsicherheit und Gewohnheit in Profit verwandeln.</p>
+          <p><strong>The Great Logout ist eine öffentliche Absage.</strong> Nicht an das Internet. Sondern an Plattformen, die so normal geworden sind, dass ihre Macht kaum noch auffällt.</p>
+          <p>Der Essay bündelt 13 Gründe: süchtig machende Feeds, algorithmische Kontrolle, Big Tech, Konsumdruck, passive Öffentlichkeit, Einsamkeit, Politik, Kultur und den schleichenden Verlust von Aufmerksamkeit.</p>
+          <p>Der Kern ist einfach: Hör auf, Systeme zu füttern, die aus Aufmerksamkeit, Wut, Einsamkeit, Unsicherheit und Gewohnheit Profit machen.</p>
           <div class="button-row compact-row">
             <a class="btn btn-secondary" href="essay.html">Die ausführliche Begründung lesen</a>
             <a class="btn btn-primary" href="#generator">Post-Ideen ansehen</a>
@@ -454,8 +454,7 @@ ${altLinks({ en: "/", de: "/de/" })}
           <div class="generator-controls">
             <div class="control-grid">
               <div class="field"><label for="postPreset">Post-Idee</label><select id="postPreset"></select></div>
-              <div class="field"><label for="postText">Text bearbeiten</label><textarea id="postText">Aufmerksamkeit ist ihre Währung.
-Geh nicht für sie pleite.</textarea></div>
+              <div class="field"><label for="postText">Text bearbeiten</label><textarea id="postText">Meine Aufmerksamkeit steht nicht zum Verkauf.</textarea></div>
               <div class="field">
                 <label for="postFormat">Format</label>
                 <select id="postFormat">
@@ -488,24 +487,24 @@ Geh nicht für sie pleite.</textarea></div>
         <div class="guide-panel">
           <div>
             <div class="kicker">7-Tage-Guide</div>
-            <h2>Eine Woche Posts. Dann der Logout.</h2>
-            <p class="lead">Der Guide gibt dir jeden Tag einen klaren Impuls. Nutze ihn genau so, ändere ihn oder ignoriere die Hälfte. Wichtig ist: Du kommst raus.</p>
+            <h2>Eine Woche sichtbar werden. Dann raus.</h2>
+            <p class="lead">Der Guide gibt dir jeden Tag einen klaren Impuls. Du kannst ihn übernehmen, anpassen oder nur als Anstoß nutzen. Wichtig ist, dass aus dem Vorsatz ein Ausstieg wird.</p>
             <div class="guide-days">
-              <article class="guide-day"><span>Tag 0</span><div><h3>Ausstieg vorbereiten</h3><p>Kontakte sichern, letzten Tag wählen und entscheiden, wo man dich erreicht.</p></div></article>
-              <article class="guide-day"><span>Tag 1</span><div><h3>Warum ich gehe</h3><p>Beginne klar. Sag, dass es Absicht ist.</p></div></article>
-              <article class="guide-day"><span>Tag 2</span><div><h3>Was der Feed mit meiner Aufmerksamkeit gemacht hat</h3><p>Benenne den Sog, das Wegdriften und die Zeit, die du zurückwillst.</p></div></article>
-              <article class="guide-day"><span>Tag 3</span><div><h3>Was ich zurückhaben will</h3><p>Mehr Ruhe. Mehr Fokus. Mehr echte Menschen. Dein Grund gehört dir.</p></div></article>
-              <article class="guide-day"><span>Tag 4</span><div><h3>Warum Big Tech zu viel Macht hat</h3><p>Sag, was ein paar Firmen nicht für dich entscheiden sollen.</p></div></article>
-              <article class="guide-day"><span>Tag 5</span><div><h3>Wo man mich erreicht</h3><p>Gib Menschen einen anderen Weg. Behalte die Verbindung. Lass den Feed los.</p></div></article>
-              <article class="guide-day"><span>Tag 6</span><div><h3>Andere einladen</h3><p>Kein Druck. Mach nur die Tür sichtbar.</p></div></article>
-              <article class="guide-day"><span>Tag 7</span><div><h3>Letzter Post und Logout</h3><p>Poste die letzte Nachricht. Lösch die Apps. Geh.</p></div></article>
+              <article class="guide-day"><span>Tag 0</span><div><h3>Den Ausstieg vorbereiten</h3><p>Kontakte sichern, letzten Tag festlegen und entscheiden, wo man dich künftig erreicht.</p></div></article>
+              <article class="guide-day"><span>Tag 1</span><div><h3>Warum ich gehe</h3><p>Fang klar an. Sag, dass dein Ausstieg bewusst ist.</p></div></article>
+              <article class="guide-day"><span>Tag 2</span><div><h3>Was der Feed mit mir macht</h3><p>Benenne den Sog, das Wegdriften und die Zeit, die du zurückhaben willst.</p></div></article>
+              <article class="guide-day"><span>Tag 3</span><div><h3>Was ich zurückholen will</h3><p>Mehr Ruhe. Mehr Fokus. Mehr echte Nähe. Dein Grund muss niemandem gefallen.</p></div></article>
+              <article class="guide-day"><span>Tag 4</span><div><h3>Warum Big Tech zu viel Macht hat</h3><p>Sag, was ein paar Konzerne nicht länger für dich sortieren sollen.</p></div></article>
+              <article class="guide-day"><span>Tag 5</span><div><h3>Wo man mich findet</h3><p>Gib Menschen einen anderen Weg zu dir. Behalte die Verbindung, nicht den Feed.</p></div></article>
+              <article class="guide-day"><span>Tag 6</span><div><h3>Andere einladen</h3><p>Ohne Druck. Zeig nur, dass die Tür offen ist.</p></div></article>
+              <article class="guide-day"><span>Tag 7</span><div><h3>Letzter Post. Logout.</h3><p>Poste deine letzte Nachricht. Lösch die Apps. Geh.</p></div></article>
             </div>
           </div>
 
           <aside class="signup-card guide-signup" id="start-guide" aria-labelledby="signup-title">
-            <h3 id="signup-title">Starte deinen Logout heute</h3>
-            <p>Poste 1 bis 7 Tage. Dann log dich aus.</p>
-            <p class="signup-link">Brauchst du zuerst einen Post? <a href="#generator">Zum Post-Generator.</a></p>
+            <h3 id="signup-title">Starte deinen Ausstieg</h3>
+            <p>1 bis 7 Tage sichtbar werden. Dann ausloggen.</p>
+            <p class="signup-link">Brauchst du zuerst eine Formulierung? <a href="#generator">Zum Post-Generator.</a></p>
             <form class="signup-form" id="guideSignupForm" data-endpoint="https://api.thegreatlogout.org/subscribe">
               <label for="email">E-Mail-Adresse</label>
               <input id="email" name="email" type="email" placeholder="du@example.com" autocomplete="email" required />
@@ -528,16 +527,16 @@ Geh nicht für sie pleite.</textarea></div>
     <section id="manifesto">
       <div class="wrap">
         <div class="section-head"><div><div class="kicker">Manifest</div><h2>Wir kündigen nicht einander.</h2></div></div>
-        <div class="manifesto"><p>Wir gehen, weil Plattformen zu Maschinen für Sucht, Empörung, Überwachung und Kontrolle geworden sind. The Great Logout ist nicht gegen Kreative. Es ist eine Weigerung, Plattformen weiter mit unserer Zeit, Wut, Freundschaft und Aufmerksamkeit zu füttern.</p></div>
+        <div class="manifesto"><p>Wir gehen, weil Plattformen zu Maschinen für Sucht, Empörung, Überwachung und Kontrolle geworden sind. The Great Logout richtet sich nicht gegen Kreative oder Gemeinschaften. Es ist eine Weigerung, Plattformen weiter mit unserer Zeit, unserer Wut, unseren Beziehungen und unserer Aufmerksamkeit zu füttern.</p></div>
       </div>
     </section>
 
     <section id="support">
       <div class="wrap">
-        <div class="section-head"><div><div class="kicker">Unterstützen</div><h2>Hilf, die Kampagne unabhängig zu halten.</h2></div></div>
+        <div class="section-head"><div><div class="kicker">Unterstützen</div><h2>Hilf mit, die Kampagne unabhängig zu halten.</h2></div></div>
         <div class="support-grid">
           <div class="support-copy">
-            <p>The Great Logout soll einfach, öffentlich und frei nutzbar bleiben. Wenn du helfen willst, kannst du die Seite teilen, den Generator benutzen, den Guide weitergeben oder die laufenden Kosten unterstützen.</p>
+            <p>The Great Logout soll einfach, öffentlich und frei nutzbar bleiben. Du hilfst, indem du die Seite teilst, den Generator nutzt, den Guide weitergibst oder die laufenden Kosten unterstützt.</p>
             <div class="button-row compact-row"><a class="btn btn-primary" href="https://ko-fi.com/thegreatlogout" target="_blank" rel="noopener">Kampagne unterstützen</a></div>
           </div>
           <aside class="origin-card">
@@ -556,7 +555,7 @@ Geh nicht für sie pleite.</textarea></div>
           <span class="brand-mark" aria-hidden="true"><img src="../assets/the-great-logout-mark.svg" alt="" decoding="async" /></span>
           <span>The Great Logout</span>
         </a>
-        <p>Poste warum. Sag, wo man dich findet. Dann log dich aus.</p>
+        <p>Sag warum. Sag, wo man dich findet. Dann log dich aus.</p>
       </div>
       <div class="footer-links" aria-label="Footer navigation">
         <a href="#how">So geht es</a>
@@ -596,17 +595,17 @@ function deEssay() {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>13 Gründe, dich auszuloggen | The Great Logout</title>
-  <meta name="description" content="Ein Essay über süchtig machende Algorithmen, Big-Tech-Macht, Aufmerksamkeit, Konsumdruck, passive Öffentlichkeit und warum The Great Logout existiert." />
+  <meta name="description" content="Ein Essay über süchtig machende Feeds, Big-Tech-Macht, Aufmerksamkeit, Konsumdruck, politische Passivität und den sichtbaren Social-Media-Ausstieg." />
   <link rel="canonical" href="${site}/de/essay.html" />
 ${altLinks({ en: "/essay.html", de: "/de/essay.html" })}
   <meta property="og:title" content="13 Gründe, dich auszuloggen" />
-  <meta property="og:description" content="Warum The Great Logout existiert und warum Social Media zu verlassen eine öffentliche Verweigerung sein kann." />
+  <meta property="og:description" content="Warum The Great Logout existiert und warum ein sichtbarer Ausstieg aus Social Media ein öffentliches Signal sein kann." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="${site}/de/essay.html" />
   <meta property="og:image" content="${site}/assets/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="13 Gründe, dich auszuloggen" />
-  <meta name="twitter:description" content="Warum Social Media zu verlassen eine öffentliche Verweigerung sein kann." />
+  <meta name="twitter:description" content="Warum ein sichtbarer Ausstieg aus Social Media ein öffentliches Signal sein kann." />
   <meta name="twitter:image" content="${site}/assets/og-image.png" />
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
@@ -615,27 +614,27 @@ ${altLinks({ en: "/essay.html", de: "/de/essay.html" })}
 <body>
   <header class="site-header"><div class="wrap nav"><a class="brand" href="index.html" aria-label="The Great Logout Startseite"><img src="../assets/the-great-logout-mark.svg" alt="" decoding="async" /><span>The Great Logout</span></a><nav class="nav-links" aria-label="Hauptnavigation"><a href="index.html#how">So geht es</a><a href="index.html#why">Warum?</a><a href="index.html#generator">Post-Generator</a><a href="index.html#guide">7-Tage-Guide</a><a href="index.html#support">Unterstützen</a><a class="language-switch" href="../essay.html" hreflang="en" lang="en">EN</a><a href="index.html#start-guide" class="nav-cta">Start</a></nav></div></header>
   <main>
-    <section class="hero"><div class="wrap"><div class="kicker">Essay</div><h1>13 Gründe, dich auszuloggen</h1><p class="intro">Es geht nicht nur darum, weniger Zeit am Handy zu verbringen. Der Feed prägt Aufmerksamkeit, Politik, Kultur, Konsum und das innere Wetter in unseren Köpfen. The Great Logout ist eine öffentliche Verweigerung, diese Maschine weiter zu füttern.</p><div class="meta" aria-label="Artikeldetails"><span>Von <a href="https://www.danielnetzl.at" target="_blank" rel="noopener">Daniel Netzl</a></span><span>Februar 2025</span><span>Für The Great Logout aktualisiert</span></div></div></section>
+    <section class="hero"><div class="wrap"><div class="kicker">Essay</div><h1>13 Gründe, dich auszuloggen</h1><p class="intro">Es geht nicht nur um weniger Bildschirmzeit. Der Feed prägt, worauf wir achten, worüber wir streiten, was wir begehren und wie sich unser Alltag anfühlt. The Great Logout ist eine öffentliche Absage an diese Normalität.</p><div class="meta" aria-label="Artikeldetails"><span>Von <a href="https://www.danielnetzl.at" target="_blank" rel="noopener">Daniel Netzl</a></span><span>Februar 2025</span><span>Für The Great Logout aktualisiert</span></div></div></section>
     <article><div class="wrap essay">
-      <p>Über manche Süchte sprechen wir inzwischen klar: Alkohol, Zigaretten, Glücksspiel, Medikamente. Ihr Schaden ist sichtbar genug, dass wir Warnungen, Regeln, Altersgrenzen und Unterstützung entwickelt haben.</p>
-      <p>Eine der stärksten Süchte unserer Zeit liegt aber in der Tasche. Sie leuchtet, aktualisiert sich, studiert dich und bietet immer noch einen Clip, eine Empörung, einen Vergleich, einen Kaufimpuls, einen Grund zu bleiben.</p>
-      <p>Der Feed wirkt harmlos, weil er alltäglich geworden ist. Genau das ist Teil seiner Macht.</p>
-      <h2>1. Deine Aufmerksamkeit wird abgeschöpft</h2><p>Aufmerksamkeit ist nichts Kleines. Sie ist die Art, wie wir ein Leben bauen: zuhören, lernen, lieben, denken, bemerken, schaffen, trauern, organisieren und verändern.</p><p>Die großen Plattformen behandeln diese Aufmerksamkeit als Rohstoff. Deine Pause, deine Wut, deine Neugier, deine Einsamkeit, deine Freundschaften, deine späte Schwäche in der Nacht. Alles wird messbar und in ein System zurückgespeist, das lernt, dich länger zu halten.</p>
-      <h2>2. Der Feed wurde gebaut, damit du zurückkommst</h2><p>TikTok, Instagram, YouTube, Facebook, X und ähnliche Plattformen sind keine neutralen Räume. Sie sind Sortiermaschinen. Sie entscheiden, was erscheint, was verschwindet, was wiederholt wird und welche Stimmung der Tag bekommt.</p><p>Das Geschäftsmodell ist einfach: Menschen schauen lassen, reagieren lassen, zurückholen. Mehr Aufmerksamkeit heißt mehr Daten. Mehr Daten heißt bessere Zielgruppen. Bessere Zielgruppen heißen mehr Geld.</p>
-      <div class="pull">Ein paar Unternehmen sitzen heute zwischen Milliarden Menschen und Wirklichkeit. Das ist zu viel Macht.</div>
-      <h2>3. Big Tech wurde zu einer privaten Schicht über dem öffentlichen Leben</h2><p>Eine Handvoll Konzerne prägt, was Milliarden Menschen sehen, glauben, wollen, fürchten und diskutieren. Sie beeinflussen Wahlen, Beziehungen, Nachrichten, Kultur, Mode, Sprache, Humor, Musik, Empörung und Schönheitsideale.</p><p>Diese Macht sieht nicht immer aus wie Politik. Aber sie entscheidet, welche Stimmen steigen, welche begraben werden, was relevant erscheint und welche Konflikte am Leben bleiben, weil sie gut performen.</p>
-      <h2>4. Empörung wird belohnt</h2><p>Algorithmen müssen nicht jede Lüge und jeden Konflikt erfinden. Sie müssen nur finden, was Menschen bindet, und es stärker ausspielen. Wut ist nützlich. Gewissheit ist nützlich. Stammesdenken ist nützlich. Nuance ist meistens zu langsam.</p><p>So verlieren Menschen einen gemeinsamen Boden. Jede Person sieht eine andere Welt, abgestimmt auf Ängste, Geschmack, Wunden und Schwächen.</p>
-      <h2>5. Deine Langeweile wird kolonisiert</h2><p>Langeweile war einmal ein Teil des Lebens: warten, gehen, im Zug sitzen, in einer Schlange stehen, den Geist ohne Auftrag wandern lassen.</p><p>Diese Momente sind oft der Ort, an dem Ideen sich verbinden und man merkt, was man eigentlich als Nächstes tun will. Der Feed greift genau diesen Raum an.</p>
-      <h2>6. Vergleich wurde normal</h2><p>Der Feed zeigt Körper, Wohnungen, Beziehungen, Reisen, Routinen, Gesichter, Karrieren und Lebensstile so angeordnet, dass ein Gefühl von Mangel entsteht.</p><p>Menschen wissen, dass vieles bearbeitet ist. Das macht es nicht harmlos. Wiederholung arbeitet unterhalb der Argumente.</p>
-      <h2>7. Einsamkeit ist profitabel</h2><p>Plattformen versprechen Verbindung, liefern aber oft Kontakt ohne Nähe. Du kannst hunderte Menschen beobachten und dich trotzdem allein fühlen. Du kannst den ganzen Tag erreichbar sein und trotzdem nicht gekannt werden.</p><p>Die Antwort ist nicht Isolation. Die Antwort ist, Beziehungen wieder in Kanäle zu bringen, die keine Sucht brauchen, um zu überleben.</p>
-      <h2>8. Politik wird Performance</h2><p>Ein Like kann sich wie eine Haltung anfühlen. Ein Repost kann sich wie Mut anfühlen. Ein Kommentar kann sich wie Handlung anfühlen. Manchmal hilft das. Oft ersetzt es das Tun außerhalb der Plattform.</p><p>Eine Gesellschaft kann den ganzen Tag wütend sein und trotzdem still bleiben.</p>
-      <div class="pull">Eine Gesellschaft kann den ganzen Tag wütend sein und trotzdem still bleiben.</div>
-      <h2>9. Kultur wird flacher</h2><p>Der Feed ist nicht gut in Tiefe. Er ist gut in Verbreitung. Was am schnellsten reist, beginnt so auszusehen, als wäre es am wichtigsten.</p><p>Das verändert Kunst, Sprache, Humor, Musik, Politik und sogar Persönlichkeit. Menschen formen sich für das System, das sie belohnt.</p>
-      <h2>10. Menschen werden passiv gehalten</h2><p>Die Plattformen zersplittern unseren gemeinsamen Horizont. Jede Person erhält eine private Version der Wirklichkeit, optimiert auf Engagement und kurzfristige Emotion.</p><p>Wir brauchen aktive Gemeinschaften, nicht nur informierte Zuschauerinnen und Zuschauer. Wir brauchen Menschen, die zusammensitzen, widersprechen, planen, protestieren, füreinander sorgen und Alternativen bauen.</p>
-      <h2>11. Begehren wird hergestellt</h2><p>Dieselben Systeme, die Meinung formen, formen auch Wünsche. Sie laden dich ein zu glauben, Erfüllung sei nur einen Kauf, eine Reise, ein Upgrade oder eine bessere Version von dir entfernt.</p><p>Diese Rastlosigkeit treibt Konsum, Müll, Vergleich, Schulden und ökologische Schäden.</p>
-      <h2>12. Beziehungen werden durch Maschinen geleitet</h2><p>Viele bleiben, weil Gehen sich wie Verschwinden anfühlt. Diese Angst ist real. Plattformen haben sich zwischen Freundschaften, Familien, Kunst, Organisation, Kundschaft und Gemeinschaften geschoben.</p><p>Wenn die Beziehung wichtig ist, gib ihr einen direkten Weg: E-Mail, Signal, Telefon, Website, Newsletter, Tisch, Raum, echtes Leben.</p>
-      <h2>13. Ein sichtbarer Ausstieg gibt anderen Erlaubnis</h2><p>Leise zu gehen ist gut für die Person, die geht. Öffentlich zu gehen ist nützlich für alle anderen.</p><p>Wenn du einfach verschwindest, schluckt die Plattform deine Abwesenheit. Wenn du aber postest, warum du gehst, sehen andere einen Ausgang. Sie sehen, dass Ausloggen öffentlich, bewusst und sozial sein kann.</p><p>Du brauchst kein perfektes Argument. Sag, warum du gehst. Sag, wo man dich erreicht. Dann geh.</p>
-      <div class="action-box"><h2>Der Ausstieg ist die Botschaft</h2><p>The Great Logout ist nicht gegen das Internet. Es richtet sich gegen Plattformen, die Sucht, Empörung, Überwachung, Einsamkeit und Unsicherheit in ein Geschäftsmodell verwandeln.</p><p>Wenn dieser Essay dir geholfen hat, den Feed anders zu sehen, nutze diese Klarheit. Mach einen Post. Starte den Guide. Unterstütze die Kampagne, wenn du kannst.</p><div class="button-row"><a class="btn btn-primary" href="index.html#guide">Logout starten</a><a class="btn btn-secondary" href="index.html#generator">Post erstellen</a><a class="btn btn-secondary" href="https://ko-fi.com/thegreatlogout" target="_blank" rel="noopener">Auf Ko-fi unterstützen</a></div></div>
+      <p>Über manche Süchte sprechen wir inzwischen offen: Alkohol, Zigaretten, Glücksspiel, Medikamente. Wir wissen, dass Willenskraft allein nicht immer reicht. Darum gibt es Warnungen, Regeln, Altersgrenzen und Unterstützung.</p>
+      <p>Eine der stärksten Abhängigkeiten unserer Zeit tragen wir aber in der Tasche. Sie leuchtet, aktualisiert sich, beobachtet uns und bietet immer noch einen Clip, eine Empörung, einen Vergleich, einen Kaufimpuls, einen Grund zu bleiben.</p>
+      <p>Der Feed wirkt harmlos, weil er alltäglich geworden ist. Genau darin liegt seine Macht.</p>
+      <h2>1. Deine Aufmerksamkeit wird abgeschöpft</h2><p>Aufmerksamkeit ist nicht irgendeine Ressource. Sie ist die Grundlage dafür, wie wir leben: wie wir zuhören, lernen, lieben, denken, trauern, arbeiten, gestalten und handeln.</p><p>Die großen Plattformen behandeln diese Aufmerksamkeit wie Rohmaterial. Deine Pause, deine Wut, deine Neugier, deine Einsamkeit, deine Freundschaften, deine Schwäche um Mitternacht. Alles wird messbar. Alles fließt zurück in ein System, das lernt, dich länger zu halten.</p>
+      <h2>2. Der Feed wurde gebaut, damit du zurückkommst</h2><p>TikTok, Instagram, YouTube, Facebook, X und ähnliche Plattformen sind keine neutralen Treffpunkte. Sie sind Sortiermaschinen. Sie entscheiden, was du siehst, was verschwindet, was wiederkommt und welche Stimmung sich durch deinen Tag zieht.</p><p>Das Geschäftsmodell ist simpel: Menschen schauen lassen, reagieren lassen, zurückholen. Mehr Aufmerksamkeit bedeutet mehr Daten. Mehr Daten bedeuten bessere Zielgruppen. Bessere Zielgruppen bedeuten mehr Geld.</p>
+      <div class="pull">Ein paar Unternehmen sitzen heute zwischen Milliarden Menschen und der Wirklichkeit. Das ist zu viel Macht.</div>
+      <h2>3. Big Tech legt sich über das öffentliche Leben</h2><p>Eine Handvoll Konzerne prägt, was Milliarden Menschen sehen, glauben, fürchten, begehren und diskutieren. Sie beeinflussen Wahlen, Beziehungen, Nachrichten, Kultur, Mode, Sprache, Humor, Musik, Empörung und Schönheitsideale.</p><p>Diese Macht sieht nicht immer wie Politik aus. Aber sie entscheidet mit, welche Stimmen lauter werden, welche verschwinden, was relevant erscheint und welche Konflikte weiterlaufen, weil sie Aufmerksamkeit bringen.</p>
+      <h2>4. Empörung wird belohnt</h2><p>Algorithmen müssen nicht jede Lüge und jeden Konflikt erfinden. Sie müssen nur erkennen, was Menschen festhält, und es stärker ausspielen. Wut funktioniert. Gewissheit funktioniert. Verachtung funktioniert. Nuance ist meistens zu langsam.</p><p>So verlieren Menschen den gemeinsamen Boden. Jede Person bekommt eine eigene Welt, abgestimmt auf Ängste, Vorlieben, Verletzungen und Schwächen.</p>
+      <h2>5. Selbst Langeweile wird besetzt</h2><p>Langeweile war einmal ein normaler Teil des Lebens: warten, gehen, im Zug sitzen, in einer Schlange stehen, den Gedanken freien Lauf lassen.</p><p>Diese Momente sind nicht leer. Oft entstehen genau dort Ideen, Entscheidungen und der erste klare Gedanke nach viel Lärm. Der Feed greift genau diesen Raum an.</p>
+      <h2>6. Vergleich wurde Alltag</h2><p>Der Feed zeigt Körper, Wohnungen, Beziehungen, Reisen, Routinen, Gesichter, Karrieren und Lebensstile so, dass fast immer ein Mangel bleibt.</p><p>Natürlich wissen viele, dass Bilder gestellt und bearbeitet sind. Das macht sie nicht harmlos. Wiederholung wirkt, auch wenn man ihr nicht glaubt.</p>
+      <h2>7. Einsamkeit ist profitabel</h2><p>Plattformen versprechen Verbindung, liefern aber oft nur Kontakt ohne Nähe. Du kannst hunderte Menschen sehen und dich trotzdem allein fühlen. Du kannst den ganzen Tag erreichbar sein und trotzdem nicht wirklich vorkommen.</p><p>Die Antwort ist nicht Rückzug aus der Welt. Die Antwort ist, Beziehungen wieder in Kanäle zu bringen, die nicht davon leben, dass du abhängig bleibst.</p>
+      <h2>8. Politik wird zur Performance</h2><p>Ein Like kann sich wie Haltung anfühlen. Ein Repost wie Mut. Ein Kommentar wie Handlung. Manchmal hilft das. Oft ersetzt es das, was außerhalb der Plattform passieren müsste.</p><p>Eine Gesellschaft kann den ganzen Tag empört sein und trotzdem stillstehen.</p>
+      <div class="pull">Eine Gesellschaft kann den ganzen Tag empört sein und trotzdem stillstehen.</div>
+      <h2>9. Kultur wird flacher</h2><p>Der Feed ist nicht auf Tiefe ausgelegt. Er ist auf Verbreitung ausgelegt. Was schnell reist, wirkt schnell wichtiger, als es ist.</p><p>Das verändert Kunst, Sprache, Humor, Musik, Politik und sogar Persönlichkeit. Menschen beginnen, sich für ein System zu formen, das aktiv unsere Aufmerksamkeit lenkt.</p>
+      <h2>10. Menschen werden passiv gehalten</h2><p>Plattformen zersplittern unseren gemeinsamen Horizont. Jede Person bekommt eine private Version der Wirklichkeit, optimiert auf Engagement und kurzfristige Emotion.</p><p>Wir brauchen aktive Gemeinschaften, nicht nur informierte Zuschauerinnen und Zuschauer. Wir brauchen Menschen, die zusammensitzen, widersprechen, planen, protestieren, füreinander sorgen und Alternativen aufbauen.</p>
+      <h2>11. Begehren wird produziert</h2><p>Dieselben Systeme, die Meinung formen, formen auch Wünsche. Sie legen nahe, dass Erfüllung nur einen Kauf, eine Reise, ein Upgrade oder eine bessere Version von dir entfernt ist.</p><p>Diese Rastlosigkeit hat Folgen: Konsum, Müll, Vergleich, Schulden und ökologische Schäden.</p>
+      <h2>12. Beziehungen laufen durch Maschinen</h2><p>Viele bleiben, weil Gehen sich wie Verschwinden anfühlt. Diese Angst ist real. Plattformen haben sich zwischen Freundschaften, Familien, Künstlerinnen, Organisatoren, Kundschaft und Gemeinschaften geschoben.</p><p>Wenn eine Beziehung wichtig ist, gib ihr einen direkten Weg: E-Mail, Signal, Telefon, Website, Newsletter, Tisch, Raum, echtes Leben.</p>
+      <h2>13. Ein sichtbarer Ausstieg macht anderen Mut</h2><p>Leise zu gehen hilft der Person, die geht. Sichtbar zu gehen hilft auch den anderen.</p><p>Wenn du einfach verschwindest, schluckt die Plattform deine Abwesenheit. Wenn du aber sagst, warum du gehst, sehen andere einen Ausgang. Sie sehen, dass Ausloggen nicht nur privates Scheitern an Disziplin ist, sondern eine bewusste Entscheidung.</p><p>Du brauchst kein perfektes Argument. Sag, warum du gehst. Sag, wo man dich erreicht. Dann geh.</p>
+      <div class="action-box"><h2>Der Ausstieg ist die Botschaft</h2><p>The Great Logout ist nicht gegen das Internet. Es richtet sich gegen Plattformen, die Sucht, Empörung, Überwachung, Einsamkeit und Unsicherheit in ein Geschäftsmodell verwandeln.</p><p>Wenn dieser Essay dir geholfen hat, den Feed anders zu sehen, nutze diese Klarheit. Erstelle einen Post. Starte den Guide. Unterstütze die Kampagne, wenn du kannst.</p><div class="button-row"><a class="btn btn-primary" href="index.html#guide">Logout starten</a><a class="btn btn-secondary" href="index.html#generator">Post erstellen</a><a class="btn btn-secondary" href="https://ko-fi.com/thegreatlogout" target="_blank" rel="noopener">Kampagne unterstützen</a></div></div>
     </div></article>
   </main>
   <footer class="footer"><div class="wrap"><p>&copy; 2026 The Great Logout</p><p><a href="index.html">Zur Kampagne</a> &middot; <a href="imprint.html">Impressum</a> &middot; <a href="privacy.html">Datenschutz</a> &middot; <a href="../essay.html" hreflang="en" lang="en">English</a></p></div></footer>
@@ -652,7 +651,7 @@ function dePrivacy() {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Datenschutzerklärung | The Great Logout</title>
-  <meta name="description" content="Datenschutzerklärung für The Great Logout, einschließlich E-Mail-Guide, Post-Generator und Spendenlinks." />
+  <meta name="description" content="Datenschutzerklärung von The Great Logout: E-Mail-Guide, Post-Generator, Dienstleister und Kontakt." />
   <link rel="canonical" href="${site}/de/privacy.html" />
 ${altLinks({ en: "/privacy.html", de: "/de/privacy.html" })}
   <meta property="og:title" content="Datenschutzerklärung | The Great Logout" />
@@ -674,18 +673,18 @@ ${altLinks({ en: "/privacy.html", de: "/de/privacy.html" })}
     <section class="hero"><div class="wrap"><div class="kicker">Datenschutz</div><h1>Datenschutzerklärung</h1></div></section>
     <section class="wrap legal" aria-label="Datenschutzerklärung">
       <p class="muted">Zuletzt aktualisiert: 19. Juni 2026</p>
-      <div class="legal-card"><p><strong>Kurzfassung:</strong> The Great Logout fragt nur nach den Daten, die für den E-Mail-Guide nötig sind. Der Post-Generator läuft in deinem Browser. Wir verwenden keine Tracking-Werbung, keine Analytics-Cookies und kein Profiling auf dieser Website.</p></div>
+      <div class="legal-card"><p><strong>Kurzfassung:</strong> The Great Logout erhebt nur die Daten, die für den E-Mail-Guide nötig sind. Der Post-Generator läuft in deinem Browser. Auf dieser Website verwenden wir keine Werbetracker, keine Analytics-Cookies und kein Profiling.</p></div>
       <h2>Verantwortlicher</h2><p>Verantwortlich für diese Website ist:</p><p>The Great Logout<br />Eine Kampagne von Daniel Netzl<br />Landstraße 47<br />2464 Göttlesbrunn<br />Österreich<br /><a href="mailto:support@thegreatlogout.org">support@thegreatlogout.org</a></p>
-      <h2>Welche Daten wir erheben</h2><p>Wenn du dich für den E-Mail-Guide anmeldest, verarbeiten wir die von dir eingegebenen Daten:</p><ul><li>E-Mail-Adresse</li><li>optional Vorname</li><li>optional geplantes Logout-Datum</li><li>gewählte Guide-Länge</li><li>Einwilligung zum Erhalt des Guides</li></ul><p>Für Versand und Abmeldung speichern wir außerdem technische Datensätze wie Abmelde-Token, Anmeldezeit, Abmeldezeit, Versandstatus, Zustell-IDs und Fehlermeldungen, soweit nötig.</p>
-      <h2>Warum wir diese Daten verwenden</h2><p>Wir verwenden diese Daten, um den Logout-Guide, spätere Check-ins und verwandte Kampagnen-E-Mails zu senden, die du angefordert hast. Rechtsgrundlage ist deine Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO.</p><p>Begrenzte technische Daten können außerdem verarbeitet werden, um Website und E-Mail-System zu betreiben, abzusichern und zu verbessern. Rechtsgrundlage ist unser berechtigtes Interesse nach Art. 6 Abs. 1 lit. f DSGVO.</p>
-      <h2>E-Mail-Guide und Abmeldung</h2><p>Du kannst dich jederzeit über den Abmeldelink in jeder E-Mail vom Guide abmelden. Du kannst uns auch unter <a href="mailto:support@thegreatlogout.org">support@thegreatlogout.org</a> kontaktieren.</p><p>Nach einer Abmeldung senden wir keine Guide-E-Mails mehr. Eine begrenzte Dokumentation der Abmeldung kann gespeichert bleiben, um weitere Zusendungen zu vermeiden und die Einwilligungshistorie zu dokumentieren.</p>
-      <h2>Post-Generator</h2><p>Der Post-Generator läuft in deinem Browser. Text, den du eingibst, wird verwendet, um das herunterladbare Bild auf deinem Gerät zu erstellen.</p><p>Einige E-Mail-Links können den Generator öffnen oder ein SVG über die Kampagnen-API anfordern. Dabei können ausgewählter Text, Format und Farbe in der URL enthalten sein, damit die Datei erzeugt werden kann.</p>
-      <h2>Dienstleister</h2><p>Wir nutzen Dienstleister für den Betrieb der Kampagne:</p><ul><li>GitHub Pages für das Hosting der statischen Website</li><li>Cloudflare für DNS, Sicherheit und die E-Mail-Anmelde-API</li><li>Cloudflare D1 zur Speicherung von Guide-Anmeldungen</li><li>Postmark für Transaktions- und Guide-E-Mails</li><li>Ko-fi für freiwillige Beiträge, wenn du die Kampagne dort unterstützt</li></ul><p>Wenn du diese Website über externe Links verlässt, gilt die Datenschutzerklärung des jeweiligen externen Dienstes.</p>
+      <h2>Welche Daten wir erheben</h2><p>Wenn du dich für den E-Mail-Guide anmeldest, verarbeiten wir die Daten, die du selbst einträgst:</p><ul><li>E-Mail-Adresse</li><li>optional Vorname</li><li>optional geplantes Logout-Datum</li><li>gewählte Guide-Länge</li><li>Einwilligung zum Erhalt des Guides</li></ul><p>Für Versand und Abmeldung speichern wir außerdem, soweit erforderlich, technische Informationen wie Abmelde-Token, Anmeldezeitpunkt, Abmeldezeitpunkt, Versandstatus, Zustell-IDs und Fehlermeldungen.</p>
+      <h2>Wofür wir diese Daten verwenden</h2><p>Wir verwenden diese Daten, um dir den Logout-Guide, spätere Check-ins und verwandte Kampagnen-E-Mails zu schicken, die du angefordert hast. Rechtsgrundlage ist deine Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO.</p><p>Begrenzte technische Daten können außerdem verarbeitet werden, um Website und E-Mail-System zu betreiben, abzusichern und zu verbessern. Rechtsgrundlage ist unser berechtigtes Interesse nach Art. 6 Abs. 1 lit. f DSGVO.</p>
+      <h2>E-Mail-Guide und Abmeldung</h2><p>Du kannst dich jederzeit über den Abmeldelink in jeder E-Mail vom Guide abmelden. Alternativ erreichst du uns unter <a href="mailto:support@thegreatlogout.org">support@thegreatlogout.org</a>.</p><p>Nach einer Abmeldung senden wir keine Guide-E-Mails mehr. Eine begrenzte Dokumentation der Abmeldung kann gespeichert bleiben, damit wir keine weiteren E-Mails senden und die Einwilligungshistorie nachvollziehen können.</p>
+      <h2>Post-Generator</h2><p>Der Post-Generator läuft in deinem Browser. Text, den du dort eingibst, wird genutzt, um das herunterladbare Bild auf deinem Gerät zu erstellen.</p><p>Einige E-Mail-Links können den Generator öffnen oder ein SVG über die Kampagnen-API anfordern. Dabei können ausgewählter Text, Format und Farbe in der URL enthalten sein, damit die Datei erzeugt werden kann.</p>
+      <h2>Dienstleister</h2><p>Für den Betrieb der Kampagne nutzen wir folgende Dienstleister:</p><ul><li>GitHub Pages für das Hosting der statischen Website</li><li>Cloudflare für DNS, Sicherheit und die E-Mail-Anmelde-API</li><li>Cloudflare D1 zur Speicherung von Guide-Anmeldungen</li><li>Postmark für Transaktions- und Guide-E-Mails</li><li>eine externe Plattform für freiwillige Beiträge, wenn du die Kampagne unterstützt</li></ul><p>Wenn du diese Website über externe Links verlässt, gilt die Datenschutzerklärung des jeweiligen externen Dienstes.</p>
       <h2>Cookies und Analytics</h2><p>Derzeit verwendet diese Website keine Analytics-Cookies, Werbe-Cookies oder Tracking-Pixel. Falls sich das ändert, wird diese Erklärung aktualisiert.</p>
-      <h2>Server-Logs</h2><p>Hosting-, DNS-, Sicherheits- und E-Mail-Anbieter können technische Daten wie IP-Adresse, Anfragezeit, Browserinformationen, angeforderte URL und Versandprotokolle verarbeiten, um ihre Dienste bereitzustellen und zu schützen. Wir verwenden diese Daten nicht, um Besucherinnen oder Besucher zu profilieren.</p>
-      <h2>Speicherdauer</h2><p>Daten zum E-Mail-Guide werden gespeichert, solange dein Abo aktiv ist. Nach einer Abmeldung speichern wir nur, was nötig ist, um die Abmeldung zu respektieren, Versandnachweise zu erhalten und rechtliche oder betriebliche Fragen zu klären. Du kannst jederzeit Löschung verlangen.</p>
-      <h2>Deine Rechte</h2><p>Nach der DSGVO kannst du Auskunft, Berichtigung, Löschung, Einschränkung oder Widerspruch gegen die Verarbeitung deiner personenbezogenen Daten verlangen. Du kannst eine Einwilligung jederzeit widerrufen.</p><p>Zur Ausübung deiner Rechte kontaktiere <a href="mailto:support@thegreatlogout.org">support@thegreatlogout.org</a>. Du hast außerdem das Recht, Beschwerde bei einer Datenschutzbehörde einzulegen.</p>
-      <h2>Änderungen</h2><p>Wir können diese Datenschutzerklärung aktualisieren, wenn sich Kampagne, Website oder E-Mail-System ändern. Das Datum oben zeigt die aktuelle Version.</p>
+      <h2>Server-Logs</h2><p>Hosting-, DNS-, Sicherheits- und E-Mail-Anbieter können technische Daten wie IP-Adresse, Anfragezeit, Browserinformationen, angeforderte URL und Versandprotokolle verarbeiten, um ihre Dienste bereitzustellen und zu schützen. Wir nutzen diese Daten nicht, um Besucherinnen oder Besucher zu profilieren.</p>
+      <h2>Speicherdauer</h2><p>Daten zum E-Mail-Guide speichern wir, solange dein Abo aktiv ist. Nach einer Abmeldung speichern wir nur, was nötig ist, um die Abmeldung zu respektieren, Versandnachweise zu erhalten und rechtliche oder betriebliche Fragen zu klären. Du kannst jederzeit Löschung verlangen.</p>
+      <h2>Deine Rechte</h2><p>Nach der DSGVO kannst du Auskunft, Berichtigung, Löschung, Einschränkung oder Widerspruch gegen die Verarbeitung deiner personenbezogenen Daten verlangen. Eine erteilte Einwilligung kannst du jederzeit widerrufen.</p><p>Zur Ausübung deiner Rechte kontaktiere <a href="mailto:support@thegreatlogout.org">support@thegreatlogout.org</a>. Du hast außerdem das Recht, Beschwerde bei einer Datenschutzbehörde einzulegen.</p>
+      <h2>Änderungen</h2><p>Wir können diese Datenschutzerklärung aktualisieren, wenn sich Kampagne, Website oder E-Mail-System ändern. Das Datum oben zeigt den Stand der aktuellen Version.</p>
     </section>
   </main>
   <footer class="footer"><div class="wrap"><p>&copy; 2026 The Great Logout</p><p><a href="index.html">Zur Kampagne</a> &middot; <a href="imprint.html">Impressum</a> &middot; <a href="../privacy.html" hreflang="en" lang="en">English</a></p></div></footer>
@@ -702,17 +701,17 @@ function deImprint() {
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Impressum | The Great Logout</title>
-  <meta name="description" content="Impressum und Kontaktinformationen für The Great Logout." />
+  <meta name="description" content="Impressum und Kontaktinformationen von The Great Logout." />
   <link rel="canonical" href="${site}/de/imprint.html" />
 ${altLinks({ en: "/imprint.html", de: "/de/imprint.html" })}
   <meta property="og:title" content="Impressum | The Great Logout" />
-  <meta property="og:description" content="Impressum und Kontaktinformationen für The Great Logout." />
+  <meta property="og:description" content="Impressum und Kontaktinformationen von The Great Logout." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="${site}/de/imprint.html" />
   <meta property="og:image" content="${site}/assets/og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Impressum | The Great Logout" />
-  <meta name="twitter:description" content="Impressum und Kontaktinformationen für The Great Logout." />
+  <meta name="twitter:description" content="Impressum und Kontaktinformationen von The Great Logout." />
   <meta name="twitter:image" content="${site}/assets/og-image.png" />
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
@@ -727,7 +726,7 @@ ${altLinks({ en: "/imprint.html", de: "/de/imprint.html" })}
       <div class="legal-card"><p><strong>The Great Logout</strong></p><p>Eine Kampagne von Daniel Netzl</p><p>Landstraße 47</p><p>2464 Göttlesbrunn</p><p>Österreich</p><p><a href="mailto:support@thegreatlogout.org">support@thegreatlogout.org</a></p></div>
       <h2>Verantwortlich für den Inhalt</h2><p>Daniel Netzl ist für den Inhalt dieser Website verantwortlich.</p>
       <h2>Unabhängigkeit</h2><p>The Great Logout ist nicht mit Instagram, TikTok, Meta, X oder einer anderen Social-Media-Plattform verbunden.</p>
-      <h2>Externe Links</h2><p>Diese Website kann auf externe Websites verlinken. Für Inhalte, Verfügbarkeit oder Datenschutzpraktiken externer Websites übernehmen wir keine Verantwortung.</p>
+      <h2>Externe Links</h2><p>Diese Website kann auf externe Websites verlinken. Für Inhalte, Verfügbarkeit und Datenschutzpraktiken externer Websites übernehmen wir keine Verantwortung.</p>
       <p class="muted">Zuletzt aktualisiert: 19. Juni 2026</p>
     </section>
   </main>
