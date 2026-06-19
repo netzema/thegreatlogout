@@ -1,4 +1,4 @@
-import { EMAIL_SEQUENCE } from "./emails.js";
+import { EMAIL_SEQUENCES } from "./emails.js";
 
 export default {
   async fetch(request, env) {
@@ -32,21 +32,85 @@ export default {
   }
 };
 
+function normalizeLanguage(value) {
+  return String(value || "en").toLowerCase().startsWith("de") ? "de" : "en";
+}
+
+function getEmailSequence(language) {
+  return EMAIL_SEQUENCES[normalizeLanguage(language)] || EMAIL_SEQUENCES.en;
+}
+
+function buildStoredSequenceKey(key, language) {
+  const normalizedLanguage = normalizeLanguage(language);
+  return normalizedLanguage === "en" ? key : `${normalizedLanguage}:${key}`;
+}
+
+function parseStoredSequenceKey(sequenceKey) {
+  const [language, ...rest] = String(sequenceKey || "").split(":");
+  if (!rest.length) return { language: "en", key: sequenceKey };
+  return { language: normalizeLanguage(language), key: rest.join(":") };
+}
+
+function getEmailLabels(language = "en") {
+  if (normalizeLanguage(language) === "de") {
+    return {
+      tagline: "Ein gemeinsamer Social-Media-Ausstieg",
+      signoff: "Log dich sichtbar aus,",
+      receiving: "Du erhältst diese E-Mail, weil du den Logout-Guide angefordert hast.",
+      unsubscribe: "Abmelden",
+      openGenerator: "Post-Generator öffnen",
+      openInGenerator: "Im Generator öffnen",
+      postOption: "Post-Option",
+      postOptions: "Post-Optionen",
+      squareSvg: "Quadratisches SVG",
+      verticalSvg: "Vertikales SVG",
+      reflectionPrompt: "Reflexionsfrage",
+      reflectionPrompts: "Reflexionsfragen",
+      threePosts: "Drei Posts, die du heute verwenden kannst",
+      threeReflections: "Drei Fragen zum Nachdenken",
+      feedbackTitle: "Erzähl uns, was passiert ist",
+      feedbackHtml: "Du kannst direkt auf diese E-Mail antworten, mit einem Kommentar, einer Notiz oder einer kurzen Erfahrung. Vielleicht fragen wir später, ob wir eine anonymisierte Version auf der Website teilen dürfen.",
+      feedbackText: "Wenn du möchtest, antworte auf diese E-Mail und erzähl uns, was passiert ist. Vielleicht fragen wir später, ob wir eine kurze anonymisierte Version auf der Website teilen dürfen."
+    };
+  }
+
+  return {
+    tagline: "A collective social media exit",
+    signoff: "Log out visibly,",
+    receiving: "You are receiving this because you requested the logout guide.",
+    unsubscribe: "Unsubscribe",
+    openGenerator: "Open the post generator",
+    openInGenerator: "Open in generator",
+    postOption: "Post option",
+    postOptions: "Post options",
+    squareSvg: "Square SVG",
+    verticalSvg: "Vertical SVG",
+    reflectionPrompt: "Reflection prompt",
+    reflectionPrompts: "Reflection prompts",
+    threePosts: "Three posts you can use today",
+    threeReflections: "Three things to reflect on",
+    feedbackTitle: "Tell us what happened",
+    feedbackHtml: "You can reply to this email with a comment, a note, or a short experience. We may later ask whether we can share an anonymized version on the website so others can see what leaving actually feels like.",
+    feedbackText: "If you want, reply to this email and tell us what happened. We may later ask whether we can share a short anonymized version on the website."
+  };
+}
+
 async function handleSubscribe(request, env) {
   const input = await request.json().catch(() => null);
   const email = normalizeEmail(input?.email);
   const firstName = cleanText(input?.firstName || "", 80);
   const guideLength = [1, 3, 7].includes(Number(input?.guideLength)) ? Number(input.guideLength) : 7;
+  const language = normalizeLanguage(input?.language);
   const plannedLogoutDate = cleanDate(input?.logoutDate);
   const consent = input?.consent === true;
   const unsubscribeToken = crypto.randomUUID();
 
   if (!email) {
-    return corsResponse({ error: "Please enter a valid email address." }, env, 400, request);
+    return corsResponse({ error: language === "de" ? "Bitte gib eine gültige E-Mail-Adresse ein." : "Please enter a valid email address." }, env, 400, request);
   }
 
   if (!consent) {
-    return corsResponse({ error: "Please confirm that you want to receive the guide." }, env, 400, request);
+    return corsResponse({ error: language === "de" ? "Bitte bestätige, dass du den Guide erhalten möchtest." : "Please confirm that you want to receive the guide." }, env, 400, request);
   }
 
   const now = new Date();
@@ -66,14 +130,14 @@ async function handleSubscribe(request, env) {
   const subscriber = await env.DB.prepare("SELECT id FROM subscribers WHERE unsubscribe_token = ?")
     .bind(unsubscribeToken)
     .first();
-  await scheduleEmails(env, subscriber.id, now, guideLength);
-  await sendWelcomeEmail(env, subscriber.id, email, firstName);
+  await scheduleEmails(env, subscriber.id, now, guideLength, language);
+  await sendWelcomeEmail(env, subscriber.id, email, firstName, language);
 
   return corsResponse({ ok: true }, env, 200, request);
 }
 
-async function scheduleEmails(env, subscriberId, startDate, guideLength) {
-  const sequence = EMAIL_SEQUENCE.filter(email => {
+async function scheduleEmails(env, subscriberId, startDate, guideLength, language = "en") {
+  const sequence = getEmailSequence(language).filter(email => {
     if (!email.key.startsWith("day-")) return true;
     const day = Number(email.key.replace("day-", ""));
     return day === 0 || day <= guideLength || day > 7;
@@ -81,10 +145,11 @@ async function scheduleEmails(env, subscriberId, startDate, guideLength) {
 
   for (const email of sequence) {
     const sendAfter = new Date(startDate.getTime() + email.delayDays * 24 * 60 * 60 * 1000).toISOString();
+    const sequenceKey = buildStoredSequenceKey(email.key, language);
     await env.DB.prepare(`
       INSERT OR IGNORE INTO email_sends (subscriber_id, sequence_key, send_after)
       VALUES (?, ?, ?)
-    `).bind(subscriberId, email.key, sendAfter).run();
+    `).bind(subscriberId, sequenceKey, sendAfter).run();
   }
 }
 
@@ -106,7 +171,8 @@ async function sendDueEmails(env) {
   `).all();
 
   for (const row of due.results || []) {
-    const email = EMAIL_SEQUENCE.find(item => item.key === row.sequence_key);
+    const parsedKey = parseStoredSequenceKey(row.sequence_key);
+    const email = getEmailSequence(parsedKey.language).find(item => item.key === parsedKey.key);
     if (!email) continue;
 
     try {
@@ -124,22 +190,23 @@ async function sendDueEmails(env) {
   }
 }
 
-async function sendWelcomeEmail(env, subscriberId, emailAddress, firstName) {
+async function sendWelcomeEmail(env, subscriberId, emailAddress, firstName, language = "en") {
+  const sequenceKey = buildStoredSequenceKey("day-0", language);
   const row = await env.DB.prepare(`
     SELECT id
     FROM email_sends
     WHERE subscriber_id = ?
-      AND sequence_key = 'day-0'
+      AND sequence_key = ?
       AND sent_at IS NULL
     LIMIT 1
-  `).bind(subscriberId).first();
+  `).bind(subscriberId, sequenceKey).first();
 
   if (!row) return;
 
   const subscriber = await env.DB.prepare("SELECT unsubscribe_token FROM subscribers WHERE id = ?")
     .bind(subscriberId)
     .first();
-  const email = EMAIL_SEQUENCE.find(item => item.key === "day-0");
+  const email = getEmailSequence(language).find(item => item.key === "day-0");
   if (!email || !subscriber?.unsubscribe_token) return;
 
   try {
@@ -182,14 +249,19 @@ async function sendPostmarkEmail(env, to, firstName, unsubscribeToken, email) {
 }
 
 function renderEmailHtml(env, firstName, unsubscribeToken, email) {
-  const greeting = firstName ? `Hi ${escapeHtml(firstName)},` : "Hi,";
+  const isGerman = email.language === "de";
+  const labels = getEmailLabels(email.language);
+  const greeting = firstName
+    ? (isGerman ? `Hallo ${escapeHtml(firstName)},` : `Hi ${escapeHtml(firstName)},`)
+    : (isGerman ? "Hallo," : "Hi,");
   const paragraphs = email.body.map(paragraph => `<p>${escapeHtml(paragraph)}</p>`).join("\n");
   const siteUrl = normalizeUrl(env.PUBLIC_SITE_URL || "https://www.thegreatlogout.org");
-  const generatorUrl = `${siteUrl}/#generator`;
-  const postOptions = renderPostOptionsHtml(env, email.posts || []);
-  const reflectionPrompts = renderReflectionPromptsHtml(email.reflectionPrompts || []);
+  const localizedSiteUrl = isGerman ? `${siteUrl}/de` : siteUrl;
+  const generatorUrl = `${localizedSiteUrl}/#generator`;
+  const postOptions = renderPostOptionsHtml(env, email.posts || [], email.language);
+  const reflectionPrompts = renderReflectionPromptsHtml(email.reflectionPrompts || [], email.language);
   const feedbackInvite = renderFeedbackInviteHtml(email);
-  const generatorButton = renderGeneratorButtonHtml(generatorUrl, email.posts || []);
+  const generatorButton = renderGeneratorButtonHtml(generatorUrl, email.posts || [], email.language);
   const unsubscribeUrl = buildUnsubscribeLink(env, unsubscribeToken);
   const logoUrl = `${siteUrl}/assets/the-great-logout-mark.svg`;
 
@@ -207,7 +279,7 @@ function renderEmailHtml(env, firstName, unsubscribeToken, email) {
               </td>
               <td style="vertical-align:middle;">
                 <div style="color:#f4f4ef;font-size:18px;line-height:1.1;font-weight:bold;">The Great Logout</div>
-                <div style="color:#a4aaa1;font-size:13px;margin-top:5px;">A collective social media exit</div>
+                <div style="color:#a4aaa1;font-size:13px;margin-top:5px;">${labels.tagline}</div>
               </td>
             </tr>
           </table>
@@ -224,12 +296,12 @@ function renderEmailHtml(env, firstName, unsubscribeToken, email) {
 
           ${generatorButton}
 
-          <p style="margin-top:30px;">Log out visibly,<br><strong>The Great Logout</strong></p>
+          <p style="margin-top:30px;">${labels.signoff}<br><strong>The Great Logout</strong></p>
         </div>
 
         <div style="padding:18px 24px 24px;border-top:1px solid rgba(244,244,239,.12);color:#a4aaa1;font-size:13px;">
-          <p style="margin:0 0 8px;">You are receiving this because you requested the logout guide.</p>
-          <p style="margin:0;"><a href="${siteUrl}" style="color:#B6FF3B;">thegreatlogout.org</a> <span style="color:#6f766d;">|</span> <a href="${unsubscribeUrl}" style="color:#a4aaa1;">Unsubscribe</a></p>
+          <p style="margin:0 0 8px;">${labels.receiving}</p>
+          <p style="margin:0;"><a href="${localizedSiteUrl}" style="color:#B6FF3B;">thegreatlogout.org</a> <span style="color:#6f766d;">|</span> <a href="${unsubscribeUrl}" style="color:#a4aaa1;">${labels.unsubscribe}</a></p>
         </div>
       </div>
     </div>
@@ -238,19 +310,22 @@ function renderEmailHtml(env, firstName, unsubscribeToken, email) {
 }
 
 function renderEmailText(env, firstName, unsubscribeToken, email) {
-  const greeting = firstName ? `Hi ${firstName},` : "Hi,";
+  const isGerman = email.language === "de";
+  const labels = getEmailLabels(email.language);
+  const greeting = firstName ? (isGerman ? `Hallo ${firstName},` : `Hi ${firstName},`) : (isGerman ? "Hallo," : "Hi,");
   const siteUrl = normalizeUrl(env.PUBLIC_SITE_URL || "https://www.thegreatlogout.org");
+  const localizedSiteUrl = isGerman ? `${siteUrl}/de` : siteUrl;
   const unsubscribeUrl = buildUnsubscribeLink(env, unsubscribeToken);
   const postLines = (email.posts || []).flatMap((post, index) => [
-    `Post option ${index + 1}:`,
+    `${labels.postOption} ${index + 1}:`,
     post,
-    `Open in generator: ${buildGeneratorLink(env, post)}`,
-    `Download square SVG: ${buildPostSvgLink(env, post, "square")}`,
-    `Download vertical SVG: ${buildPostSvgLink(env, post, "vertical")}`,
+    `${labels.openInGenerator}: ${buildGeneratorLink(env, post, email.language)}`,
+    `${labels.squareSvg}: ${buildPostSvgLink(env, post, "square", email.language)}`,
+    `${labels.verticalSvg}: ${buildPostSvgLink(env, post, "vertical", email.language)}`,
     ""
   ]);
   const reflectionLines = (email.reflectionPrompts || []).flatMap((prompt, index) => [
-    `Reflection prompt ${index + 1}: ${prompt}`
+    `${labels.reflectionPrompt} ${index + 1}: ${prompt}`
   ]);
 
   return [
@@ -262,60 +337,63 @@ function renderEmailText(env, firstName, unsubscribeToken, email) {
     "",
     ...email.body,
     "",
-    ...(postLines.length ? ["Post options", "", ...postLines] : []),
-    ...(reflectionLines.length ? ["Reflection prompts", "", ...reflectionLines, ""] : []),
+    ...(postLines.length ? [labels.postOptions, "", ...postLines] : []),
+    ...(reflectionLines.length ? [labels.reflectionPrompts, "", ...reflectionLines, ""] : []),
     ...(email.feedbackInvite ? [
-      "If you want, reply to this email and tell us what happened. We may later ask whether we can share a short anonymized version on the website.",
+      labels.feedbackText,
       ""
     ] : []),
-    ...((email.posts || []).length ? ["Open the post generator:", `${siteUrl}/#generator`, ""] : []),
-    "Log out visibly,",
+    ...((email.posts || []).length ? [`${labels.openGenerator}:`, `${localizedSiteUrl}/#generator`, ""] : []),
+    labels.signoff.replace("<br>", ""),
     "The Great Logout",
     "",
-    siteUrl,
+    localizedSiteUrl,
     "",
-    "You are receiving this because you requested the logout guide.",
-    `Unsubscribe: ${unsubscribeUrl}`
+    labels.receiving,
+    `${labels.unsubscribe}: ${unsubscribeUrl}`
   ].join("\n");
 }
 
-function renderGeneratorButtonHtml(generatorUrl, posts) {
+function renderGeneratorButtonHtml(generatorUrl, posts, language = "en") {
   if (!posts.length) return "";
+  const labels = getEmailLabels(language);
 
   return `
     <p style="margin:28px 0 0;">
-      <a href="${generatorUrl}" style="display:inline-block;background:#B6FF3B;color:#070807;text-decoration:none;font-weight:bold;border-radius:999px;padding:13px 18px;">Open the post generator</a>
+      <a href="${generatorUrl}" style="display:inline-block;background:#B6FF3B;color:#070807;text-decoration:none;font-weight:bold;border-radius:999px;padding:13px 18px;">${labels.openGenerator}</a>
     </p>
   `;
 }
 
-function renderPostOptionsHtml(env, posts) {
+function renderPostOptionsHtml(env, posts, language = "en") {
   if (!posts.length) return "";
+  const labels = getEmailLabels(language);
 
   const cards = posts.map((post, index) => `
     <div style="border:1px solid rgba(244,244,239,.14);border-radius:16px;background:#121512;padding:16px;margin:12px 0;">
-      <div style="color:#B6FF3B;font-family:Consolas,monospace;font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">Post option ${index + 1}</div>
+      <div style="color:#B6FF3B;font-family:Consolas,monospace;font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">${labels.postOption} ${index + 1}</div>
       <div style="white-space:pre-line;font-size:20px;line-height:1.18;color:#f4f4ef;font-weight:bold;">${escapeHtml(post)}</div>
       <div style="margin-top:14px;">
-        <a href="${buildGeneratorLink(env, post)}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">Open in generator</a>
+        <a href="${buildGeneratorLink(env, post, language)}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">${labels.openInGenerator}</a>
         <span style="color:#6f766d;"> &nbsp;|&nbsp; </span>
-        <a href="${buildPostSvgLink(env, post, "square")}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">Square SVG</a>
+        <a href="${buildPostSvgLink(env, post, "square", language)}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">${labels.squareSvg}</a>
         <span style="color:#6f766d;"> &nbsp;|&nbsp; </span>
-        <a href="${buildPostSvgLink(env, post, "vertical")}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">Vertical SVG</a>
+        <a href="${buildPostSvgLink(env, post, "vertical", language)}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">${labels.verticalSvg}</a>
       </div>
     </div>
   `).join("");
 
   return `
     <div style="margin-top:30px;">
-      <h2 style="font-size:20px;line-height:1.2;margin:0 0 12px;color:#f4f4ef;">Three posts you can use today</h2>
+      <h2 style="font-size:20px;line-height:1.2;margin:0 0 12px;color:#f4f4ef;">${labels.threePosts}</h2>
       ${cards}
     </div>
   `;
 }
 
-function renderReflectionPromptsHtml(prompts) {
+function renderReflectionPromptsHtml(prompts, language = "en") {
   if (!prompts.length) return "";
+  const labels = getEmailLabels(language);
 
   const items = prompts.map(prompt => `
     <li style="margin:10px 0;color:#f4f4ef;">${escapeHtml(prompt)}</li>
@@ -323,7 +401,7 @@ function renderReflectionPromptsHtml(prompts) {
 
   return `
     <div style="margin-top:30px;border:1px solid rgba(244,244,239,.14);border-radius:16px;background:#121512;padding:18px;">
-      <h2 style="font-size:20px;line-height:1.2;margin:0 0 12px;color:#f4f4ef;">Three things to reflect on</h2>
+      <h2 style="font-size:20px;line-height:1.2;margin:0 0 12px;color:#f4f4ef;">${labels.threeReflections}</h2>
       <ul style="margin:0;padding-left:20px;">${items}</ul>
     </div>
   `;
@@ -331,24 +409,27 @@ function renderReflectionPromptsHtml(prompts) {
 
 function renderFeedbackInviteHtml(email) {
   if (!email.feedbackInvite) return "";
+  const labels = getEmailLabels(email.language);
 
   return `
     <div style="margin-top:22px;border:1px solid rgba(182,255,59,.32);border-radius:16px;background:rgba(182,255,59,.07);padding:18px;">
-      <h2 style="font-size:20px;line-height:1.2;margin:0 0 10px;color:#f4f4ef;">Tell us what happened</h2>
-      <p style="margin:0;color:#a4aaa1;">You can reply to this email with a comment, a note, or a short experience. We may later ask whether we can share an anonymized version on the website so others can see what leaving actually feels like.</p>
+      <h2 style="font-size:20px;line-height:1.2;margin:0 0 10px;color:#f4f4ef;">${labels.feedbackTitle}</h2>
+      <p style="margin:0;color:#a4aaa1;">${labels.feedbackHtml}</p>
     </div>
   `;
 }
 
-function buildGeneratorLink(env, post) {
+function buildGeneratorLink(env, post, language = "en") {
   const siteUrl = normalizeUrl(env.PUBLIC_SITE_URL || "https://www.thegreatlogout.org");
-  return `${siteUrl}/?post=${encodeURIComponent(post)}#generator`;
+  const pathPrefix = normalizeLanguage(language) === "de" ? "/de/" : "/";
+  return `${siteUrl}${pathPrefix}?post=${encodeURIComponent(post)}#generator`;
 }
 
-function buildPostSvgLink(env, post, format = "square") {
+function buildPostSvgLink(env, post, format = "square", language = "en") {
   const apiBaseUrl = normalizeUrl(env.API_BASE_URL || "https://api.thegreatlogout.org");
   const formatParam = format === "vertical" ? "&format=vertical" : "";
-  return `${apiBaseUrl}/post.svg?text=${encodeURIComponent(post)}${formatParam}`;
+  const languageParam = normalizeLanguage(language) === "de" ? "&lang=de" : "";
+  return `${apiBaseUrl}/post.svg?text=${encodeURIComponent(post)}${formatParam}${languageParam}`;
 }
 
 function buildUnsubscribeLink(env, token) {
@@ -403,7 +484,8 @@ function handlePostSvg(url) {
   const text = cleanText(url.searchParams.get("text") || "The exit is the message.", 280);
   const color = url.searchParams.get("color") === "green" ? "#B6FF3B" : "#f4f4ef";
   const format = url.searchParams.get("format") === "vertical" ? "vertical" : "square";
-  const svg = buildSocialPostSvg(text, color, format);
+  const language = normalizeLanguage(url.searchParams.get("lang"));
+  const svg = buildSocialPostSvg(text, color, format, language);
   const filename = format === "vertical" ? "great-logout-vertical.svg" : "great-logout-square.svg";
 
   return new Response(svg, {
@@ -414,7 +496,7 @@ function handlePostSvg(url) {
   });
 }
 
-function buildSocialPostSvg(text, color, format = "square") {
+function buildSocialPostSvg(text, color, format = "square", language = "en") {
   const width = 1080;
   const height = format === "vertical" ? 1920 : 1080;
   const lines = wrapSvgText(text, 18);
@@ -423,6 +505,8 @@ function buildSocialPostSvg(text, color, format = "square") {
   const footerTop = height - 200;
   const startY = Math.round((footerTop - lines.length * lineHeight) / 2 + fontSize);
   const tspans = lines.map((line, index) => `<tspan x="50%" y="${startY + index * lineHeight}">${escapeHtml(line)}</tspan>`).join("");
+
+  const labels = getEmailLabels(language);
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">
   <rect width="100%" height="100%" fill="#070807"/>
@@ -440,7 +524,7 @@ function buildSocialPostSvg(text, color, format = "square") {
     <path d="M170 94l34 34-34 34"/>
   </g>
   <text x="208" y="${height - 156}" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#f4f4ef">The Great Logout</text>
-  <text x="208" y="${height - 124}" font-family="Arial, sans-serif" font-size="23" fill="#a4aaa1">A collective social media exit</text>
+  <text x="208" y="${height - 124}" font-family="Arial, sans-serif" font-size="23" fill="#a4aaa1">${escapeHtml(labels.tagline)}</text>
   <text x="972" y="${height - 124}" text-anchor="end" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#B6FF3B">thegreatlogout.org</text>
 </svg>`;
 }

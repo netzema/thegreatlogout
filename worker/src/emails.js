@@ -325,6 +325,298 @@ const BASE_EMAIL_SEQUENCE = [
   }
 ];
 
+const BASE_EMAIL_SEQUENCE_DE = [
+  {
+    key: "day-0",
+    delayDays: 0,
+    subject: "Willkommen bei The Great Logout",
+    title: "Du bist dabei. Jetzt mach den Ausstieg sichtbar.",
+    body: [
+      "danke, dass du bei The Great Logout mitmachst.",
+      "Das ist ein öffentlicher Ausstieg aus süchtig machenden sozialen Medien. Kein stiller Detox. Kein weiterer privater Versuch, disziplinierter zu sein. In den nächsten Tagen machst du deine Entscheidung sichtbar, bevor du gehst.",
+      "Wenn Menschen leise verschwinden, schluckt der Feed ihre Abwesenheit. Wenn Menschen öffentlich gehen, sehen andere, dass Ausloggen möglich, bewusst und sozial sein kann.",
+      "Das Ziel ist einfach: Poste, warum du gehst. Sag, wo man dich erreichen kann. Dann log dich aus.",
+      "Tag 0 ist Vorbereitung. Sichere Kontakte, wähle dein letztes Datum und entscheide, welcher Kanal nach dem Ausstieg bleibt.",
+      "Heutige Aufgabe: Wähle dein Logout-Datum und entscheide, wo Menschen dich erreichen können."
+    ]
+  },
+  {
+    key: "day-1",
+    delayDays: 1,
+    subject: "Tag 1: Sag es klar",
+    title: "Warum ich gehe",
+    body: [
+      "heute ist das erste öffentliche Signal.",
+      "Erkläre nicht zu viel. Der stärkste Post ist oft der einfachste. Sag, dass du süchtig machende soziale Medien verlässt, dass es Absicht ist und dass du für ein paar Tage postest, warum du gehst.",
+      "Es geht nicht darum, besser zu sein als andere. Es ist eine Weigerung, ein System weiter zu füttern, das dafür gebaut wurde, dich zurückzuholen.",
+      "Heutige Aufgabe: Veröffentliche deinen ersten Logout-Post."
+    ]
+  },
+  {
+    key: "day-2",
+    delayDays: 2,
+    subject: "Tag 2: Deine Aufmerksamkeit ist nicht das Problem",
+    title: "Was der Feed mit meiner Aufmerksamkeit gemacht hat",
+    body: [
+      "der Feed ist dafür gebaut, dich zurückzuziehen.",
+      "Viele geben sich zuerst selbst die Schuld. Sie glauben, sie seien faul, schwach oder undiszipliniert. Aber Disziplin ist nicht die ganze Geschichte, wenn ein System dafür gebaut wurde, dich zu unterbrechen, zu belohnen, zu reizen und zurückzubringen.",
+      "Schreib heute über Aufmerksamkeit. Was hat der Feed deinem Tag genommen? Was unterbricht er? Was hast du früher gemacht, wenn du gelangweilt, müde, wartend oder allein warst?",
+      "Heutige Aufgabe: Benenne eine konkrete Art, wie der Feed deine Aufmerksamkeit verändert hat."
+    ]
+  },
+  {
+    key: "day-3",
+    delayDays: 3,
+    subject: "Tag 3: Was du zurückhaben willst",
+    title: "Was ich zurückhaben will",
+    body: [
+      "gehen ist nicht nur ein Nein.",
+      "Es ist auch eine Rückkehr. Du entfernst nicht nur eine App, du machst Raum für etwas, das wieder möglich werden kann.",
+      "Vielleicht willst du deine Morgen zurück. Vielleicht willst du lesen, ohne alle paar Minuten aufs Handy zu greifen. Vielleicht willst du Langeweile zurück, weil dort oft die eigenen Gedanken wieder auftauchen.",
+      "Heutige Aufgabe: Poste, was du zurückhaben willst."
+    ]
+  },
+  {
+    key: "day-4",
+    delayDays: 4,
+    subject: "Tag 4: Ein paar Firmen sollten nicht den Raum besitzen",
+    title: "Warum Big Tech zu viel Macht hat",
+    body: [
+      "das hier ist nicht nur eine Frage von Bildschirmzeit.",
+      "Ein paar Konzerne prägen, was Milliarden Menschen sehen, wollen, fürchten, vergleichen, glauben und diskutieren. Der Feed ist kein neutrales Fenster. Er ist ein Ranking-System für Profit.",
+      "Wenn Plattformen Aufmerksamkeit in dieser Größenordnung kontrollieren, beeinflussen sie Kultur und Politik, ohne wie Regierungen aussehen zu müssen.",
+      "Heutige Aufgabe: Sag, was eine Plattform nicht für dich entscheiden soll."
+    ]
+  },
+  {
+    key: "day-5",
+    delayDays: 5,
+    subject: "Tag 5: Lass eine Tür offen",
+    title: "Wo man mich erreicht",
+    body: [
+      "heute wird es praktisch.",
+      "Viele bleiben, weil Gehen sich wie Verschwinden anfühlt. Diese Angst ist real. Freundschaften, Einladungen und lose Kontakte wurden in Plattformen verwoben, denen die Beziehungen selbst vollkommen egal sind.",
+      "Lass also eine Tür offen. Sag Menschen, wo sie dich erreichen können. E-Mail, Signal, Telefon, Website, Newsletter, echtes Leben. Du musst nicht überall verfügbar sein. Ein ehrlicher Weg reicht.",
+      "Heutige Aufgabe: Poste deinen neuen Kontaktweg."
+    ]
+  },
+  {
+    key: "day-6",
+    delayDays: 6,
+    subject: "Tag 6: Mach die Tür sichtbar",
+    title: "Andere einladen",
+    body: [
+      "heute geht es nicht um Druck.",
+      "Niemand geht, weil man ihn hart genug beschämt. Die bessere Einladung ist subtiler: Ich gehe, das ist mein Grund, und wenn du ähnlich fühlst, kannst du auch gehen.",
+      "Ein öffentlicher Ausstieg gibt anderen ein Bild, das ihnen vielleicht gefehlt hat. Ausloggen kann bewusst, sozial und sichtbar sein.",
+      "Heutige Aufgabe: Lade andere ein, ohne zu drängen."
+    ]
+  },
+  {
+    key: "day-7",
+    delayDays: 7,
+    subject: "Tag 7: Log dich aus",
+    title: "Letzter Post und Logout",
+    body: [
+      "heute ist der letzte Post.",
+      "Sag es klar. Sag, wo man dich erreichen kann. Sag, warum du gehst. Dann mach den Ausstieg real: Lösche die Apps, deaktiviere Accounts und entferne die Shortcuts.",
+      "Vielleicht spürst du danach einen seltsamen Zug zurück. Das heißt nicht, dass die Entscheidung falsch war. Es heißt, dass der Reflex noch einen Weg in deinem Körper hat.",
+      "Heutige Aufgabe: Veröffentliche den letzten Post und log dich aus. Viel Erfolg!"
+    ]
+  },
+  {
+    key: "day-14",
+    delayDays: 14,
+    subject: "Zwei Wochen später: die erste Ruhe",
+    title: "Die erste ruhige Woche",
+    body: [
+      "die erste Ruhe kann seltsam sein.",
+      "Manche erwarten, dass Freiheit sofort und dramatisch wirkt. Oft fühlt sie sich ungleichmäßig an: Erleichterung, Langeweile, Unruhe, FOMO oder der Impuls, nur kurz wieder zu schauen.",
+      "Das bedeutet nicht, dass der Logout gescheitert ist. Es bedeutet, dass der Reflex noch ausklingt.",
+      "Frage für heute: Was hast du bemerkt, das der Feed sonst überdeckt?"
+    ]
+  },
+  {
+    key: "day-30",
+    delayDays: 30,
+    subject: "Dreißig Tage später: was kam zurück?",
+    title: "Was zurückkam",
+    body: [
+      "dreißig Tage sind lang genug, um Muster zu bemerken.",
+      "Vielleicht hat sich dein Schlaf verändert. Vielleicht ist deine Aufmerksamkeit noch verstreut, aber weniger aggressiv. Vielleicht hast du nach dem Handy gegriffen und dort war nichts.",
+      "Schreib auf, was zurückkam: Zeit, Ruhe, Fokus, Langeweile, direkte Nachrichten, weniger Streit, weniger Vergleich.",
+      "Schreib auch auf, was schwer war. Auch das ist wichtig."
+    ]
+  },
+  {
+    key: "reason-1",
+    delayDays: 60,
+    subject: "Grund 1: Aufmerksamkeit wird abgeschöpft",
+    title: "Deine Aufmerksamkeit ist kein Rohstoff",
+    body: [
+      "deine Aufmerksamkeit ist nichts Kleines.",
+      "Sie ist die Art, wie du ein Leben baust: zuhören, lernen, lieben, denken, bemerken, schaffen und verändern.",
+      "Der Feed behandelt diese Aufmerksamkeit als Rohstoff. Gehen heißt auch: Ich lasse mich nicht weiter abbauen."
+    ]
+  },
+  {
+    key: "reason-2",
+    delayDays: 90,
+    subject: "Grund 2: Der Feed wurde gebaut, um zu gewinnen",
+    title: "Er wurde gebaut, damit du zurückkommst",
+    body: [
+      "der Feed ist kein neutraler Raum.",
+      "Er ist eine Sortiermaschine. Er entscheidet, was erscheint, verschwindet, wiederholt wird und die Stimmung des Tages prägt.",
+      "Wenn Aufhören schwerer war als erwartet, heißt das nicht, dass du schwach bist. Es heißt, dass das System funktioniert hat."
+    ]
+  },
+  {
+    key: "reason-3",
+    delayDays: 120,
+    subject: "Grund 3: Big Tech hat zu viel Macht",
+    title: "Eine private Schicht über dem öffentlichen Leben",
+    body: [
+      "ein paar Unternehmen prägen, was Milliarden Menschen sehen.",
+      "Sie beeinflussen Nachrichten, Kultur, Politik, Beziehungen, Schönheitsideale, Sprache, Humor und Empörung.",
+      "Niemand sollte öffentliches Leben still justieren, um Werbung zu verkaufen."
+    ]
+  },
+  {
+    key: "reason-4",
+    delayDays: 150,
+    subject: "Grund 4: Empörung wird belohnt",
+    title: "Wut reist gut",
+    body: [
+      "Algorithmen müssen nicht jeden Konflikt erfinden.",
+      "Sie müssen nur finden, was bindet, und es stärker ausspielen. Wut ist nützlich. Gewissheit ist nützlich. Nuance ist meistens zu langsam.",
+      "Den Feed zu verlassen ist eine Art, das eigene Nervensystem aus diesem Geschäftsmodell herauszunehmen."
+    ]
+  },
+  {
+    key: "month-6",
+    delayDays: 183,
+    subject: "Sechs Monate später: nicht aus Versehen zurückgleiten",
+    title: "Nicht leise zurückkehren",
+    body: [
+      "sechs Monate sind lang genug, damit der alte Sog höflich wird.",
+      "Vielleicht kommt er als ein Link, ein Login, ein Event, eine App, die alle anderen noch nutzen. Dann ist der Feed wieder in deiner Tasche, als wäre nichts passiert.",
+      "Wenn du zurückgeglitten bist, sei ehrlich. Nicht zur Strafe, sondern um den Mechanismus zu sehen.",
+      "Wenn du draußen geblieben bist, schütze diese Entscheidung."
+    ]
+  },
+  {
+    key: "reason-5",
+    delayDays: 210,
+    subject: "Grund 5: Langeweile wird kolonisiert",
+    title: "Langeweile ist kein Versagen",
+    body: [
+      "Langeweile war einmal Teil des Lebens.",
+      "Warten, gehen, im Zug sitzen, den Geist ohne Auftrag bewegen lassen.",
+      "Der Feed greift genau diesen Raum an und trainiert dich, nach Stimulation zu greifen, bevor Gedanken entstehen."
+    ]
+  },
+  {
+    key: "reason-6",
+    delayDays: 240,
+    subject: "Grund 6: Vergleich wurde normal",
+    title: "Der Feed erzeugt Mangel",
+    body: [
+      "Vergleich wirkt auch dann, wenn du weißt, dass Bilder bearbeitet sind.",
+      "Der Feed zeigt Leben so, dass ein Gefühl von Mangel entsteht.",
+      "Gehen ist eine Art, dein reales Leben nicht weiter gegen endlose Performances zu messen."
+    ]
+  },
+  {
+    key: "reason-7",
+    delayDays: 270,
+    subject: "Grund 7: Einsamkeit ist profitabel",
+    title: "Kontakt ist nicht Nähe",
+    body: [
+      "Plattformen versprechen Verbindung.",
+      "Oft liefern sie Kontakt ohne Nähe. Du kannst hunderte Menschen beobachten und dich trotzdem allein fühlen.",
+      "Das Ziel ist nicht Isolation. Das Ziel ist, Beziehungen in Kanäle zu bringen, die keine Sucht brauchen."
+    ]
+  },
+  {
+    key: "reason-8",
+    delayDays: 300,
+    subject: "Grund 8: Politik wurde Performance",
+    title: "Reaktion ist nicht Handlung",
+    body: [
+      "Ein Like kann sich wie eine Haltung anfühlen.",
+      "Ein Repost kann sich wie Mut anfühlen. Ein Kommentar kann sich wie Handlung anfühlen.",
+      "Eine Gesellschaft kann den ganzen Tag wütend sein und trotzdem still bleiben."
+    ]
+  },
+  {
+    key: "reason-9",
+    delayDays: 330,
+    subject: "Grund 9: Kultur wird flacher",
+    title: "Schnell ist nicht dasselbe wie gut",
+    body: [
+      "der Feed ist nicht gut in der Tiefe.",
+      "Er ist gut in Verbreitung. Was am schnellsten reist, sieht schnell wie das Wichtigste aus.",
+      "Kultur braucht Reibung, Erinnerung, Geduld und Räume, in denen nicht alles sofort gemessen wird."
+    ]
+  },
+  {
+    key: "reason-10",
+    delayDays: 360,
+    subject: "Grund 10: Menschen werden passiv gehalten",
+    title: "Die Welt braucht mehr als Zuschauer",
+    body: [
+      "der Feed zersplittert unseren gemeinsamen Horizont.",
+      "Gemeinsame Probleme wirken zu groß, zu verwirrend oder zu hoffnungslos, wenn alle eine private Version der Wirklichkeit erhalten.",
+      "Ausloggen bringt Aufmerksamkeit und Energie zurück an Orte, an denen Veränderung tatsächlich passieren kann."
+    ]
+  },
+  {
+    key: "year-1",
+    delayDays: 365,
+    subject: "Ein Jahr später",
+    title: "Ein Jahr ohne Feed",
+    body: [
+      "ein Jahr ist keine Serie. Es ist ein Beweis.",
+      "Etwas hat sich verändert, auch wenn es leise war. Deine Aufmerksamkeit ging irgendwohin. Deine Beziehungen mussten andere Wege finden.",
+      "Die wichtige Frage ist nicht, ob du perfekt warst. Die wichtige Frage ist, ob du bewusster geworden bist.",
+      "Danke, dass du den Ausstieg sichtbar gemacht hast."
+    ]
+  },
+  {
+    key: "reason-11",
+    delayDays: 390,
+    subject: "Grund 11: Begehren wird hergestellt",
+    title: "Der Feed verkauft Rastlosigkeit",
+    body: [
+      "der Feed braucht nicht, dass du glücklich bist.",
+      "Er braucht, dass du rastlos genug bist, zurückzukehren: ein Kauf entfernt, eine Reise entfernt, ein Upgrade entfernt.",
+      "Diese Rastlosigkeit treibt Konsum, Müll, Vergleich und Schulden."
+    ]
+  },
+  {
+    key: "reason-12",
+    delayDays: 420,
+    subject: "Grund 12: Beziehungen verdienen Besseres",
+    title: "Freundschaft braucht einen direkten Weg",
+    body: [
+      "viele Menschen bleiben, weil Gehen sich wie Verschwinden anfühlt.",
+      "Diese Angst ist real. Plattformen haben sich zwischen Menschen und ihre Beziehungen geschoben.",
+      "Wenn die Beziehung wichtig ist, gib ihr einen direkten Weg."
+    ]
+  },
+  {
+    key: "reason-13",
+    delayDays: 450,
+    subject: "Grund 13: Sichtbare Ausstiege zählen",
+    title: "Der Ausstieg ist die Botschaft",
+    body: [
+      "leise zu gehen ist gut für die Person, die geht.",
+      "Öffentlich zu gehen ist nützlich für alle anderen. Menschen sehen einen Ausgang.",
+      "Du brauchst kein perfektes Argument: Sag, warum du gehst. Sag, wo man dich erreicht. Dann geh."
+    ]
+  }
+];
+
 const POST_OPTIONS_BY_KEY = {
   "day-0": [
     "I am preparing to leave this platform.\nI am not disappearing.",
@@ -395,9 +687,89 @@ const REFLECTION_PROMPTS_BY_KEY = {
   ]
 };
 
-export const EMAIL_SEQUENCE = BASE_EMAIL_SEQUENCE.map(email => ({
-  ...email,
-  posts: POST_OPTIONS_BY_KEY[email.key] || [],
-  reflectionPrompts: REFLECTION_PROMPTS_BY_KEY[email.key] || [],
-  feedbackInvite: ["day-7", "day-14", "day-30", "month-6", "year-1"].includes(email.key)
-}));
+const POST_OPTIONS_BY_KEY_DE = {
+  "day-0": [
+    "Ich bereite mich darauf vor, diese Plattform zu verlassen.\nIch verschwinde nicht.",
+    "Behalte deine Freunde.\nVerlier den Feed.",
+    "Ich richte meine Aufmerksamkeit und meine Beziehungen woanders hin."
+  ],
+  "day-1": [
+    "Ich verlasse diese Plattform.\nIn den nächsten Tagen poste ich warum.",
+    "Das ist kein Detox.\nDas ist eine Verweigerung.",
+    "Der Ausstieg ist die Botschaft."
+  ],
+  "day-2": [
+    "Meine Aufmerksamkeit steht nicht zum Verkauf.",
+    "Aufmerksamkeit ist ihre Währung.\nGeh nicht für sie pleite.",
+    "Du bist nicht faul.\nDu wirst gegen dich selbst designt."
+  ],
+  "day-3": [
+    "Hol dir deine Zeit zurück.\nSie gehörte nie ihnen.",
+    "Weniger Scrollen.\nMehr Leben.",
+    "Was, wenn deine Langeweile\ndich retten wollte?"
+  ],
+  "day-4": [
+    "Ich will meine Gedanken nicht vorsortiert bekommen.",
+    "Ich will nicht, dass ein paar Firmen jeden Tag entscheiden, was ich sehe.",
+    "Deine Gedanken sind kein Marktplatz."
+  ],
+  "day-5": [
+    "Ich verlasse den Feed,\nnicht die Menschen.",
+    "Du erreichst mich weiterhin hier: ...",
+    "Ich verschwinde nicht.\nIch kehre zurück."
+  ],
+  "day-6": [
+    "Wenn der Feed mehr nimmt als gibt,\nwieso gehst du nicht?",
+    "Poste warum.\nSag, wo man dich findet.\nDann log dich aus.",
+    "Suchst du den Hausverstand?\nVersuch es mit Ausloggen."
+  ],
+  "day-7": [
+    "Das ist mein letzter Post hier.\nFindet mich im echten Leben.",
+    "Ich habe mich ausgeloggt,\num zu mir zurückzukommen.",
+    "Das echte Leben hat keinen unendlichen Scroll."
+  ],
+  "day-14": [],
+  "day-30": [],
+  "month-6": [],
+  "year-1": []
+};
+
+const REFLECTION_PROMPTS_BY_KEY_DE = {
+  "day-14": [
+    "Was hat der Feed sonst überdeckt?",
+    "Was fühlte sich besser an als erwartet?",
+    "Was war schwerer als gedacht?"
+  ],
+  "day-30": [
+    "Was kam nach dreißig Tagen zurück?",
+    "Was vermisst du noch?",
+    "Was würdest du jemandem sagen, der heute beginnt?"
+  ],
+  "month-6": [
+    "Was wollte dich zurückziehen?",
+    "Welche Abkürzung muss wieder verschwinden?",
+    "Welche Grenze muss stärker werden?"
+  ],
+  "year-1": [
+    "Was hat sich nach einem Jahr verändert?",
+    "Was wurde durch das Gehen möglich?",
+    "Was sollte The Great Logout ehrlicher erzählen?"
+  ]
+};
+
+function buildEmailSequence(baseSequence, postOptions, reflectionPrompts, language = "en") {
+  return baseSequence.map(email => ({
+    ...email,
+    language,
+    posts: postOptions[email.key] || [],
+    reflectionPrompts: reflectionPrompts[email.key] || [],
+    feedbackInvite: ["day-7", "day-14", "day-30", "month-6", "year-1"].includes(email.key)
+  }));
+}
+
+export const EMAIL_SEQUENCES = {
+  en: buildEmailSequence(BASE_EMAIL_SEQUENCE, POST_OPTIONS_BY_KEY, REFLECTION_PROMPTS_BY_KEY, "en"),
+  de: buildEmailSequence(BASE_EMAIL_SEQUENCE_DE, POST_OPTIONS_BY_KEY_DE, REFLECTION_PROMPTS_BY_KEY_DE, "de")
+};
+
+export const EMAIL_SEQUENCE = EMAIL_SEQUENCES.en;
