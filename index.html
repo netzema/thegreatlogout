@@ -1559,6 +1559,7 @@ Don't go broke for them.</textarea>
 
             <!-- Set data-endpoint to your deployed Worker URL, for example https://api.thegreatlogout.org/subscribe. -->
             <form class="signup-form" id="guideSignupForm" data-endpoint="https://api.thegreatlogout.org/subscribe">
+              <input type="hidden" name="language" value="en" />
               <label for="email">Email address</label>
               <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
 
@@ -2284,7 +2285,7 @@ Don't go broke for them.</textarea>
           firstName: String(formData.get("firstName") || "").trim(),
           logoutDate: String(formData.get("logoutDate") || "").trim(),
           guideLength: Number(formData.get("guideLength") || 7),
-          language: "en",
+          language: String(formData.get("language") || document.documentElement.lang || "en").trim().slice(0, 8),
           consent: formData.get("consent") === "on"
         };
 

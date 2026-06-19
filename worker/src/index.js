@@ -36,6 +36,15 @@ function normalizeLanguage(value) {
   return String(value || "en").toLowerCase().startsWith("de") ? "de" : "en";
 }
 
+function inferLanguageFromRequest(request) {
+  const referer = request.headers.get("Referer") || request.headers.get("Referrer") || "";
+  try {
+    return new URL(referer).pathname.toLowerCase().startsWith("/de") ? "de" : "en";
+  } catch {
+    return "en";
+  }
+}
+
 function getEmailSequence(language) {
   return EMAIL_SEQUENCES[normalizeLanguage(language)] || EMAIL_SEQUENCES.en;
 }
@@ -100,7 +109,7 @@ async function handleSubscribe(request, env) {
   const email = normalizeEmail(input?.email);
   const firstName = cleanText(input?.firstName || "", 80);
   const guideLength = [1, 3, 7].includes(Number(input?.guideLength)) ? Number(input.guideLength) : 7;
-  const language = normalizeLanguage(input?.language);
+  const language = normalizeLanguage(input?.language || inferLanguageFromRequest(request));
   const plannedLogoutDate = cleanDate(input?.logoutDate);
   const consent = input?.consent === true;
   const unsubscribeToken = crypto.randomUUID();

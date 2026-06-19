@@ -265,13 +265,15 @@ function deIndexScript() {
     .replace('logoImage.src = "assets/the-great-logout-mark.svg";', 'logoImage.src = "../assets/the-great-logout-mark.svg";')
     .replaceAll("A collective social media exit", "Gemeinsam raus aus Social Media")
     .replaceAll("The exit is the message.", "Der Ausstieg ist die Botschaft.")
+    .replace('value="en" />\n              <label for="email">Email address</label>', 'value="de" />\n              <label for="email">E-Mail-Adresse</label>')
+    .replace('language: String(formData.get("language") || document.documentElement.lang || "en").trim().slice(0, 8)', 'language: String(formData.get("language") || document.documentElement.lang || "de").trim().slice(0, 8)')
     .replace('language: "en"', 'language: "de"')
     .replace('custom.textContent = "Custom text";', 'custom.textContent = "Eigener Text";')
     .replace('button.textContent = "Use this";', 'button.textContent = "Verwenden";')
     .replace('signupStatus.textContent = "Signup is not connected yet.";', 'signupStatus.textContent = "Die Anmeldung ist noch nicht verbunden.";')
     .replace('signupStatus.textContent = "Adding you to the guide...";', 'signupStatus.textContent = "Deine Anmeldung wird eingetragen...";')
     .replace('throw new Error(result.error || "Signup failed.");', 'throw new Error(result.error || "Anmeldung fehlgeschlagen.");')
-    .replace('signupStatus.textContent = "You\\\'re in. Check your inbox for the first email.";', 'signupStatus.textContent = "Du bist dabei. Die erste E-Mail ist unterwegs.";')
+    .replace('signupStatus.textContent = "You\'re in. Check your inbox for the first email.";', 'signupStatus.textContent = "Du bist dabei. Die erste E-Mail ist unterwegs.";')
     .replace('signupStatus.textContent = error.message || "Something went wrong. Please try again.";','signupStatus.textContent = error.message || "Etwas ist schiefgelaufen. Bitte versuche es erneut.";');
 
   script = script.replace(
@@ -506,6 +508,7 @@ ${altLinks({ en: "/", de: "/de/" })}
             <p>1 bis 7 Tage sichtbar werden. Dann ausloggen.</p>
             <p class="signup-link">Brauchst du zuerst eine Formulierung? <a href="#generator">Zum Post-Generator.</a></p>
             <form class="signup-form" id="guideSignupForm" data-endpoint="https://api.thegreatlogout.org/subscribe">
+              <input type="hidden" name="language" value="de" />
               <label for="email">E-Mail-Adresse</label>
               <input id="email" name="email" type="email" placeholder="du@example.com" autocomplete="email" required />
               <label for="firstName">Vorname <span aria-hidden="true">(optional)</span></label>
@@ -741,6 +744,14 @@ function patchEnglishIndexPayload() {
   source = source.replace(
     /guideLength: Number\(formData\.get\("guideLength"\) \|\| 7\),\n          consent:/,
     'guideLength: Number(formData.get("guideLength") || 7),\n          language: "en",\n          consent:'
+  );
+  source = source.replace(
+    /guideLength: Number\(formData\.get\("guideLength"\) \|\| 7\),\n          language: "en",/,
+    'guideLength: Number(formData.get("guideLength") || 7),\n          language: String(formData.get("language") || document.documentElement.lang || "en").trim().slice(0, 8),'
+  );
+  source = source.replace(
+    /<form class="signup-form" id="guideSignupForm" data-endpoint="https:\/\/api\.thegreatlogout\.org\/subscribe">\n(?!\s*<input type="hidden" name="language")/,
+    '<form class="signup-form" id="guideSignupForm" data-endpoint="https://api.thegreatlogout.org/subscribe">\n              <input type="hidden" name="language" value="en" />\n'
   );
   write("index.html", source);
 }

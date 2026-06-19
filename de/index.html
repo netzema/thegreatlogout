@@ -1437,6 +1437,7 @@
             <p>1 bis 7 Tage sichtbar werden. Dann ausloggen.</p>
             <p class="signup-link">Brauchst du zuerst eine Formulierung? <a href="#generator">Zum Post-Generator.</a></p>
             <form class="signup-form" id="guideSignupForm" data-endpoint="https://api.thegreatlogout.org/subscribe">
+              <input type="hidden" name="language" value="de" />
               <label for="email">E-Mail-Adresse</label>
               <input id="email" name="email" type="email" placeholder="du@example.com" autocomplete="email" required />
               <label for="firstName">Vorname <span aria-hidden="true">(optional)</span></label>
@@ -2118,7 +2119,7 @@
           firstName: String(formData.get("firstName") || "").trim(),
           logoutDate: String(formData.get("logoutDate") || "").trim(),
           guideLength: Number(formData.get("guideLength") || 7),
-          language: "de",
+          language: String(formData.get("language") || document.documentElement.lang || "de").trim().slice(0, 8),
           consent: formData.get("consent") === "on"
         };
 
@@ -2147,7 +2148,7 @@
             logoutDateInput.value = getDateInputValue(8);
           }
           if (signupStatus) {
-            signupStatus.textContent = "You're in. Check your inbox for the first email.";
+            signupStatus.textContent = "Du bist dabei. Die erste E-Mail ist unterwegs.";
             signupStatus.dataset.state = "success";
           }
         } catch (error) {
