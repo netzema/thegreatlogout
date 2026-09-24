@@ -5,7 +5,7 @@ const root = path.resolve(__dirname, "..");
 const deDir = path.join(root, "de");
 fs.mkdirSync(deDir, { recursive: true });
 
-const site = "https://www.thegreatlogout.org";
+const site = "https://thegreatlogout.org";
 
 function read(name) {
   return fs.readFileSync(path.join(root, name), "utf8");
@@ -179,6 +179,14 @@ function ensureMobileMenuScript(output) {
   return output.replace("</body>", `${mobileMenuScript()}\n</body>`);
 }
 
+function ensureAnalyticsAssets(output, prefix = "") {
+  output = output
+    .replace(/\n\s*<link rel="stylesheet" href="(?:\.\.\/)?assets\/analytics\.css" \/>/g, "")
+    .replace(/\n\s*<script src="(?:\.\.\/)?assets\/analytics\.js"><\/script>/g, "");
+  output = output.replace("</head>", `  <link rel="stylesheet" href="${prefix}assets/analytics.css" />\n</head>`);
+  return output.replace("</body>", `  <script src="${prefix}assets/analytics.js"></script>\n</body>`);
+}
+
 function altLinks({ en, de }) {
   return `  <link rel="alternate" hreflang="en" href="${site}${en}" />
   <link rel="alternate" hreflang="de" href="${site}${de}" />
@@ -195,22 +203,15 @@ function updateEnglishPage(file, counterpart) {
   const enPath = file === "index.html" ? "/" : `/${file}`;
   let output = updateHead(source, { en: enPath, de: counterpart });
   output = output.replace(/\n\s*<a class="language-switch" href="[^"]+" hreflang="de" lang="de">DE<\/a>/g, "");
-  output = output.replace(/\s*&middot;\s*<a href="de\/[^"]*" hreflang="de" lang="de">Deutsch<\/a>/g, "");
-  output = output.replace(/\s*&middot;\s*<a href="de\/" hreflang="de" lang="de">Deutsch<\/a>/g, "");
   output = output.replace(/<style>([\s\S]*?)<\/style>/, (_match, style) => `<style>${ensureLanguageCss(style)}</style>`);
   const deHref = counterpart === "/de/" ? "de/" : `de/${path.basename(counterpart)}`;
   output = output.replace(
     /(<a href="index\.html#start-guide" class="nav-cta">Start<\/a>|<a href="#start-guide" class="nav-cta">Start<\/a>)/,
     `<a class="language-switch" href="${deHref}" hreflang="de" lang="de">DE</a>\n        $1`
   );
-  output = output.replace(
-    /(<a href="privacy\.html">Privacy<\/a>|<a href="privacy\.html">Privacy<\/a><\/p>|<a href="imprint\.html">Imprint<\/a><\/p>|<a href="privacy\.html">Privacy Policy<\/a><\/p>)/,
-    match => match.includes("</p>")
-      ? match.replace("</p>", ` &middot; <a href="${deHref}" hreflang="de" lang="de">Deutsch</a></p>`)
-      : `${match}\n        &middot;\n        <a href="${deHref}" hreflang="de" lang="de">Deutsch</a>`
-  );
   output = ensureMobileMenuMarkup(output, "Menu");
   output = ensureMobileMenuScript(output);
+  output = ensureAnalyticsAssets(output);
   write(file, output);
 }
 
@@ -272,7 +273,7 @@ function deIndexScript() {
     .replace('button.textContent = "Use this";', 'button.textContent = "Verwenden";')
     .replace('signupStatus.textContent = "Signup is not connected yet.";', 'signupStatus.textContent = "Die Anmeldung ist noch nicht verbunden.";')
     .replace('signupStatus.textContent = "Adding you to the guide...";', 'signupStatus.textContent = "Deine Anmeldung wird eingetragen...";')
-    .replace('throw new Error(result.error || "Signup failed.");', 'throw new Error(result.error || "Anmeldung fehlgeschlagen.");')
+    .replace('throw new Error(result.detail || result.error || "Signup failed.");', 'throw new Error(result.detail || result.error || "Anmeldung fehlgeschlagen.");')
     .replace('signupStatus.textContent = "You\'re in. Check your inbox for the first email.";', 'signupStatus.textContent = "Du bist dabei. Die erste E-Mail ist unterwegs.";')
     .replace('signupStatus.textContent = error.message || "Something went wrong. Please try again.";','signupStatus.textContent = error.message || "Etwas ist schiefgelaufen. Bitte versuche es erneut.";');
 
@@ -507,8 +508,12 @@ ${altLinks({ en: "/", de: "/de/" })}
             <h3 id="signup-title">Starte deinen Ausstieg</h3>
             <p>1 bis 7 Tage sichtbar werden. Dann ausloggen.</p>
             <p class="signup-link">Brauchst du zuerst eine Formulierung? <a href="#generator">Zum Post-Generator.</a></p>
-            <form class="signup-form" id="guideSignupForm" data-endpoint="https://api.thegreatlogout.org/subscribe">
+            <form class="signup-form" id="guideSignupForm" data-endpoint="/api/guide/subscribe">
               <input type="hidden" name="language" value="de" />
+              <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;">
+                <label for="website">Website</label>
+                <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+              </div>
               <label for="email">E-Mail-Adresse</label>
               <input id="email" name="email" type="email" placeholder="du@example.com" autocomplete="email" required />
               <label for="firstName">Vorname <span aria-hidden="true">(optional)</span></label>
@@ -575,6 +580,8 @@ ${altLinks({ en: "/", de: "/de/" })}
         &middot;
         <a href="privacy.html">Datenschutz</a>
         &middot;
+        <button class="privacy-settings" type="button" data-analytics-settings>Datenschutz-Einstellungen</button>
+        &middot;
         <a href="../" hreflang="en" lang="en">English</a>
       </div>
     </div>
@@ -640,7 +647,7 @@ ${altLinks({ en: "/essay.html", de: "/de/essay.html" })}
       <div class="action-box"><h2>Der Ausstieg ist die Botschaft</h2><p>The Great Logout ist nicht gegen das Internet. Es richtet sich gegen Plattformen, die Sucht, Empörung, Überwachung, Einsamkeit und Unsicherheit in ein Geschäftsmodell verwandeln.</p><p>Wenn dieser Essay dir geholfen hat, den Feed anders zu sehen, nutze diese Klarheit. Erstelle einen Post. Starte den Guide. Unterstütze die Kampagne, wenn du kannst.</p><div class="button-row"><a class="btn btn-primary" href="index.html#guide">Logout starten</a><a class="btn btn-secondary" href="index.html#generator">Post erstellen</a><a class="btn btn-secondary" href="https://ko-fi.com/thegreatlogout" target="_blank" rel="noopener">Kampagne unterstützen</a></div></div>
     </div></article>
   </main>
-  <footer class="footer"><div class="wrap"><p>&copy; 2026 The Great Logout</p><p><a href="index.html">Zur Kampagne</a> &middot; <a href="imprint.html">Impressum</a> &middot; <a href="privacy.html">Datenschutz</a> &middot; <a href="../essay.html" hreflang="en" lang="en">English</a></p></div></footer>
+  <footer class="footer"><div class="wrap"><p>&copy; 2026 The Great Logout</p><p><a href="index.html">Zur Kampagne</a> &middot; <a href="imprint.html">Impressum</a> &middot; <a href="privacy.html">Datenschutz</a> &middot; <button class="privacy-settings" type="button" data-analytics-settings>Datenschutz-Einstellungen</button> &middot; <a href="../essay.html" hreflang="en" lang="en">English</a></p></div></footer>
 </body>
 </html>
 `;
@@ -675,22 +682,22 @@ ${altLinks({ en: "/privacy.html", de: "/de/privacy.html" })}
   <main>
     <section class="hero"><div class="wrap"><div class="kicker">Datenschutz</div><h1>Datenschutzerklärung</h1></div></section>
     <section class="wrap legal" aria-label="Datenschutzerklärung">
-      <p class="muted">Zuletzt aktualisiert: 19. Juni 2026</p>
-      <div class="legal-card"><p><strong>Kurzfassung:</strong> The Great Logout erhebt nur die Daten, die für den E-Mail-Guide nötig sind. Der Post-Generator läuft in deinem Browser. Auf dieser Website verwenden wir keine Werbetracker, keine Analytics-Cookies und kein Profiling.</p></div>
+      <p class="muted">Zuletzt aktualisiert: 24. September 2026</p>
+      <div class="legal-card"><p><strong>Kurzfassung:</strong> The Great Logout läuft auf unserem eigenen Server. Der Post-Generator arbeitet in deinem Browser. Mit deiner Einwilligung nutzen wir eine datensparsame Website-Statistik auf demselben Server. Wir verwenden keine Werbetracker und kein Profiling.</p></div>
       <h2>Verantwortlicher</h2><p>Verantwortlich für diese Website ist:</p><p>The Great Logout<br />Eine Kampagne von Daniel Netzl<br />Landstraße 47<br />2464 Göttlesbrunn<br />Österreich<br /><a href="mailto:support@thegreatlogout.org">support@thegreatlogout.org</a></p>
       <h2>Welche Daten wir erheben</h2><p>Wenn du dich für den E-Mail-Guide anmeldest, verarbeiten wir die Daten, die du selbst einträgst:</p><ul><li>E-Mail-Adresse</li><li>optional Vorname</li><li>optional geplantes Logout-Datum</li><li>gewählte Guide-Länge</li><li>Einwilligung zum Erhalt des Guides</li></ul><p>Für Versand und Abmeldung speichern wir außerdem, soweit erforderlich, technische Informationen wie Abmelde-Token, Anmeldezeitpunkt, Abmeldezeitpunkt, Versandstatus, Zustell-IDs und Fehlermeldungen.</p>
       <h2>Wofür wir diese Daten verwenden</h2><p>Wir verwenden diese Daten, um dir den Logout-Guide, spätere Check-ins und verwandte Kampagnen-E-Mails zu schicken, die du angefordert hast. Rechtsgrundlage ist deine Einwilligung nach Art. 6 Abs. 1 lit. a DSGVO.</p><p>Begrenzte technische Daten können außerdem verarbeitet werden, um Website und E-Mail-System zu betreiben, abzusichern und zu verbessern. Rechtsgrundlage ist unser berechtigtes Interesse nach Art. 6 Abs. 1 lit. f DSGVO.</p>
       <h2>E-Mail-Guide und Abmeldung</h2><p>Du kannst dich jederzeit über den Abmeldelink in jeder E-Mail vom Guide abmelden. Alternativ erreichst du uns unter <a href="mailto:support@thegreatlogout.org">support@thegreatlogout.org</a>.</p><p>Nach einer Abmeldung senden wir keine Guide-E-Mails mehr. Eine begrenzte Dokumentation der Abmeldung kann gespeichert bleiben, damit wir keine weiteren E-Mails senden und die Einwilligungshistorie nachvollziehen können.</p>
       <h2>Post-Generator</h2><p>Der Post-Generator läuft in deinem Browser. Text, den du dort eingibst, wird genutzt, um das herunterladbare Bild auf deinem Gerät zu erstellen.</p><p>Einige E-Mail-Links können den Generator öffnen oder ein SVG über die Kampagnen-API anfordern. Dabei können ausgewählter Text, Format und Farbe in der URL enthalten sein, damit die Datei erzeugt werden kann.</p>
-      <h2>Dienstleister</h2><p>Für den Betrieb der Kampagne nutzen wir folgende Dienstleister:</p><ul><li>GitHub Pages für das Hosting der statischen Website</li><li>Cloudflare für DNS, Sicherheit und die E-Mail-Anmelde-API</li><li>Cloudflare D1 zur Speicherung von Guide-Anmeldungen</li><li>Postmark für Transaktions- und Guide-E-Mails</li><li>eine externe Plattform für freiwillige Beiträge, wenn du die Kampagne unterstützt</li></ul><p>Wenn du diese Website über externe Links verlässt, gilt die Datenschutzerklärung des jeweiligen externen Dienstes.</p>
-      <h2>Cookies und Analytics</h2><p>Derzeit verwendet diese Website keine Analytics-Cookies, Werbe-Cookies oder Tracking-Pixel. Falls sich das ändert, wird diese Erklärung aktualisiert.</p>
-      <h2>Server-Logs</h2><p>Hosting-, DNS-, Sicherheits- und E-Mail-Anbieter können technische Daten wie IP-Adresse, Anfragezeit, Browserinformationen, angeforderte URL und Versandprotokolle verarbeiten, um ihre Dienste bereitzustellen und zu schützen. Wir nutzen diese Daten nicht, um Besucherinnen oder Besucher zu profilieren.</p>
+      <h2>Dienstleister</h2><p>Für den Betrieb der Kampagne nutzen wir folgende Dienstleister:</p><ul><li>Postmark, ein Dienst der AC PM LLC, für Transaktions- und Guide-E-Mails</li><li>Ko-fi, wenn du die Kampagne über den externen Beitragslink unterstützt</li></ul><p>Website, Anmeldedienst, Anmeldedatenbank, E-Mail-Zeitplan und Website-Statistik laufen auf unserem eigenen Server. Die für den E-Mail-Versand erforderlichen Daten werden an Postmark als Auftragsverarbeiter übermittelt. Weitere Informationen findest du in der <a href="https://postmarkapp.com/privacy-policy" rel="noopener noreferrer">Datenschutzerklärung von Postmark</a>.</p><p>Wenn du diese Website über externe Links verlässt, gilt die Datenschutzerklärung des jeweiligen externen Dienstes.</p>
+      <h2 id="website-statistics">Cookies und Website-Statistik</h2><p>Mit deiner ausdrücklichen Zustimmung verwenden wir eine selbst betriebene, datensparsame Website-Statistik. Sie hilft uns zu verstehen, welche Seiten, Links, Outreach-Kampagnen und Kampagnenmaterialien nützlich sind. Es werden keine Daten an einen externen Analysedienst übermittelt.</p><p>Erfasst werden Seitenaufrufe, pseudonyme Besucher- und Sitzungskennungen, die verweisende Domain, Herkunft und gegebenenfalls die Kampagnenparameter <code>utm_source</code>, <code>utm_medium</code>, <code>utm_campaign</code>, <code>utm_content</code> und <code>utm_term</code>, die grobe Geräteklasse, aktive Besuchszeit, angeklickte Linkziele, erfolgreiche Guide-Anmeldungen und Post-Downloads. Formularinhalte, E-Mail-Adressen, vollständige IP-Adressen und vollständige verweisende URLs werden nicht in der Analysedatenbank gespeichert.</p><p>Rechtsgrundlage ist deine Einwilligung gemäß Art. 6 Abs. 1 lit. a DSGVO und § 165 Abs. 3 TKG 2021. Vor deiner Zustimmung werden keine Analyseereignisse übertragen und keine Analysekennung gespeichert.</p><p>Deine Auswahl und die pseudonyme Besucherkennung werden für bis zu 180 Tage in den First-Party-Cookies <code>tgl_analytics_consent</code> und <code>tgl_analytics_visitor</code> gespeichert. Die Sitzungskennung liegt im Sitzungsspeicher deines Browsers und wird nach 30 Minuten Inaktivität erneuert. Einzelne Analyseereignisse werden nach spätestens 90 Tagen gelöscht.</p><p>Du kannst deine Entscheidung jederzeit ändern oder widerrufen. Beim Widerruf werden die Besucherkennung und die aktuelle Sitzungskennung auf deinem Gerät gelöscht; ab diesem Zeitpunkt werden keine weiteren Analyseereignisse übertragen.</p><p><button class="privacy-settings" type="button" data-analytics-settings>Datenschutz-Einstellungen öffnen</button></p>
+      <h2>Server-Logs</h2><p>Beim Besuch verarbeitet unser Server technische Daten wie IP-Adresse, Anfragezeit, Browserinformationen und angeforderte URL, um den Dienst bereitzustellen, abzusichern und Fehler zu analysieren. Server-Logs werden nicht mit der optionalen Website-Statistik zusammengeführt und nicht für Profiling verwendet.</p>
       <h2>Speicherdauer</h2><p>Daten zum E-Mail-Guide speichern wir, solange dein Abo aktiv ist. Nach einer Abmeldung speichern wir nur, was nötig ist, um die Abmeldung zu respektieren, Versandnachweise zu erhalten und rechtliche oder betriebliche Fragen zu klären. Du kannst jederzeit Löschung verlangen.</p>
       <h2>Deine Rechte</h2><p>Nach der DSGVO kannst du Auskunft, Berichtigung, Löschung, Einschränkung oder Widerspruch gegen die Verarbeitung deiner personenbezogenen Daten verlangen. Eine erteilte Einwilligung kannst du jederzeit widerrufen.</p><p>Zur Ausübung deiner Rechte kontaktiere <a href="mailto:support@thegreatlogout.org">support@thegreatlogout.org</a>. Du hast außerdem das Recht, Beschwerde bei einer Datenschutzbehörde einzulegen.</p>
       <h2>Änderungen</h2><p>Wir können diese Datenschutzerklärung aktualisieren, wenn sich Kampagne, Website oder E-Mail-System ändern. Das Datum oben zeigt den Stand der aktuellen Version.</p>
     </section>
   </main>
-  <footer class="footer"><div class="wrap"><p>&copy; 2026 The Great Logout</p><p><a href="index.html">Zur Kampagne</a> &middot; <a href="imprint.html">Impressum</a> &middot; <a href="../privacy.html" hreflang="en" lang="en">English</a></p></div></footer>
+  <footer class="footer"><div class="wrap"><p>&copy; 2026 The Great Logout</p><p><a href="index.html">Zur Kampagne</a> &middot; <a href="imprint.html">Impressum</a> &middot; <button class="privacy-settings" type="button" data-analytics-settings>Datenschutz-Einstellungen</button> &middot; <a href="../privacy.html" hreflang="en" lang="en">English</a></p></div></footer>
 </body>
 </html>
 `;
@@ -733,7 +740,7 @@ ${altLinks({ en: "/imprint.html", de: "/de/imprint.html" })}
       <p class="muted">Zuletzt aktualisiert: 19. Juni 2026</p>
     </section>
   </main>
-  <footer class="footer"><div class="wrap"><p>&copy; 2026 The Great Logout</p><p><a href="index.html">Zur Kampagne</a> &middot; <a href="privacy.html">Datenschutzerklärung</a> &middot; <a href="../imprint.html" hreflang="en" lang="en">English</a></p></div></footer>
+  <footer class="footer"><div class="wrap"><p>&copy; 2026 The Great Logout</p><p><a href="index.html">Zur Kampagne</a> &middot; <a href="privacy.html">Datenschutzerklärung</a> &middot; <button class="privacy-settings" type="button" data-analytics-settings>Datenschutz-Einstellungen</button> &middot; <a href="../imprint.html" hreflang="en" lang="en">English</a></p></div></footer>
 </body>
 </html>
 `;
@@ -750,8 +757,8 @@ function patchEnglishIndexPayload() {
     'guideLength: Number(formData.get("guideLength") || 7),\n          language: String(formData.get("language") || document.documentElement.lang || "en").trim().slice(0, 8),'
   );
   source = source.replace(
-    /<form class="signup-form" id="guideSignupForm" data-endpoint="https:\/\/api\.thegreatlogout\.org\/subscribe">\n(?!\s*<input type="hidden" name="language")/,
-    '<form class="signup-form" id="guideSignupForm" data-endpoint="https://api.thegreatlogout.org/subscribe">\n              <input type="hidden" name="language" value="en" />\n'
+    /<form class="signup-form" id="guideSignupForm" data-endpoint="\/api\/guide\/subscribe">\n(?!\s*<input type="hidden" name="language")/,
+    '<form class="signup-form" id="guideSignupForm" data-endpoint="/api/guide/subscribe">\n              <input type="hidden" name="language" value="en" />\n'
   );
   write("index.html", source);
 }
@@ -762,9 +769,9 @@ updateEnglishPage("privacy.html", "/de/privacy.html");
 updateEnglishPage("imprint.html", "/de/imprint.html");
 patchEnglishIndexPayload();
 
-write(path.join("de", "index.html"), ensureMobileMenuScript(ensureMobileMenuMarkup(deIndex(), "Menü")));
-write(path.join("de", "essay.html"), ensureMobileMenuScript(ensureMobileMenuMarkup(deEssay(), "Menü")));
-write(path.join("de", "privacy.html"), ensureMobileMenuScript(ensureMobileMenuMarkup(dePrivacy(), "Menü")));
-write(path.join("de", "imprint.html"), ensureMobileMenuScript(ensureMobileMenuMarkup(deImprint(), "Menü")));
+write(path.join("de", "index.html"), ensureAnalyticsAssets(ensureMobileMenuScript(ensureMobileMenuMarkup(deIndex(), "Menü")), "../"));
+write(path.join("de", "essay.html"), ensureAnalyticsAssets(ensureMobileMenuScript(ensureMobileMenuMarkup(deEssay(), "Menü")), "../"));
+write(path.join("de", "privacy.html"), ensureAnalyticsAssets(ensureMobileMenuScript(ensureMobileMenuMarkup(dePrivacy(), "Menü")), "../"));
+write(path.join("de", "imprint.html"), ensureAnalyticsAssets(ensureMobileMenuScript(ensureMobileMenuMarkup(deImprint(), "Menü")), "../"));
 
 console.log("Generated German site and updated language metadata.");

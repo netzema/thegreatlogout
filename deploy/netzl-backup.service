@@ -1,0 +1,17 @@
+[Unit]
+Description=Netzl Backend Backup with Restore Test
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=deploy
+Group=www-data
+WorkingDirectory=/home/deploy/apps/backend-release
+EnvironmentFile=/home/deploy/apps/backend/.env
+Environment="PATH=/home/deploy/apps/backend/.venv/bin"
+Environment="ANALYTICS_DATABASE_URL=sqlite:////home/deploy/apps/backend/data/analytics.db"
+Environment="BACKUP_DIRECTORY=/home/deploy/apps/backend/data/backups"
+ExecStart=/home/deploy/apps/backend/.venv/bin/python /home/deploy/apps/backend-release/scripts/create_backup.py
+PrivateTmp=true
+NoNewPrivileges=true

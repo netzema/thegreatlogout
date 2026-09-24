@@ -1,0 +1,197 @@
+limit_req_zone $binary_remote_addr zone=thegreatlogout_guide:10m rate=3r/m;
+limit_req_zone $binary_remote_addr zone=thegreatlogout_analytics:10m rate=20r/s;
+limit_req_zone $binary_remote_addr zone=thegreatlogout_generated_post:10m rate=15r/m;
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name thegreatlogout.org www.thegreatlogout.org api.thegreatlogout.org;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /home/deploy/apps/thegreatlogout.org;
+        default_type text/plain;
+        try_files $uri =404;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name thegreatlogout.org;
+
+    root /home/deploy/apps/thegreatlogout.org;
+    index index.html;
+
+    access_log /var/log/nginx/thegreatlogout.org.access.log;
+    error_log  /var/log/nginx/thegreatlogout.org.error.log;
+
+    ssl_certificate /etc/letsencrypt/live/thegreatlogout.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/thegreatlogout.org/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+
+    location = /api/guide/subscribe {
+        limit_req zone=thegreatlogout_guide burst=3 nodelay;
+        limit_req_status 429;
+        client_max_body_size 12k;
+        proxy_pass http://127.0.0.1:8788;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 25s;
+        proxy_send_timeout 10s;
+    }
+
+    location = /api/guide/unsubscribe {
+        proxy_pass http://127.0.0.1:8788;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 10s;
+    }
+
+    location = /api/guide/post.svg {
+        limit_req zone=thegreatlogout_generated_post burst=10 nodelay;
+        limit_req_status 429;
+        proxy_pass http://127.0.0.1:8788;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 10s;
+    }
+
+    location = /api/analytics/events {
+        limit_req zone=thegreatlogout_analytics burst=40 nodelay;
+        limit_req_status 429;
+        client_max_body_size 8k;
+        proxy_pass http://127.0.0.1:8060;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 10s;
+        proxy_send_timeout 10s;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+
+    location ~* ^/(?:data|deploy|scripts|server|tests|worker)(?:/|$) {
+        return 404;
+    }
+
+    location ~* \.(?:css|js|png|jpg|jpeg|webp|svg|ico)$ {
+        expires 7d;
+        add_header Cache-Control "public, max-age=604800";
+        try_files $uri =404;
+    }
+
+    location = / {
+        try_files /index.html =404;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name www.thegreatlogout.org;
+
+    ssl_certificate /etc/letsencrypt/live/thegreatlogout.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/thegreatlogout.org/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    return 301 https://thegreatlogout.org$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name api.thegreatlogout.org;
+
+    access_log /var/log/nginx/api.thegreatlogout.org.access.log;
+    error_log  /var/log/nginx/api.thegreatlogout.org.error.log;
+
+    ssl_certificate /etc/letsencrypt/live/thegreatlogout.org/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/thegreatlogout.org/privkey.pem;
+    include /etc/letsencrypt/options-ssl-nginx.conf;
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer" always;
+
+    location = /subscribe {
+        limit_req zone=thegreatlogout_guide burst=3 nodelay;
+        limit_req_status 429;
+        client_max_body_size 12k;
+        proxy_pass http://127.0.0.1:8788;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 25s;
+        proxy_send_timeout 10s;
+    }
+
+    location = /unsubscribe {
+        proxy_pass http://127.0.0.1:8788;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 10s;
+    }
+
+    location = /post.svg {
+        limit_req zone=thegreatlogout_generated_post burst=10 nodelay;
+        limit_req_status 429;
+        proxy_pass http://127.0.0.1:8788;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 10s;
+    }
+
+    location = /health {
+        proxy_pass http://127.0.0.1:8788;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_connect_timeout 3s;
+        proxy_read_timeout 5s;
+    }
+
+    location / {
+        return 404;
+    }
+}

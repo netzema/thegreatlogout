@@ -19,3 +19,26 @@ Teilnehmende kündigen ihren Ausstieg an, bevor sie von den Plattformen verschwi
 Dabei geht es nicht nur um Bildschirmzeit. Es geht auch um die wachsende Macht großer Tech-Plattformen, die Aufmerksamkeit, öffentliche Debatten, Kultur, Politik, Konsumverhalten und psychische Gesundheit beeinflussen. Es geht auch um süchtig machende Feeds, ständigen Vergleich, Einsamkeit, Empörung, Überkonsum, passive Gemeinschaften und den leisen Verlust von Zeit, Fokus und echtem sozialen Leben. The Great Logout macht den Ausstieg sichtbar: Andere sehen, dass ein bewusster, sozialer und öffentlicher Ausstieg möglich ist.
 
 Die Website bietet einen 7-Tage-E-Mail-Guide, einen Post-Generator für teilbare Ausstiegsbotschaften und Hintergrundtexte zur Motivation der Kampagne.
+
+## Self-hosted architecture
+
+The production target is a single self-hosted server:
+
+- Nginx serves the static English and German site.
+- FastAPI stores guide signups and email schedules in local SQLite.
+- A systemd timer sends due guide emails through Postmark.
+- Consent-based first-party analytics flow into the existing dashboard at `admin.netzldatasolutions.at`.
+- Cloudflare, GitHub Pages, Plausible, and Cloudflare D1 are not required after cutover.
+
+Deployment files and the cutover checklist are in [`deploy/README.md`](deploy/README.md). The legacy `worker/` implementation remains temporarily available as rollback material and is not exposed by the Nginx configuration.
+
+### Local checks
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r server/requirements-dev.txt
+.venv/bin/python -m pytest tests/test_server.py -q
+.venv/bin/ruff check server tests
+node --check assets/analytics.js
+node --check scripts/generate_de_site.js
+```

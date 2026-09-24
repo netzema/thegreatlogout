@@ -1,0 +1,36 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name thegreatlogout.org www.thegreatlogout.org api.thegreatlogout.org;
+
+    root /home/deploy/apps/thegreatlogout.org;
+    index index.html;
+
+    access_log /var/log/nginx/thegreatlogout.org.access.log;
+    error_log  /var/log/nginx/thegreatlogout.org.error.log;
+
+    location ^~ /.well-known/acme-challenge/ {
+        default_type text/plain;
+        try_files $uri =404;
+    }
+
+    location = /api/guide/subscribe {
+        return 503;
+    }
+
+    location ~ /\. {
+        deny all;
+    }
+
+    location ~* ^/(?:data|deploy|scripts|server|tests|worker)(?:/|$) {
+        return 404;
+    }
+
+    location = / {
+        try_files /index.html =404;
+    }
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+}

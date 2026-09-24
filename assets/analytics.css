@@ -1,0 +1,156 @@
+.tgl-consent-dialog[hidden] {
+  display: none;
+}
+
+.tgl-consent-dialog {
+  position: fixed;
+  z-index: 10000;
+  right: 18px;
+  bottom: 18px;
+  left: 18px;
+  color: #f4f4ef;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+.tgl-consent-inner {
+  width: min(100%, 920px);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 28px;
+  align-items: end;
+  padding: 24px;
+  border: 1px solid rgba(182, 255, 59, 0.38);
+  border-radius: 18px;
+  background: #0f110f;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.7);
+}
+
+.tgl-consent-copy h2 {
+  margin: 3px 0 8px;
+  max-width: 680px;
+  color: #f4f4ef;
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+  line-height: 1.22;
+}
+
+.tgl-consent-copy p {
+  max-width: 680px;
+  margin: 0 0 8px;
+  color: #a4aaa1;
+  font-size: 0.91rem;
+  line-height: 1.55;
+}
+
+.tgl-consent-copy .tgl-consent-kicker {
+  margin: 0;
+  color: #b6ff3b;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+
+.tgl-consent-copy .tgl-consent-status:empty {
+  display: none;
+}
+
+.tgl-consent-copy a {
+  color: #b6ff3b;
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-underline-offset: 3px;
+}
+
+.tgl-consent-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(112px, 1fr));
+  gap: 9px;
+  min-width: 250px;
+}
+
+.tgl-consent-actions button {
+  min-height: 44px;
+  border: 1px solid #f4f4ef;
+  border-radius: 999px;
+  padding: 10px 16px;
+  background: transparent;
+  color: #f4f4ef;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.tgl-consent-actions button[data-consent="granted"] {
+  border-color: #b6ff3b;
+  background: #b6ff3b;
+  color: #070807;
+}
+
+.tgl-consent-actions button:hover,
+.tgl-consent-actions button:focus-visible {
+  border-color: #b6ff3b;
+  background: #b6ff3b;
+  color: #070807;
+}
+
+.tgl-consent-actions button:focus-visible,
+.privacy-settings:focus-visible {
+  outline: 3px solid #b6ff3b;
+  outline-offset: 3px;
+}
+
+.tgl-consent-close {
+  grid-column: 1 / -1;
+  border-color: transparent !important;
+  background: transparent !important;
+  color: #a4aaa1 !important;
+}
+
+.tgl-consent-dialog.is-required .tgl-consent-close {
+  display: none;
+}
+
+.privacy-settings {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.privacy-settings:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 720px) {
+  .tgl-consent-dialog {
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+  }
+
+  .tgl-consent-inner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .tgl-consent-actions {
+    min-width: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tgl-consent-dialog,
+  .tgl-consent-actions button {
+    scroll-behavior: auto;
+    transition: none;
+  }
+}
