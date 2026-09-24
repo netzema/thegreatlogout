@@ -98,11 +98,12 @@ sudo certbot renew --dry-run
 
 ## 6. Activate analytics changes
 
-The backend changes add The Great Logout origins, campaign dimensions, conversions, dashboard tables, and backups. Because the backend worktree can contain other in-progress changes, review it before restarting the shared service:
+The backend changes add The Great Logout origins, campaign dimensions, conversions, dashboard tables, and backups. Production runs from the clean, merged release worktree at `/home/deploy/apps/backend-release`; the dirty development worktree remains untouched. Install the service override and restart the shared backend:
 
 ```bash
-cd /home/deploy/apps/backend
-.venv/bin/python -m pytest tests/test_analytics.py tests/test_app.py -q
+sudo install -d -m 0755 /etc/systemd/system/backend.service.d
+sudo install -m 0644 /home/deploy/apps/thegreatlogout.org/deploy/backend-thegreatlogout.override.conf /etc/systemd/system/backend.service.d/10-thegreatlogout-release.conf
+sudo systemctl daemon-reload
 sudo systemctl restart backend.service
 curl --fail --silent http://127.0.0.1:8060/health
 sudo systemctl status --no-pager backend.service
@@ -111,8 +112,8 @@ sudo systemctl status --no-pager backend.service
 Enable the existing daily backup timer after the updated backup code is active. Its ZIP now contains consistent copies of the business database, analytics database, and The Great Logout guide database when those files exist:
 
 ```bash
-sudo install -m 0644 /home/deploy/apps/backend/deploy/systemd/netzl-backup.service /etc/systemd/system/netzl-backup.service
-sudo install -m 0644 /home/deploy/apps/backend/deploy/systemd/netzl-backup.timer /etc/systemd/system/netzl-backup.timer
+sudo install -m 0644 /home/deploy/apps/thegreatlogout.org/deploy/netzl-backup.service /etc/systemd/system/netzl-backup.service
+sudo install -m 0644 /home/deploy/apps/backend-release/deploy/systemd/netzl-backup.timer /etc/systemd/system/netzl-backup.timer
 sudo systemctl daemon-reload
 sudo systemctl enable --now netzl-backup.timer
 sudo systemctl start netzl-backup.service
