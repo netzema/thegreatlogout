@@ -6,6 +6,8 @@ User-agent: *
 Allow: /
 Crawl-delay: 10
 
+Sitemap: https://thegreatlogout.org/sitemap.xml
+
 # Known email harvesters / aggressive scrapers
 User-agent: EmailCollector
 Disallow: /

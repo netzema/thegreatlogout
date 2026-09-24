@@ -6,24 +6,24 @@
 
   <title>The Great Logout - Gemeinsam raus aus süchtig machenden sozialen Medien.</title>
   <meta name="description" content="The Great Logout macht den Ausstieg aus süchtig machenden sozialen Medien sichtbar: Gründe posten, erreichbar bleiben, ausloggen." />
-  <link rel="canonical" href="https://www.thegreatlogout.org/de/" />
-  <link rel="alternate" hreflang="en" href="https://www.thegreatlogout.org/" />
-  <link rel="alternate" hreflang="de" href="https://www.thegreatlogout.org/de/" />
-  <link rel="alternate" hreflang="x-default" href="https://www.thegreatlogout.org/" />
+  <link rel="canonical" href="https://thegreatlogout.org/de/" />
+  <link rel="alternate" hreflang="en" href="https://thegreatlogout.org/" />
+  <link rel="alternate" hreflang="de" href="https://thegreatlogout.org/de/" />
+  <link rel="alternate" hreflang="x-default" href="https://thegreatlogout.org/" />
 
   <meta property="og:title" content="The Great Logout" />
   <meta property="og:description" content="Eine öffentliche Kampagne für alle, die süchtig machende soziale Medien sichtbar verlassen wollen." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.thegreatlogout.org/de/" />
-  <meta property="og:image" content="https://www.thegreatlogout.org/assets/og-image.png" />
-  <meta property="og:image:secure_url" content="https://www.thegreatlogout.org/assets/og-image.png" />
+  <meta property="og:url" content="https://thegreatlogout.org/de/" />
+  <meta property="og:image" content="https://thegreatlogout.org/assets/og-image.png" />
+  <meta property="og:image:secure_url" content="https://thegreatlogout.org/assets/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="The Great Logout - Sag, warum du gehst. Dann log dich aus." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="The Great Logout" />
   <meta name="twitter:description" content="Eine öffentliche Kampagne für alle, die süchtig machende soziale Medien sichtbar verlassen wollen." />
-  <meta name="twitter:image" content="https://www.thegreatlogout.org/assets/og-image.png" />
+  <meta name="twitter:image" content="https://thegreatlogout.org/assets/og-image.png" />
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
   <link rel="shortcut icon" href="../assets/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png" />
@@ -1238,6 +1238,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="../assets/analytics.css" />
 </head>
 
 <body>
@@ -1436,8 +1437,12 @@
             <h3 id="signup-title">Starte deinen Ausstieg</h3>
             <p>1 bis 7 Tage sichtbar werden. Dann ausloggen.</p>
             <p class="signup-link">Brauchst du zuerst eine Formulierung? <a href="#generator">Zum Post-Generator.</a></p>
-            <form class="signup-form" id="guideSignupForm" data-endpoint="https://api.thegreatlogout.org/subscribe">
+            <form class="signup-form" id="guideSignupForm" data-endpoint="/api/guide/subscribe">
               <input type="hidden" name="language" value="de" />
+              <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;">
+                <label for="website">Website</label>
+                <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+              </div>
               <label for="email">E-Mail-Adresse</label>
               <input id="email" name="email" type="email" placeholder="du@example.com" autocomplete="email" required />
               <label for="firstName">Vorname <span aria-hidden="true">(optional)</span></label>
@@ -1503,6 +1508,8 @@
         <a href="imprint.html">Impressum</a>
         &middot;
         <a href="privacy.html">Datenschutz</a>
+        &middot;
+        <button class="privacy-settings" type="button" data-analytics-settings>Datenschutz-Einstellungen</button>
         &middot;
         <a href="../" hreflang="en" lang="en">English</a>
       </div>
@@ -2060,6 +2067,7 @@
         button.addEventListener("click", () => {
           const type = button.getAttribute("data-download");
           const format = formats[postFormat.value] || formats["instagram-post"];
+          window.tglAnalytics?.trackPostDownload(`${format.label}:${type}`);
 
           if (type === "png" || type === "jpg") {
             downloadCanvas(type);
@@ -2095,6 +2103,8 @@
     function setupGuideSignup() {
       if (!guideSignupForm) return;
 
+      let signupStartedAt = Date.now();
+
       const logoutDateInput = guideSignupForm.querySelector("#logoutDate");
       if (logoutDateInput && !logoutDateInput.value) {
         logoutDateInput.value = getDateInputValue(8);
@@ -2120,7 +2130,9 @@
           logoutDate: String(formData.get("logoutDate") || "").trim(),
           guideLength: Number(formData.get("guideLength") || 7),
           language: String(formData.get("language") || document.documentElement.lang || "de").trim().slice(0, 8),
-          consent: formData.get("consent") === "on"
+          consent: formData.get("consent") === "on",
+          website: String(formData.get("website") || ""),
+          startedAt: signupStartedAt
         };
 
         submitButton.disabled = true;
@@ -2140,13 +2152,15 @@
 
           const result = await response.json().catch(() => ({}));
           if (!response.ok) {
-            throw new Error(result.error || "Anmeldung fehlgeschlagen.");
+            throw new Error(result.detail || result.error || "Anmeldung fehlgeschlagen.");
           }
 
           guideSignupForm.reset();
           if (logoutDateInput) {
             logoutDateInput.value = getDateInputValue(8);
           }
+          signupStartedAt = Date.now();
+          window.tglAnalytics?.trackGuideSignup();
           if (signupStatus) {
             signupStatus.textContent = "Du bist dabei. Die erste E-Mail ist unterwegs.";
             signupStatus.dataset.state = "success";
@@ -2204,5 +2218,6 @@
       });
     })();
   </script>
+  <script src="../assets/analytics.js"></script>
 </body>
 </html>

@@ -1,0 +1,25 @@
+[Unit]
+Description=Send due The Great Logout guide emails
+Wants=network-online.target
+After=network-online.target thegreatlogout-guide.service
+
+[Service]
+Type=oneshot
+User=deploy
+Group=deploy
+WorkingDirectory=/home/deploy/apps/thegreatlogout.org
+EnvironmentFile=/home/deploy/apps/thegreatlogout.org/.env
+ExecStart=/home/deploy/apps/thegreatlogout.org/.venv/bin/python -m server.send_due
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/deploy/apps/thegreatlogout.org/data
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX

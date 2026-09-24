@@ -1,0 +1,31 @@
+[Unit]
+Description=The Great Logout guide API
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=deploy
+Group=deploy
+WorkingDirectory=/home/deploy/apps/thegreatlogout.org
+EnvironmentFile=/home/deploy/apps/thegreatlogout.org/.env
+ExecStart=/home/deploy/apps/thegreatlogout.org/.venv/bin/uvicorn server.app:app --host 127.0.0.1 --port 8788 --workers 1 --proxy-headers --forwarded-allow-ips=127.0.0.1
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=15
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/home/deploy/apps/thegreatlogout.org/data
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictRealtime=true
+LockPersonality=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://thegreatlogout.org/</loc>
+    <lastmod>2026-09-24</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thegreatlogout.org/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://thegreatlogout.org/de/" />
+  </url>
+  <url>
+    <loc>https://thegreatlogout.org/de/</loc>
+    <lastmod>2026-09-24</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://thegreatlogout.org/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://thegreatlogout.org/de/" />
+  </url>
+  <url><loc>https://thegreatlogout.org/essay.html</loc><lastmod>2026-09-24</lastmod></url>
+  <url><loc>https://thegreatlogout.org/de/essay.html</loc><lastmod>2026-09-24</lastmod></url>
+  <url><loc>https://thegreatlogout.org/imprint.html</loc><lastmod>2026-09-24</lastmod></url>
+  <url><loc>https://thegreatlogout.org/de/imprint.html</loc><lastmod>2026-09-24</lastmod></url>
+  <url><loc>https://thegreatlogout.org/privacy.html</loc><lastmod>2026-09-24</lastmod></url>
+  <url><loc>https://thegreatlogout.org/de/privacy.html</loc><lastmod>2026-09-24</lastmod></url>
+</urlset>

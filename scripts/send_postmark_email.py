@@ -31,7 +31,7 @@ ENV_FILE = ROOT / ".env"
 
 DEFAULT_FROM_EMAIL = "hello@thegreatlogout.org"
 DEFAULT_FROM_NAME = "The Great Logout"
-DEFAULT_PUBLIC_SITE_URL = "https://www.thegreatlogout.org"
+DEFAULT_PUBLIC_SITE_URL = "https://thegreatlogout.org"
 DEFAULT_API_BASE_URL = "https://api.thegreatlogout.org"
 
 
@@ -389,7 +389,7 @@ def render_text(email: dict[str, Any], first_name: str, site_url: str, api_base_
 def normalize_url(value: str) -> str:
     value = (value or "").strip().rstrip("/")
     if not value:
-        return "https://www.thegreatlogout.org"
+        return "https://thegreatlogout.org"
     if value.lower().startswith("https://"):
         return value
     return "https://" + value.removeprefix("http://")

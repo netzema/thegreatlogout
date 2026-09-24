@@ -6,29 +6,23 @@
 
   <title>The Great Logout - A public campaign for leaving social media together.</title>
   <meta name="description" content="The Great Logout is a public campaign for a mass exit from addictive social media. Post your reasons for 1 to 7 days. Then log out." />
-  <link rel="canonical" href="https://www.thegreatlogout.org/" />
-  <link rel="alternate" hreflang="en" href="https://www.thegreatlogout.org/" />
-  <link rel="alternate" hreflang="de" href="https://www.thegreatlogout.org/de/" />
-  <link rel="alternate" hreflang="x-default" href="https://www.thegreatlogout.org/" />
-  <!-- Privacy-friendly analytics by Plausible -->
-  <script async src="https://plausible.io/js/pa-eiIizNcE0t2f0SqBiCrfV.js"></script>
-  <script>
-    window.plausible=window.plausible||function(){(plausible.q=plausible.q||[]).push(arguments)},plausible.init=plausible.init||function(i){plausible.o=i||{}};
-    plausible.init()
-  </script>
+  <link rel="canonical" href="https://thegreatlogout.org/" />
+  <link rel="alternate" hreflang="en" href="https://thegreatlogout.org/" />
+  <link rel="alternate" hreflang="de" href="https://thegreatlogout.org/de/" />
+  <link rel="alternate" hreflang="x-default" href="https://thegreatlogout.org/" />
   <meta property="og:title" content="The Great Logout" />
   <meta property="og:description" content="A public campaign for a mass exit from addictive social media." />
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://www.thegreatlogout.org/" />
-  <meta property="og:image" content="https://www.thegreatlogout.org/assets/og-image.png" />
-  <meta property="og:image:secure_url" content="https://www.thegreatlogout.org/assets/og-image.png" />
+  <meta property="og:url" content="https://thegreatlogout.org/" />
+  <meta property="og:image" content="https://thegreatlogout.org/assets/og-image.png" />
+  <meta property="og:image:secure_url" content="https://thegreatlogout.org/assets/og-image.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="The Great Logout - Post why you're leaving. Then leave." />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="The Great Logout" />
   <meta name="twitter:description" content="A public campaign for a mass exit from addictive social media." />
-  <meta name="twitter:image" content="https://www.thegreatlogout.org/assets/og-image.png" />
+  <meta name="twitter:image" content="https://thegreatlogout.org/assets/og-image.png" />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="shortcut icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
@@ -1243,6 +1237,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="assets/analytics.css" />
 </head>
 
 <body>
@@ -1562,9 +1557,12 @@ Don't go broke for them.</textarea>
             <p>Post for 1 to 7 days. Then log out.</p>
             <p class="signup-link">Need a post first? <a href="#generator">Explore our post generator.</a></p>
 
-            <!-- Set data-endpoint to your deployed Worker URL, for example https://api.thegreatlogout.org/subscribe. -->
-            <form class="signup-form" id="guideSignupForm" data-endpoint="https://api.thegreatlogout.org/subscribe">
+            <form class="signup-form" id="guideSignupForm" data-endpoint="/api/guide/subscribe">
               <input type="hidden" name="language" value="en" />
+              <div aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;">
+                <label for="website">Website</label>
+                <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
+              </div>
               <label for="email">Email address</label>
               <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required />
 
@@ -1675,6 +1673,8 @@ Don't go broke for them.</textarea>
         <a href="privacy.html">Privacy</a>
         &middot;
         <a href="de/" hreflang="de" lang="de">Deutsch</a>
+        &middot;
+        <button class="privacy-settings" type="button" data-analytics-settings>Privacy settings</button>
       </div>
     </div>
   </footer>
@@ -2231,6 +2231,7 @@ Don't go broke for them.</textarea>
         button.addEventListener("click", () => {
           const type = button.getAttribute("data-download");
           const format = formats[postFormat.value] || formats["instagram-post"];
+          window.tglAnalytics?.trackPostDownload(`${format.label}:${type}`);
 
           if (type === "png" || type === "jpg") {
             downloadCanvas(type);
@@ -2266,6 +2267,8 @@ Don't go broke for them.</textarea>
     function setupGuideSignup() {
       if (!guideSignupForm) return;
 
+      let signupStartedAt = Date.now();
+
       const logoutDateInput = guideSignupForm.querySelector("#logoutDate");
       if (logoutDateInput && !logoutDateInput.value) {
         logoutDateInput.value = getDateInputValue(8);
@@ -2291,7 +2294,9 @@ Don't go broke for them.</textarea>
           logoutDate: String(formData.get("logoutDate") || "").trim(),
           guideLength: Number(formData.get("guideLength") || 7),
           language: String(formData.get("language") || document.documentElement.lang || "en").trim().slice(0, 8),
-          consent: formData.get("consent") === "on"
+          consent: formData.get("consent") === "on",
+          website: String(formData.get("website") || ""),
+          startedAt: signupStartedAt
         };
 
         submitButton.disabled = true;
@@ -2311,13 +2316,15 @@ Don't go broke for them.</textarea>
 
           const result = await response.json().catch(() => ({}));
           if (!response.ok) {
-            throw new Error(result.error || "Signup failed.");
+            throw new Error(result.detail || result.error || "Signup failed.");
           }
 
           guideSignupForm.reset();
           if (logoutDateInput) {
             logoutDateInput.value = getDateInputValue(8);
           }
+          signupStartedAt = Date.now();
+          window.tglAnalytics?.trackGuideSignup();
           if (signupStatus) {
             signupStatus.textContent = "You're in. Check your inbox for the first email.";
             signupStatus.dataset.state = "success";
@@ -2375,5 +2382,6 @@ Don't go broke for them.</textarea>
       });
     })();
   </script>
+  <script src="assets/analytics.js"></script>
 </body>
 </html>

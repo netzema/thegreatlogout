@@ -1,0 +1,12 @@
+[Unit]
+Description=Run The Great Logout email scheduler every 15 minutes
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=15min
+Persistent=true
+RandomizedDelaySec=20s
+Unit=thegreatlogout-send-due.service
+
+[Install]
+WantedBy=timers.target
