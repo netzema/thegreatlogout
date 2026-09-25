@@ -19,7 +19,6 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 from server.email_content import load_email_sequences
 from server.mailer import build_postmark_payload, send_postmark_message
 
-
 ROOT = Path(__file__).resolve().parents[1]
 DATABASE_PATH = Path(os.getenv("DATABASE_PATH", ROOT / "data" / "thegreatlogout.db"))
 ALLOWED_ORIGINS = {
@@ -339,7 +338,8 @@ def send_due_emails(limit: int = 50, subscriber_id: int | None = None) -> int:
                     (utc_now(), result.get("MessageID"), row["id"]),
                 )
                 sent += 1
-            except Exception as error:
+            # Keep one failed delivery from stopping the rest of the due queue.
+            except Exception as error:  # noqa: BLE001
                 record_send_error(connection, row["id"], str(error))
             connection.commit()
         return sent

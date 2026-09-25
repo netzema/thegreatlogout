@@ -51,10 +51,13 @@
 
     html {
       scroll-behavior: smooth;
+      max-width: 100%;
+      overflow-x: hidden;
     }
 
     body {
       margin: 0;
+      max-width: 100%;
       background:
         radial-gradient(circle at 72% 10%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 27rem),
         radial-gradient(circle at 10% 18%, rgba(255,255,255,0.08), transparent 22rem),
@@ -63,6 +66,13 @@
       font-family: var(--sans);
       line-height: 1.5;
       overflow-x: hidden;
+    }
+
+    @supports (overflow: clip) {
+      html,
+      body {
+        overflow-x: clip;
+      }
     }
 
     body::before {
@@ -1039,14 +1049,29 @@
     }
 
     .footer-inner {
-      display: flex;
-      justify-content: space-between;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
       gap: 24px;
-      flex-wrap: wrap;
     }
 
     .footer a {
       color: var(--muted);
+    }
+
+    .footer-links {
+      display: flex;
+      min-width: 0;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px 18px;
+      align-items: center;
+    }
+
+    .footer-links a,
+    .footer-links .privacy-settings {
+      color: var(--muted);
+      line-height: 1.35;
     }
 
     .site-header .nav {
@@ -1203,6 +1228,36 @@
       .manifesto {
         padding: 24px;
       }
+
+      .footer-inner {
+        grid-template-columns: 1fr;
+        align-items: start;
+      }
+
+      .footer-links {
+        display: grid;
+        width: 100%;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .footer-links a,
+      .footer-links .privacy-settings {
+        display: flex;
+        min-width: 0;
+        min-height: 44px;
+        align-items: center;
+        padding: 10px 12px;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        background: rgba(255,255,255,0.035);
+        overflow-wrap: anywhere;
+        text-align: left;
+      }
+
+      .footer-links .privacy-settings {
+        grid-column: 1 / -1;
+      }
     }
 
     @media (max-width: 520px) {
@@ -1279,7 +1334,7 @@
           </p>
 
           <div class="button-row">
-            <a class="btn btn-primary" href="#start-guide">Start the 7-day guide</a>
+            <a class="btn btn-primary" href="#guide">Start the 7-day guide</a>
             <a class="btn btn-secondary" href="#generator">Make a post</a>
           </div>
 
@@ -1328,7 +1383,7 @@
             </ol>
 
             <div class="mobile-sequence-cta">
-              <a class="btn btn-primary" href="#start-guide">Start your exit today</a>
+              <a class="btn btn-primary" href="#guide">Start your exit today</a>
             </div>
           </div>
         </aside>
@@ -1657,25 +1712,17 @@ Don't go broke for them.</textarea>
   <footer class="footer">
     <div class="wrap footer-inner">
       <div>© 2026 The Great Logout</div>
-      <div>
+      <nav class="footer-links" aria-label="Footer navigation">
         <a href="#how">How it works</a>
-        ·
         <a href="#guide">7-day guide</a>
-        ·
         <a href="#generator">Post generator</a>
-        &middot;
         <a href="essay.html">Deeper case</a>
-        &middot;
         <a href="#support">Support</a>
-        &middot;
         <a href="imprint.html">Imprint</a>
-        &middot;
         <a href="privacy.html">Privacy</a>
-        &middot;
         <a href="de/" hreflang="de" lang="de">Deutsch</a>
-        &middot;
         <button class="privacy-settings" type="button" data-analytics-settings>Privacy settings</button>
-      </div>
+      </nav>
     </div>
   </footer>
 
@@ -1747,6 +1794,7 @@ Don't go broke for them.</textarea>
     const postFormat = document.getElementById("postFormat");
     const postCanvas = document.getElementById("postCanvas");
     const quoteCarousel = document.getElementById("quoteCarousel");
+    const generatorPreview = document.querySelector(".generator-preview");
     const guideSignupForm = document.getElementById("guideSignupForm");
     const signupStatus = document.getElementById("signupStatus");
     const context = postCanvas.getContext("2d");
@@ -2223,7 +2271,15 @@ Don't go broke for them.</textarea>
           selectPresetForText(postText.value);
           drawPost();
           stopCarousel();
-          document.getElementById("postText").focus();
+          if (window.matchMedia("(max-width: 900px)").matches) {
+            window.requestAnimationFrame(() => {
+              generatorPreview?.scrollIntoView({
+                behavior: prefersReducedMotion ? "auto" : "smooth",
+                block: "nearest",
+                inline: "nearest"
+              });
+            });
+          }
         });
       });
 

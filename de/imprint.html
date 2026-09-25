@@ -41,16 +41,27 @@
 
     html {
       scroll-behavior: smooth;
+      max-width: 100%;
+      overflow-x: hidden;
     }
 
     body {
       margin: 0;
+      max-width: 100%;
       background:
         radial-gradient(circle at 78% 4%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 28rem),
         var(--bg);
       color: var(--text);
       font-family: var(--sans);
       line-height: 1.62;
+      overflow-x: hidden;
+    }
+
+    @supports (overflow: clip) {
+      html,
+      body {
+        overflow-x: clip;
+      }
     }
 
     body::before {
@@ -68,6 +79,17 @@
 
     a {
       color: inherit;
+    }
+
+    h1,
+    h2,
+    p,
+    li,
+    a,
+    button,
+    code {
+      min-width: 0;
+      overflow-wrap: anywhere;
     }
 
     .wrap {

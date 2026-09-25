@@ -330,14 +330,14 @@ const BASE_EMAIL_SEQUENCE_DE = [
     key: "day-0",
     delayDays: 0,
     subject: "Willkommen bei The Great Logout",
-    title: "Du bist dabei. Jetzt wird der Ausstieg konkret.",
+    title: "Du bist dabei. Jetzt wird dein Ausstieg konkret.",
     body: [
       "danke, dass du bei The Great Logout mitmachst.",
-      "Das hier ist kein stiller Detox und kein weiterer privater Versuch, einfach disziplinierter zu sein. Es ist ein sichtbarer Ausstieg aus süchtig machenden sozialen Medien.",
-      "Wenn Menschen leise verschwinden, schluckt der Feed ihre Abwesenheit. Wenn Menschen sichtbar gehen, sehen andere: Ausloggen ist möglich. Bewusst. Sozial. Nachvollziehbar.",
-      "Der Ablauf bleibt einfach: Sag, warum du gehst. Sag, wo man dich weiterhin erreicht. Dann log dich aus.",
-      "Tag 0 ist Vorbereitung. Sichere Kontakte, lege dein Ausstiegsdatum fest und entscheide, welcher Kanal nach dem Ausstieg bleibt.",
-      "Deine Aufgabe heute: Wähle dein Logout-Datum und entscheide, wo Menschen dich künftig erreichen können."
+      "Das hier ist kein stiller Detox und auch kein neuer Versuch, einfach disziplinierter zu sein. Es ist ein sichtbarer Abschied von sozialen Medien, die dich immer wieder zurückholen wollen.",
+      "Wenn du einfach verschwindest, merkt der Feed nichts davon. Wenn du offen sagst, warum du gehst, sehen andere: Ausloggen ist möglich, ohne dass man gleich aus dem Leben der Menschen verschwindet.",
+      "Der Ablauf ist einfach: Sag, warum du gehst. Sag, wo man dich weiterhin erreicht. Dann log dich aus.",
+      "Heute bereitest du alles vor: Sichere wichtige Kontakte, lege dein Ausstiegsdatum fest und entscheide, wo man dich danach erreicht.",
+      "Deine Aufgabe für heute: Wähle dein Logout-Datum und einen Kontaktweg, der nach dem Ausstieg bleibt."
     ]
   },
   {
@@ -346,10 +346,10 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Tag 1: Sag es klar",
     title: "Warum ich gehe",
     body: [
-      "heute ist das erste öffentliche Signal.",
-      "Erkläre nicht zu viel. Der stärkste Post ist oft der einfachste: Ich verlasse diese Plattform. Nicht aus Versehen, nicht aus Laune, sondern bewusst.",
-      "Es geht nicht darum, besser zu sein als andere. Es geht darum, einem System eine Grenze zu setzen, das davon lebt, dich immer wieder zurückzuholen.",
-      "Deine Aufgabe heute: Veröffentliche deinen ersten Ausstiegs-Post."
+      "heute sagst du zum ersten Mal öffentlich, dass du gehst.",
+      "Du musst dich nicht endlos erklären. Oft ist der klarste Post auch der stärkste: Ich verlasse diese Plattform. Nicht aus einer Laune heraus, sondern ganz bewusst.",
+      "Es geht nicht darum, besser zu sein als andere. Du ziehst nur eine Grenze gegenüber einem System, das dich immer wieder zurückholen will.",
+      "Deine Aufgabe für heute: Veröffentliche deinen ersten Post zum Ausstieg."
     ]
   },
   {
@@ -358,10 +358,10 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Tag 2: Es liegt nicht nur an dir",
     title: "Was der Feed mit mir macht",
     body: [
-      "der Feed ist so gebaut, dass er dich zurückzieht.",
-      "Viele geben sich zuerst selbst die Schuld. Sie halten sich für faul, schwach oder undiszipliniert. Aber Disziplin ist nicht die ganze Geschichte, wenn ein System darauf optimiert wurde, dich zu unterbrechen, zu reizen, zu belohnen und zurückzubringen.",
-      "Schreib heute über Aufmerksamkeit. Was nimmt dir der Feed im Alltag? Was unterbricht er? Was hast du früher gemacht, wenn du gewartet hast, müde warst, gelangweilt oder allein?",
-      "Deine Aufgabe heute: Benenne eine konkrete Art, wie der Feed deine Aufmerksamkeit verändert hat."
+      "der Feed ist so gebaut, dass du immer wieder zurückkommst.",
+      "Viele geben sich deshalb selbst die Schuld und halten sich für faul oder undiszipliniert. Aber es liegt nicht nur an deiner Willenskraft, wenn ein System dich ständig unterbricht, reizt und belohnt.",
+      "Schreib heute über deine Aufmerksamkeit. Was nimmt dir der Feed im Alltag? Was unterbricht er? Was hast du früher getan, wenn du warten musstest, müde, gelangweilt oder allein warst?",
+      "Deine Aufgabe für heute: Nenne ein konkretes Beispiel dafür, wie der Feed deine Aufmerksamkeit verändert hat."
     ]
   },
   {
@@ -370,22 +370,22 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Tag 3: Was du dir zurückholst",
     title: "Was ich mir zurückhole",
     body: [
-      "ausloggen ist nicht nur ein Nein.",
-      "Es ist auch eine Rückkehr. Du entfernst nicht nur eine App. Du machst Raum für etwas, das wieder möglich werden kann.",
-      "Vielleicht willst du deine Morgen zurück. Vielleicht willst du wieder lesen, ohne alle paar Minuten aufs Handy zu greifen. Vielleicht willst du Langeweile zurück, weil dort oft die eigenen Gedanken wieder hörbar werden.",
-      "Deine Aufgabe heute: Poste, was du dir zurückholen willst."
+      "ausloggen ist nicht nur ein Nein zum Feed.",
+      "Du löschst nicht bloß eine App. Du schaffst Platz für Dinge, die im ständigen Scrollen zu kurz gekommen sind.",
+      "Vielleicht möchtest du ruhige Morgen zurück. Vielleicht wieder lesen, ohne alle paar Minuten zum Handy zu greifen. Oder einfach Langeweile zulassen, bis die eigenen Gedanken wieder hörbar werden.",
+      "Deine Aufgabe für heute: Poste, was du dir zurückholen möchtest."
     ]
   },
   {
     key: "day-4",
     delayDays: 4,
-    subject: "Tag 4: Ein paar Firmen sollten nicht den Raum bestimmen",
+    subject: "Tag 4: Zu viel Macht für wenige Konzerne",
     title: "Warum Big Tech zu viel Macht hat",
     body: [
-      "das hier ist nicht nur eine Frage von Bildschirmzeit.",
-      "Ein paar Konzerne prägen, was Milliarden Menschen sehen, wollen, fürchten, vergleichen, glauben und diskutieren. Der Feed ist kein neutrales Fenster. Er ist ein Ranking-System mit Geschäftsmodell.",
-      "Wenn Plattformen Aufmerksamkeit in dieser Größenordnung kontrollieren, beeinflussen sie Kultur und Politik, ohne wie Regierungen aussehen zu müssen.",
-      "Deine Aufgabe heute: Sag, was eine Plattform nicht länger für dich sortieren soll."
+      "beim Ausstieg geht es um mehr als deine Bildschirmzeit.",
+      "Wenige Konzerne prägen, was Milliarden Menschen sehen, fürchten, vergleichen, glauben und diskutieren. Der Feed ist kein neutrales Fenster, sondern ein Ranking-System mit einem Geschäftsmodell.",
+      "Wer so viel Aufmerksamkeit lenkt, beeinflusst auch Kultur und Politik, ohne demokratisch dazu beauftragt worden zu sein.",
+      "Deine Aufgabe für heute: Sag, was eine Plattform nicht länger für dich auswählen soll."
     ]
   },
   {
@@ -395,9 +395,9 @@ const BASE_EMAIL_SEQUENCE_DE = [
     title: "Wo man mich findet",
     body: [
       "heute wird es praktisch.",
-      "Viele bleiben, weil Gehen sich wie Verschwinden anfühlt. Diese Angst ist real. Freundschaften, Einladungen und lose Kontakte hängen an Plattformen, denen die Beziehungen selbst egal sind.",
-      "Lass deshalb eine Tür offen. Sag Menschen, wo sie dich erreichen können: E-Mail, Signal, Telefon, Website, Newsletter, echtes Leben. Du musst nicht überall verfügbar sein. Ein ehrlicher Weg reicht.",
-      "Deine Aufgabe heute: Poste deinen neuen Kontaktweg."
+      "Viele bleiben, weil sich Gehen wie Verschwinden anfühlt. Das ist verständlich: Freundschaften, Einladungen und lose Kontakte laufen inzwischen oft über Plattformen.",
+      "Lass deshalb eine Tür offen. Sag den Menschen, wo sie dich erreichen können: per E-Mail, Signal, Telefon, über deine Website oder einfach im echten Leben. Du musst nicht überall erreichbar sein. Ein guter Weg reicht.",
+      "Deine Aufgabe für heute: Teile den Kontaktweg, der für dich bleiben soll."
     ]
   },
   {
@@ -407,9 +407,9 @@ const BASE_EMAIL_SEQUENCE_DE = [
     title: "Andere einladen",
     body: [
       "heute geht es nicht um Druck.",
-      "Niemand geht, weil man ihn beschämt. Die bessere Einladung ist ruhiger: Ich gehe. Das ist mein Grund. Wenn du ähnlich fühlst, darfst du auch gehen.",
-      "Ein sichtbarer Ausstieg gibt anderen ein Bild, das ihnen vielleicht gefehlt hat. Ausloggen kann bewusst, sozial und öffentlich sein.",
-      "Deine Aufgabe heute: Lade andere ein, ohne zu drängen."
+      "Niemand geht, weil man ihn beschämt. Eine ruhige Einladung wirkt besser: Ich gehe. Das ist mein Grund. Wenn es dir ähnlich geht, darfst du auch gehen.",
+      "Ein sichtbarer Ausstieg zeigt anderen eine Möglichkeit, die ihnen vielleicht gefehlt hat. Man kann bewusst gehen und trotzdem verbunden bleiben.",
+      "Deine Aufgabe für heute: Lade andere ein, ohne Druck zu machen."
     ]
   },
   {
@@ -419,21 +419,21 @@ const BASE_EMAIL_SEQUENCE_DE = [
     title: "Letzter Post. Logout.",
     body: [
       "heute ist der letzte Post.",
-      "Sag es klar. Sag, wo man dich erreichen kann. Sag, warum du gehst. Dann mach den Ausstieg real: Lösch die Apps, deaktiviere Accounts oder entferne die Shortcuts.",
-      "Vielleicht spürst du danach einen seltsamen Zug zurück. Das heißt nicht, dass die Entscheidung falsch war. Es heißt nur, dass der Reflex noch da ist.",
-      "Deine Aufgabe heute: Veröffentliche den letzten Post und log dich aus."
+      "Sag noch einmal, warum du gehst und wo man dich weiterhin erreicht. Dann mach den Ausstieg real: Lösch die Apps, deaktiviere deine Accounts oder entferne zumindest die schnellen Zugänge.",
+      "Vielleicht zieht es dich danach automatisch wieder zum Feed. Das heißt nicht, dass deine Entscheidung falsch war. Der alte Reflex braucht einfach etwas Zeit.",
+      "Deine Aufgabe für heute: Veröffentliche deinen letzten Post und log dich aus."
     ]
   },
   {
     key: "day-14",
     delayDays: 14,
     subject: "Zwei Wochen später: die erste Ruhe",
-    title: "Die erste ruhige Woche",
+    title: "Wie fühlt sich die neue Ruhe an?",
     body: [
       "die erste Ruhe kann seltsam sein.",
-      "Manche erwarten, dass Freiheit sofort groß und eindeutig wirkt. Oft fühlt sie sich gemischter an: Erleichterung, Langeweile, Unruhe, FOMO oder der Impuls, nur kurz wieder zu schauen.",
-      "Das bedeutet nicht, dass der Logout gescheitert ist. Es bedeutet, dass der Reflex noch ausklingt.",
-      "Frage für heute: Was hast du bemerkt, das der Feed sonst überdeckt?"
+      "Vielleicht hast du mit sofortiger Erleichterung gerechnet. In Wirklichkeit ist es oft gemischt: Ruhe, Langeweile, Unruhe, die Angst, etwas zu verpassen, oder der Impuls, doch kurz nachzusehen.",
+      "Das bedeutet nicht, dass dein Logout gescheitert ist. Der alte Reflex klingt nur noch nach.",
+      "Eine Frage für heute: Was hast du bemerkt, das der Feed sonst überdeckt hat?"
     ]
   },
   {
@@ -442,32 +442,32 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Dreißig Tage später: was kam zurück?",
     title: "Was zurückkam",
     body: [
-      "dreißig Tage sind lang genug, um Muster zu bemerken.",
-      "Vielleicht hat sich dein Schlaf verändert. Vielleicht ist deine Aufmerksamkeit noch verstreut, aber weniger aggressiv. Vielleicht hast du zum Handy gegriffen und dort war plötzlich nichts mehr.",
-      "Schreib auf, was zurückkam: Zeit, Ruhe, Fokus, Langeweile, direkte Nachrichten, weniger Streit, weniger Vergleich.",
+      "nach dreißig Tagen lassen sich erste Muster erkennen.",
+      "Vielleicht schläfst du anders. Vielleicht ist deine Aufmerksamkeit noch unruhig, aber nicht mehr ganz so umkämpft. Vielleicht hast du zum Handy gegriffen und gemerkt, dass dort nichts auf dich wartet.",
+      "Schreib auf, was zurückgekommen ist: Zeit, Ruhe, Fokus, Langeweile, direkte Nachrichten, weniger Streit oder weniger Vergleich.",
       "Schreib auch auf, was schwer war. Auch das ist wichtig."
     ]
   },
   {
     key: "reason-1",
     delayDays: 60,
-    subject: "Grund 1: Aufmerksamkeit wird abgeschöpft",
+    subject: "Grund 1: Deine Aufmerksamkeit ist wertvoll",
     title: "Deine Aufmerksamkeit ist kein Rohstoff",
     body: [
-      "deine Aufmerksamkeit ist nichts Kleines.",
-      "Sie ist die Art, wie du ein Leben baust: zuhören, lernen, lieben, denken, bemerken, schaffen und verändern.",
-      "Der Feed behandelt diese Aufmerksamkeit wie Rohstoff. Gehen heißt auch: Ich lasse mich nicht weiter abbauen."
+      "deine Aufmerksamkeit ist kostbar.",
+      "Mit ihr hörst du zu, lernst, liebst, denkst, bemerkst, gestaltest und veränderst dein Leben.",
+      "Für den Feed ist diese Aufmerksamkeit vor allem ein Rohstoff. Gehen heißt auch: Ich entscheide wieder selbst, wohin sie fließt."
     ]
   },
   {
     key: "reason-2",
     delayDays: 90,
-    subject: "Grund 2: Der Feed wurde gebaut, um zu gewinnen",
+    subject: "Grund 2: Der Feed will dich zurückholen",
     title: "Er wurde gebaut, damit du zurückkommst",
     body: [
       "der Feed ist kein neutraler Raum.",
-      "Er ist eine Sortiermaschine. Er entscheidet, was erscheint, verschwindet, wiederholt wird und die Stimmung des Tages prägt.",
-      "Wenn Aufhören schwerer war als erwartet, heißt das nicht, dass du schwach bist. Es heißt, dass das System funktioniert hat."
+      "Er sortiert, was du siehst, was verschwindet, was sich wiederholt und was am Ende deine Stimmung prägt.",
+      "Wenn dir das Aufhören schwerer gefallen ist als erwartet, bist du nicht schwach. Das System hat nur genau so funktioniert, wie es sollte."
     ]
   },
   {
@@ -476,10 +476,10 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Grund 3: Big Tech hat zu viel Macht",
     title: "Big Tech legt sich über das öffentliche Leben",
     body: [
-      "ein paar Unternehmen prägen, was Milliarden Menschen sehen.",
+      "wenige Unternehmen prägen, was Milliarden Menschen sehen.",
       "Sie beeinflussen Nachrichten, Kultur, Politik, Beziehungen, Schönheitsideale, Sprache, Humor und Empörung.",
       "Ein paar Unternehmen sitzen heute zwischen Milliarden Menschen und der Wirklichkeit. Das ist zu viel Macht.",
-      "Niemand sollte öffentliches Leben im Hintergrund justieren, nur um Werbung zu verkaufen."
+      "Niemand sollte unser öffentliches Leben im Hintergrund steuern, nur um mehr Werbung zu verkaufen."
     ]
   },
   {
@@ -488,20 +488,20 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Grund 4: Empörung wird belohnt",
     title: "Wut funktioniert zu gut",
     body: [
-      "Algorithmen müssen nicht jeden Konflikt erfinden.",
-      "Sie müssen nur finden, was bindet, und es stärker ausspielen. Wut funktioniert. Gewissheit funktioniert. Nuance ist meistens zu langsam.",
-      "Den Feed zu verlassen ist eine Art, das eigene Nervensystem aus diesem Geschäftsmodell herauszunehmen."
+      "Algorithmen müssen Konflikte nicht einmal selbst erfinden.",
+      "Sie müssen nur erkennen, was uns festhält, und mehr davon zeigen. Wut funktioniert. Gewissheit auch. Für Zwischentöne bleibt kaum Zeit.",
+      "Wenn du den Feed verlässt, nimmst du dein eigenes Nervensystem aus diesem Geschäftsmodell heraus."
     ]
   },
   {
     key: "month-6",
     delayDays: 183,
-    subject: "Sechs Monate später: nicht aus Versehen zurückrutschen",
+    subject: "Sechs Monate später: Wie stabil ist dein Ausstieg?",
     title: "Nicht leise zurückkehren",
     body: [
-      "sechs Monate sind lang genug, damit der alte Sog höflich wird.",
-      "Vielleicht kommt er als ein Link, ein Login, ein Event, eine App, die alle anderen noch nutzen. Dann ist der Feed wieder in deiner Tasche, als wäre nichts passiert.",
-      "Wenn du zurückgerutscht bist, sei ehrlich. Nicht zur Strafe, sondern um den Mechanismus zu sehen.",
+      "nach sechs Monaten wirkt der alte Sog oft ganz harmlos.",
+      "Vielleicht kommt er als Link, Login, Veranstaltung oder App, die alle anderen noch nutzen. Und plötzlich ist der Feed wieder in deiner Tasche, als wäre nichts gewesen.",
+      "Wenn du wieder hineingerutscht bist, schau ehrlich hin. Nicht, um dich zu bestrafen, sondern um den Auslöser zu verstehen.",
       "Wenn du draußen geblieben bist, schütze diese Entscheidung."
     ]
   },
@@ -511,9 +511,9 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Grund 5: Selbst Langeweile wird besetzt",
     title: "Langeweile ist kein Versagen",
     body: [
-      "Langeweile war einmal Teil des Lebens.",
-      "Warten, spazieren, im Zug sitzen, den Gedanken freien Lauf lassen.",
-      "Der Feed greift genau diesen Raum an und trainiert dich, nach Stimulation zu greifen, bevor Gedanken entstehen."
+      "Langeweile gehört zum Leben.",
+      "Warten, spazieren, im Zug sitzen, den eigenen Gedanken freien Lauf lassen.",
+      "Der Feed besetzt genau diesen Raum. Er gewöhnt uns daran, sofort nach einem neuen Reiz zu greifen, noch bevor ein eigener Gedanke entstehen kann."
     ]
   },
   {
@@ -522,9 +522,9 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Grund 6: Vergleich wurde Alltag",
     title: "Der Feed erzeugt Mangel",
     body: [
-      "Vergleich wirkt auch dann, wenn du weißt, dass Bilder bearbeitet sind.",
-      "Der Feed zeigt Leben so, dass ein Gefühl von Mangel entsteht.",
-      "Gehen heißt auch, dein reales Leben nicht weiter an endlosen Inszenierungen zu messen."
+      "Vergleich wirkt selbst dann, wenn du weißt, dass Bilder gestellt oder bearbeitet sind.",
+      "Der Feed zeigt das Leben anderer so, dass leicht ein Gefühl von Mangel entsteht.",
+      "Gehen heißt auch, dein eigenes Leben nicht länger an einer endlosen Reihe von Inszenierungen zu messen."
     ]
   },
   {
@@ -534,8 +534,8 @@ const BASE_EMAIL_SEQUENCE_DE = [
     title: "Kontakt ist nicht Nähe",
     body: [
       "Plattformen versprechen Verbindung.",
-      "Oft liefern sie Kontakt ohne Nähe. Du kannst hunderte Menschen beobachten und dich trotzdem allein fühlen.",
-      "Das Ziel ist nicht Isolation. Das Ziel ist, Beziehungen in Kanäle zu bringen, die keine Abhängigkeit brauchen."
+      "Oft liefern sie Kontakt ohne echte Nähe. Du kannst Hunderte Menschen beobachten und dich trotzdem allein fühlen.",
+      "Das Ziel ist nicht, dich zurückzuziehen. Es geht darum, Beziehungen auf direkte Wege zu bringen, die keine Abhängigkeit brauchen."
     ]
   },
   {
@@ -544,8 +544,8 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Grund 8: Politik wurde Performance",
     title: "Reaktion ist nicht Handlung",
     body: [
-      "Ein Like kann sich wie eine Haltung anfühlen.",
-      "Ein Repost kann sich wie Mut anfühlen. Ein Kommentar kann sich wie Handlung anfühlen.",
+      "Ein Like kann sich wie Haltung anfühlen.",
+      "Ein Repost kann sich wie Mut anfühlen, ein Kommentar wie echtes Handeln.",
       "Eine Gesellschaft kann den ganzen Tag empört sein und trotzdem stillstehen."
     ]
   },
@@ -555,9 +555,9 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Grund 9: Kultur wird flacher",
     title: "Schnell ist nicht automatisch wichtig",
     body: [
-      "der Feed ist nicht für Tiefe gebaut.",
-      "Er ist für Verbreitung gebaut. Was am schnellsten reist, wirkt schnell wie das Wichtigste.",
-      "Kultur braucht Reibung, Erinnerung, Geduld und Räume, in denen nicht alles sofort gemessen wird. Sonst formen wir uns für ein System, das aktiv unsere Aufmerksamkeit lenkt."
+      "der Feed ist nicht für Tiefe gemacht.",
+      "Er ist auf schnelle Verbreitung ausgelegt. Was sich am schnellsten verbreitet, wirkt dadurch leicht wie das Wichtigste.",
+      "Kultur braucht Reibung, Erinnerung, Geduld und Räume, in denen nicht alles sofort gemessen wird. Sonst passen wir uns immer stärker an ein System an, das unsere Aufmerksamkeit lenkt."
     ]
   },
   {
@@ -566,9 +566,9 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Grund 10: Menschen werden passiv gehalten",
     title: "Die Welt braucht mehr als Zuschauer",
     body: [
-      "der Feed zersplittert unseren gemeinsamen Horizont.",
-      "Gemeinsame Probleme wirken zu groß, zu verwirrend oder zu hoffnungslos, wenn alle eine private Version der Wirklichkeit erhalten.",
-      "Ausloggen bringt Aufmerksamkeit und Energie zurück an Orte, an denen Veränderung tatsächlich passieren kann."
+      "der Feed zersplittert unseren Blick auf die Welt.",
+      "Gemeinsame Probleme wirken schnell zu groß oder hoffnungslos, wenn alle eine andere, persönlich sortierte Version der Wirklichkeit sehen.",
+      "Ausloggen bringt Aufmerksamkeit und Energie dorthin zurück, wo echte Veränderung möglich ist."
     ]
   },
   {
@@ -577,9 +577,9 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Ein Jahr später",
     title: "Ein Jahr ohne Feed",
     body: [
-      "ein Jahr ist keine Serie. Es ist ein Beweis.",
-      "Etwas hat sich verändert, auch wenn es leise war. Deine Aufmerksamkeit ging irgendwohin. Deine Beziehungen mussten andere Wege finden.",
-      "Die wichtige Frage ist nicht, ob du perfekt warst. Die wichtige Frage ist, ob du bewusster geworden bist.",
+      "ein Jahr ist mehr als eine kleine Pause.",
+      "Etwas hat sich verändert, auch wenn es leise passiert ist. Deine Aufmerksamkeit ist woanders hingeflossen, und deine Beziehungen haben neue Wege gefunden.",
+      "Die wichtige Frage ist nicht, ob du alles perfekt gemacht hast. Entscheidend ist, ob du heute bewusster mit deiner Aufmerksamkeit umgehst.",
       "Danke, dass du den Ausstieg sichtbar gemacht hast."
     ]
   },
@@ -590,7 +590,7 @@ const BASE_EMAIL_SEQUENCE_DE = [
     title: "Der Feed verkauft Rastlosigkeit",
     body: [
       "der Feed muss dich nicht glücklich machen.",
-      "Er muss dich nur rastlos genug halten, damit du zurückkommst: ein Kauf entfernt, eine Reise entfernt, ein Upgrade entfernt.",
+      "Es reicht, wenn er dich rastlos hält: Das gute Leben scheint immer nur einen Kauf, eine Reise oder ein Upgrade entfernt.",
       "Diese Rastlosigkeit treibt Konsum, Müll, Vergleich und Schulden."
     ]
   },
@@ -600,7 +600,7 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Grund 12: Beziehungen verdienen Besseres",
     title: "Freundschaft braucht einen direkten Weg",
     body: [
-      "viele Menschen bleiben, weil Gehen sich wie Verschwinden anfühlt.",
+      "viele Menschen bleiben, weil sich Gehen wie Verschwinden anfühlt.",
       "Diese Angst ist real. Plattformen haben sich zwischen Menschen und ihre Beziehungen geschoben.",
       "Wenn die Beziehung wichtig ist, gib ihr einen direkten Weg."
     ]
@@ -611,9 +611,9 @@ const BASE_EMAIL_SEQUENCE_DE = [
     subject: "Grund 13: Sichtbare Ausstiege machen Mut",
     title: "Der Ausstieg ist die Botschaft",
     body: [
-      "leise zu gehen hilft der Person, die geht.",
-      "Sichtbar zu gehen hilft auch den anderen. Menschen sehen einen Ausgang.",
-      "Du brauchst kein perfektes Argument: Sag, warum du gehst. Sag, wo man dich erreicht. Dann log dich aus."
+      "leise zu gehen kann dir selbst helfen.",
+      "Wenn du deinen Ausstieg sichtbar machst, hilft das auch anderen. Sie sehen, dass es einen Weg hinaus gibt.",
+      "Du brauchst dafür kein perfektes Argument: Sag, warum du gehst. Sag, wo man dich erreicht. Dann log dich aus."
     ]
   }
 ];
@@ -702,7 +702,7 @@ const POST_OPTIONS_BY_KEY_DE = {
   "day-2": [
     "Meine Aufmerksamkeit steht nicht zum Verkauf.",
     "Aufmerksamkeit ist wertvoll.\nIch gebe sie nicht länger ab.",
-    "Du bist nicht undiszipliniert.\nDas System wurde gegen dich gebaut."
+    "Du bist nicht undiszipliniert.\nDer Feed soll dich zurückholen."
   ],
   "day-3": [
     "Ich hole mir meine Zeit zurück.\nSie war nie für den Feed bestimmt.",
@@ -720,8 +720,8 @@ const POST_OPTIONS_BY_KEY_DE = {
     "Ich verschwinde nicht.\nIch bin nur nicht mehr hier."
   ],
   "day-6": [
-    "Wenn der Feed mehr nimmt als gibt,\ndarfst du gehen.",
-    "Sag warum.\nSag, wo man dich findet.\nDann log dich aus.",
+    "Wenn dir der Feed mehr nimmt, als er gibt,\ndarfst du gehen.",
+    "Sag, warum du gehst.\nSag, wo man dich findet.\nDann log dich aus.",
     "Wenn alles nur noch rauscht,\nist Ausloggen ein Anfang."
   ],
   "day-7": [

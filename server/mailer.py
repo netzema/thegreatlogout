@@ -7,7 +7,6 @@ import urllib.parse
 import urllib.request
 from typing import Any
 
-
 LABELS = {
     "en": {
         "tagline": "A collective social media exit",
@@ -26,20 +25,20 @@ LABELS = {
         "feedback": "If you want, reply to this email and tell us what happened.",
     },
     "de": {
-        "tagline": "Ein gemeinsamer Social-Media-Ausstieg",
+        "tagline": "Gemeinsam raus aus süchtig machenden Feeds",
         "greeting": "Hallo",
-        "signoff": "Log dich sichtbar aus,",
-        "receiving": "Du erhältst diese E-Mail, weil du den Logout-Guide angefordert hast.",
+        "signoff": "Bis bald außerhalb des Feeds,",
+        "receiving": "Du bekommst diese E-Mail, weil du dich für den Logout-Guide angemeldet hast.",
         "unsubscribe": "Abmelden",
-        "open_generator": "Post-Generator öffnen",
-        "open_in_generator": "Im Generator öffnen",
-        "post_option": "Post-Option",
-        "post_options": "Drei Posts, die du heute verwenden kannst",
-        "square_svg": "Quadratisches SVG",
-        "vertical_svg": "Vertikales SVG",
-        "reflections": "Drei Fragen zum Nachdenken",
-        "feedback_title": "Erzähl uns, was passiert ist",
-        "feedback": "Wenn du möchtest, antworte auf diese E-Mail und erzähl uns, was passiert ist.",
+        "open_generator": "Post im Generator anpassen",
+        "open_in_generator": "Diesen Post anpassen",
+        "post_option": "Vorschlag",
+        "post_options": "Drei Vorschläge für deinen heutigen Post",
+        "square_svg": "Quadrat herunterladen",
+        "vertical_svg": "Hochformat herunterladen",
+        "reflections": "Drei Fragen für dich",
+        "feedback_title": "Wie ist es dir ergangen?",
+        "feedback": "Wenn du magst, antworte einfach auf diese E-Mail und erzähl uns davon.",
     },
 }
 
@@ -106,6 +105,7 @@ def render_html(
 ) -> str:
     language = normalize_language(email.get("language"))
     labels = LABELS[language]
+    site_url = site_url.rstrip("/")
     localized_site = f"{site_url}/de/" if language == "de" else f"{site_url}/"
     greeting = f"{labels['greeting']} {html.escape(first_name)}," if first_name else f"{labels['greeting']},"
     paragraphs = "\n".join(
@@ -130,12 +130,14 @@ def render_html(
             f'padding:13px 18px;">{labels["open_generator"]}</a></p>'
         )
     unsubscribe_url = f"{api_base_url}/unsubscribe?token={urllib.parse.quote(token)}"
+    logo_url = f"{site_url}/assets/the-great-logout-mark.svg"
     return f"""<!doctype html>
 <html lang="{language}"><body style="margin:0;background:#070807;color:#f4f4ef;font-family:Arial,sans-serif;line-height:1.58;">
+<div style="display:none;max-height:0;overflow:hidden;color:transparent;">{html.escape(str(email['subject']))} - The Great Logout</div>
 <div style="max-width:680px;margin:0 auto;padding:30px 20px 42px;"><div style="border:1px solid rgba(244,244,239,.12);border-radius:22px;background:#0f110f;overflow:hidden;">
-<div style="padding:22px 24px;border-bottom:1px solid rgba(244,244,239,.12);"><strong style="font-size:18px;">The Great Logout</strong><div style="color:#a4aaa1;font-size:13px;margin-top:5px;">{labels['tagline']}</div></div>
-<div style="padding:28px 24px 8px;"><h1 style="font-size:34px;line-height:1.05;margin:0 0 22px;">{html.escape(str(email['title']))}</h1><p>{greeting}</p>{paragraphs}{posts}{reflections}{feedback}{generator}<p style="margin-top:30px;">{labels['signoff']}<br><strong>The Great Logout</strong></p></div>
-<div style="padding:18px 24px 24px;border-top:1px solid rgba(244,244,239,.12);color:#a4aaa1;font-size:13px;"><p>{labels['receiving']}</p><p><a href="{localized_site}" style="color:#B6FF3B;">thegreatlogout.org</a> | <a href="{unsubscribe_url}" style="color:#a4aaa1;">{labels['unsubscribe']}</a></p></div>
+<div style="padding:22px 24px;border-bottom:1px solid rgba(244,244,239,.12);"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td width="54" style="vertical-align:middle;width:54px;"><img src="{logo_url}" width="42" height="42" alt="" style="display:block;width:42px;height:42px;"></td><td style="vertical-align:middle;"><div style="color:#f4f4ef;font-size:18px;line-height:1.1;font-weight:bold;">The Great Logout</div><div style="color:#a4aaa1;font-size:13px;margin-top:5px;">{labels['tagline']}</div></td></tr></table></div>
+<div style="padding:28px 24px 8px;"><h1 style="font-size:34px;line-height:1.05;margin:0 0 22px;color:#f4f4ef;">{html.escape(str(email['title']))}</h1><p>{greeting}</p>{paragraphs}{posts}{reflections}{feedback}{generator}<p style="margin-top:30px;">{labels['signoff']}<br><strong>The Great Logout</strong></p></div>
+<div style="padding:18px 24px 24px;border-top:1px solid rgba(244,244,239,.12);color:#a4aaa1;font-size:13px;"><p style="margin:0 0 8px;">{labels['receiving']}</p><p style="margin:0;"><a href="{localized_site}" style="color:#B6FF3B;">thegreatlogout.org</a> <span style="color:#6f766d;">|</span> <a href="{unsubscribe_url}" style="color:#a4aaa1;">{labels['unsubscribe']}</a></p></div>
 </div></div></body></html>"""
 
 
@@ -154,20 +156,28 @@ def render_posts(
         cards.append(
             '<div style="border:1px solid rgba(244,244,239,.14);border-radius:16px;'
             'background:#121512;padding:16px;margin:12px 0;">'
-            f'<div style="color:#B6FF3B;font-size:12px;margin-bottom:10px;">{labels["post_option"]} {index}</div>'
-            f'<div style="white-space:pre-line;font-size:20px;font-weight:bold;">{html.escape(post)}</div>'
-            f'<div style="margin-top:14px;"><a href="{generator}" style="color:#B6FF3B;">{labels["open_in_generator"]}</a> | '
-            f'<a href="{square}" style="color:#B6FF3B;">{labels["square_svg"]}</a> | '
-            f'<a href="{vertical}" style="color:#B6FF3B;">{labels["vertical_svg"]}</a></div></div>'
+            f'<div style="color:#B6FF3B;font-family:Consolas,monospace;font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;">{labels["post_option"]} {index}</div>'
+            f'<div style="white-space:pre-line;font-size:20px;line-height:1.18;color:#f4f4ef;font-weight:bold;">{html.escape(post)}</div>'
+            f'<div style="margin-top:14px;"><a href="{generator}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">{labels["open_in_generator"]}</a> '
+            f'<span style="color:#6f766d;">&nbsp;|&nbsp;</span> <a href="{square}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">{labels["square_svg"]}</a> '
+            f'<span style="color:#6f766d;">&nbsp;|&nbsp;</span> <a href="{vertical}" style="color:#B6FF3B;text-decoration:none;font-weight:bold;">{labels["vertical_svg"]}</a></div></div>'
         )
-    return f'<div style="margin-top:30px;"><h2>{labels["post_options"]}</h2>{"".join(cards)}</div>'
+    return f'<div style="margin-top:30px;"><h2 style="font-size:20px;line-height:1.2;margin:0 0 12px;color:#f4f4ef;">{labels["post_options"]}</h2>{"".join(cards)}</div>'
 
 
 def render_reflections(prompts: list[str], language: str) -> str:
     if not prompts:
         return ""
-    items = "".join(f"<li>{html.escape(prompt)}</li>" for prompt in prompts)
-    return f'<div style="margin-top:30px;"><h2>{LABELS[language]["reflections"]}</h2><ul>{items}</ul></div>'
+    items = "".join(
+        f'<li style="margin:10px 0;color:#f4f4ef;">{html.escape(prompt)}</li>'
+        for prompt in prompts
+    )
+    return (
+        '<div style="margin-top:30px;border:1px solid rgba(244,244,239,.14);'
+        'border-radius:16px;background:#121512;padding:18px;">'
+        f'<h2 style="font-size:20px;line-height:1.2;margin:0 0 12px;color:#f4f4ef;">{LABELS[language]["reflections"]}</h2>'
+        f'<ul style="margin:0;padding-left:20px;">{items}</ul></div>'
+    )
 
 
 def render_text(
@@ -179,6 +189,7 @@ def render_text(
 ) -> str:
     language = normalize_language(email.get("language"))
     labels = LABELS[language]
+    site_url = site_url.rstrip("/")
     localized_site = f"{site_url}/de/" if language == "de" else f"{site_url}/"
     greeting = f"{labels['greeting']} {first_name}," if first_name else f"{labels['greeting']},"
     lines = ["The Great Logout", "", str(email["title"]), "", greeting, "", *email["body"], ""]

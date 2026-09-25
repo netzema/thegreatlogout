@@ -228,7 +228,7 @@ const dePostIdeas = [
   "Der Feed kennt deine Schwächen.\nGenau deshalb funktioniert er.",
   "Du schuldest keiner Plattform dein Leben.",
   "Erst verkaufen sie deine Aufmerksamkeit.\nDann verkaufen sie dir die Ablenkung zurück.",
-  "Du bist nicht undiszipliniert.\nDas System wurde gegen dich gebaut.",
+  "Du bist nicht undiszipliniert.\nDer Feed soll dich zurückholen.",
   "Ich bin kein Rohstoff.",
   "Weniger Scrollen.\nMehr Leben.",
   "Mein Kopf ist kein Werbeplatz.",
@@ -251,8 +251,8 @@ const dePostIdeas = [
   "Ich logge mich aus,\num wieder bei mir anzukommen.",
   "Vielleicht ist Langeweile kein Problem.\nVielleicht ist sie ein Signal.",
   "Du verpasst nicht alles.\nDu wirst in alles hineingezogen.",
-  "Wenn der Feed mehr nimmt als gibt,\ndarfst du gehen.",
-  "Sag warum.\nSag, wo man dich findet.\nDann log dich aus.",
+  "Wenn dir der Feed mehr nimmt, als er gibt,\ndarfst du gehen.",
+  "Sag, warum du gehst.\nSag, wo man dich findet.\nDann log dich aus.",
   "Behalte die Menschen.\nVerlier den Feed.",
   "Das ist mein letzter Post hier.\nWir sehen uns im echten Leben."
 ];
@@ -347,11 +347,11 @@ ${altLinks({ en: "/", de: "/de/" })}
           <h1>Raus aus Social Media. Sichtbar.</h1>
 
           <p class="hero-copy">
-            The Great Logout hilft dir, süchtig machende soziale Medien bewusst und sichtbar zu verlassen. <strong>Teile 1 bis 7 Tage lang kurze Ausstiegs-Posts</strong>, erklär warum du gehst, sag wo man dich weiterhin erreicht und log dich dann aus. Nicht still. Sondern so, dass andere merken: Man kann gehen.
+            The Great Logout hilft dir, süchtig machende soziale Medien bewusst und sichtbar zu verlassen. <strong>Teile 1 bis 7 Tage lang kurze Posts zu deinem Ausstieg</strong>, sag, warum du gehst und wo man dich weiterhin erreicht. Dann log dich aus. So sehen andere: Man kann gehen, ohne aus dem Leben der Menschen zu verschwinden.
           </p>
 
           <div class="button-row">
-            <a class="btn btn-primary" href="#start-guide">7-Tage-Guide starten</a>
+            <a class="btn btn-primary" href="#guide">7-Tage-Guide starten</a>
             <a class="btn btn-secondary" href="#generator">Post erstellen</a>
           </div>
 
@@ -387,7 +387,7 @@ ${altLinks({ en: "/", de: "/de/" })}
                 <span>Vor dem Ausstieg</span>
                 <div>
                   <strong>Bleib erreichbar.</strong>
-                  <p>E-Mail, Telefon, Website, Messenger, echtes Leben. Hauptsache: nicht mehr über den Feed.</p>
+                  <p>E-Mail, Telefon, Website, Messenger oder echtes Leben. Hauptsache, der Kontakt hängt nicht mehr am Feed.</p>
                 </div>
               </li>
               <li class="formula-step">
@@ -400,7 +400,7 @@ ${altLinks({ en: "/", de: "/de/" })}
             </ol>
 
             <div class="mobile-sequence-cta">
-              <a class="btn btn-primary" href="#start-guide">Heute starten</a>
+              <a class="btn btn-primary" href="#guide">Heute starten</a>
             </div>
           </div>
         </aside>
@@ -419,15 +419,15 @@ ${altLinks({ en: "/", de: "/de/" })}
         <div class="steps">
           <article class="step"><div><h3>Wähle 1, 3 oder 7 Tage.</h3><p>Nimm dir eine Dauer vor, die du wirklich durchziehst. Sieben Tage geben anderen genug Zeit, deinen Ausstieg wahrzunehmen.</p></div></article>
           <article class="step"><div><h3>Teile jeden Tag einen Grund.</h3><p>Schreib direkt und menschlich. Sag, was dir der Feed nimmt und was du dir zurückholen willst.</p></div></article>
-          <article class="step"><div><h3>Sag, wo man dich erreicht.</h3><p>Verschwinde nicht aus dem Leben der Menschen, die dir wichtig sind. Verlege die Beziehung aus der Plattform heraus.</p></div></article>
+          <article class="step"><div><h3>Sag, wo man dich erreicht.</h3><p>Verschwinde nicht aus dem Leben der Menschen, die dir wichtig sind. Gebt eurer Beziehung einen direkten Weg außerhalb der Plattform.</p></div></article>
           <article class="step"><div><h3>Lösch die Apps oder deaktiviere deine Accounts.</h3><p>Mach den Rückweg schwerer. Entferne die Abkürzung. Unterbrich den Reflex.</p></div></article>
           <article class="step"><div><h3>Bleib draußen und mach es anderen leichter.</h3><p>Wenn dich jemand fragt, warum du gegangen bist, antworte klar. So wird aus einem privaten Schritt ein öffentliches Signal.</p></div></article>
         </div>
 
         <div class="how-cta">
           <div>
-            <h3>Bereit, es wirklich zu machen?</h3>
-            <p>Der Guide gibt dir Tagesimpulse, ein konkretes Ausstiegsdatum und spätere Check-ins.</p>
+            <h3>Bereit für den ersten Schritt?</h3>
+            <p>Der Guide begleitet dich mit kurzen Tagesimpulsen bis zum Ausstieg und meldet sich danach noch ein paar Mal bei dir.</p>
           </div>
           <a class="btn btn-primary" href="#start-guide">Heute starten</a>
         </div>
@@ -490,8 +490,8 @@ ${altLinks({ en: "/", de: "/de/" })}
         <div class="guide-panel">
           <div>
             <div class="kicker">7-Tage-Guide</div>
-            <h2>Eine Woche sichtbar werden. Dann raus.</h2>
-            <p class="lead">Der Guide gibt dir jeden Tag einen klaren Impuls. Du kannst ihn übernehmen, anpassen oder nur als Anstoß nutzen. Wichtig ist, dass aus dem Vorsatz ein Ausstieg wird.</p>
+            <h2>Eine Woche lang sichtbar gehen. Dann wirklich raus.</h2>
+            <p class="lead">Der Guide schickt dir jeden Tag einen kurzen Impuls. Du kannst die Vorschläge übernehmen, anpassen oder einfach als Anstoß nutzen. Entscheidend ist, dass aus deinem Vorsatz ein echter Ausstieg wird.</p>
             <div class="guide-days">
               <article class="guide-day"><span>Tag 0</span><div><h3>Den Ausstieg vorbereiten</h3><p>Kontakte sichern, letzten Tag festlegen und entscheiden, wo man dich künftig erreicht.</p></div></article>
               <article class="guide-day"><span>Tag 1</span><div><h3>Warum ich gehe</h3><p>Fang klar an. Sag, dass dein Ausstieg bewusst ist.</p></div></article>
@@ -506,7 +506,7 @@ ${altLinks({ en: "/", de: "/de/" })}
 
           <aside class="signup-card guide-signup" id="start-guide" aria-labelledby="signup-title">
             <h3 id="signup-title">Starte deinen Ausstieg</h3>
-            <p>1 bis 7 Tage sichtbar werden. Dann ausloggen.</p>
+            <p>Zeig 1 bis 7 Tage lang, warum du gehst. Dann log dich aus.</p>
             <p class="signup-link">Brauchst du zuerst eine Formulierung? <a href="#generator">Zum Post-Generator.</a></p>
             <form class="signup-form" id="guideSignupForm" data-endpoint="/api/guide/subscribe">
               <input type="hidden" name="language" value="de" />
@@ -534,7 +534,7 @@ ${altLinks({ en: "/", de: "/de/" })}
 
     <section id="manifesto">
       <div class="wrap">
-        <div class="section-head"><div><div class="kicker">Manifest</div><h2>Wir kündigen nicht einander.</h2></div></div>
+        <div class="section-head"><div><div class="kicker">Manifest</div><h2>Wir verlassen den Feed, nicht einander.</h2></div></div>
         <div class="manifesto"><p>Wir gehen, weil Plattformen zu Maschinen für Sucht, Empörung, Überwachung und Kontrolle geworden sind. The Great Logout richtet sich nicht gegen Kreative oder Gemeinschaften. Es ist eine Weigerung, Plattformen weiter mit unserer Zeit, unserer Wut, unseren Beziehungen und unserer Aufmerksamkeit zu füttern.</p></div>
       </div>
     </section>
@@ -556,34 +556,20 @@ ${altLinks({ en: "/", de: "/de/" })}
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrap footer-grid">
-      <div>
-        <a class="brand footer-brand" href="#top" aria-label="The Great Logout Startseite">
-          <span class="brand-mark" aria-hidden="true"><img src="../assets/the-great-logout-mark.svg" alt="" decoding="async" /></span>
-          <span>The Great Logout</span>
-        </a>
-        <p>Sag warum. Sag, wo man dich findet. Dann log dich aus.</p>
-      </div>
-      <div class="footer-links" aria-label="Footer navigation">
+  <footer class="footer">
+    <div class="wrap footer-inner">
+      <div>© 2026 The Great Logout</div>
+      <nav class="footer-links" aria-label="Footer-Navigation">
         <a href="#how">So geht es</a>
-        &middot;
         <a href="#guide">7-Tage-Guide</a>
-        &middot;
         <a href="#generator">Post-Generator</a>
-        &middot;
         <a href="essay.html">Essay</a>
-        &middot;
         <a href="#support">Unterstützen</a>
-        &middot;
         <a href="imprint.html">Impressum</a>
-        &middot;
         <a href="privacy.html">Datenschutz</a>
-        &middot;
-        <button class="privacy-settings" type="button" data-analytics-settings>Datenschutz-Einstellungen</button>
-        &middot;
         <a href="../" hreflang="en" lang="en">English</a>
-      </div>
+        <button class="privacy-settings" type="button" data-analytics-settings>Datenschutz-Einstellungen</button>
+      </nav>
     </div>
   </footer>
 

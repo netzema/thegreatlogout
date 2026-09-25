@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "project": {
+    "id": "the-great-logout",
+    "name": "The Great Logout",
+    "owner": "Daniel Netzl",
+    "repository": "thegreatlogout"
+  },
+  "notes": {
+    "primary": "10 Projects/The Great Logout/Outreach-System und Automatisierung.md",
+    "project_overview": "40 Areas/NDS/Projektübersicht.md",
+    "project_history": "40 Areas/NDS/Projekthistorie.md",
+    "competence_profile": "40 Areas/NDS/Kompetenzprofil.md",
+    "additional": [
+      "10 Projects/The Great Logout/Website- und Message-Testing.md",
+      "40 Areas/NDS/Nächste Schritte.md"
+    ]
+  },
+  "workflow": {
+    "language": "de",
+    "require_preview": true,
+    "require_write_approval": true,
+    "require_version_check": true,
+    "archive_primary_on_close": false
+  },
+  "data_policy": {
+    "forbid_secrets": true,
+    "forbid_personal_raw_data": true,
+    "allowed_note_paths": [
+      "10 Projects/The Great Logout/Outreach-System und Automatisierung.md",
+      "10 Projects/The Great Logout/Website- und Message-Testing.md",
+      "40 Areas/NDS/Projektübersicht.md",
+      "40 Areas/NDS/Projekthistorie.md",
+      "40 Areas/NDS/Kompetenzprofil.md",
+      "40 Areas/NDS/Nächste Schritte.md"
+    ]
+  }
+}

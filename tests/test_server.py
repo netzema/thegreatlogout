@@ -7,7 +7,6 @@ from fastapi.testclient import TestClient
 
 import server.app as service
 
-
 ORIGIN = "https://thegreatlogout.org"
 
 
@@ -83,6 +82,44 @@ def test_duplicate_active_signup_is_idempotent(tmp_path, monkeypatch):
     assert len(sent_messages) == 1
     with sqlite3.connect(database_path) as connection:
         assert connection.execute("SELECT COUNT(*) FROM subscribers").fetchone()[0] == 1
+
+
+def test_each_scheduled_email_is_sent_only_once(tmp_path, monkeypatch):
+    client, database_path, sent_messages = make_client(tmp_path, monkeypatch)
+
+    with client:
+        response = client.post(
+            "/api/guide/subscribe",
+            headers={"Origin": ORIGIN},
+            json=signup_payload(language="de"),
+        )
+        with sqlite3.connect(database_path) as connection:
+            subscriber_id = connection.execute("SELECT id FROM subscribers").fetchone()[0]
+            connection.execute(
+                "UPDATE email_sends SET send_after = '2000-01-01T00:00:00+00:00'"
+            )
+        first_timer_run = service.send_due_emails(limit=100, subscriber_id=subscriber_id)
+        second_timer_run = service.send_due_emails(limit=100, subscriber_id=subscriber_id)
+
+    assert response.status_code == 202
+    assert first_timer_run == 24
+    assert second_timer_run == 0
+    assert len(sent_messages) == 25
+    assert len({message["Subject"] for message in sent_messages}) == 25
+
+    welcome_html = sent_messages[0]["HtmlBody"]
+    assert "background:#070807" in welcome_html
+    assert "/assets/the-great-logout-mark.svg" in welcome_html
+    assert "Drei Vorschläge für deinen heutigen Post" in welcome_html
+    assert "Diesen Post anpassen" in welcome_html
+    assert "Quadrat herunterladen" in welcome_html
+
+    with sqlite3.connect(database_path) as connection:
+        sent_rows = connection.execute(
+            "SELECT COUNT(*), COUNT(DISTINCT sequence_key) "
+            "FROM email_sends WHERE sent_at IS NOT NULL"
+        ).fetchone()
+    assert sent_rows == (25, 25)
 
 
 def test_honeypot_accepts_without_storing(tmp_path, monkeypatch):

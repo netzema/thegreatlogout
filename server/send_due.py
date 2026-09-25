@@ -5,7 +5,6 @@ from pathlib import Path
 
 from server.app import send_due_emails
 
-
 LOCK_PATH = Path("/tmp/thegreatlogout-send-due.lock")
 
 
