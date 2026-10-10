@@ -1,0 +1,13 @@
+[Unit]
+Description=The Great Logout encrypted external backup and restore verification
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/deploy/apps/thegreatlogout.org
+EnvironmentFile=/home/deploy/apps/thegreatlogout.org/.env.admin
+ExecStart=/home/deploy/apps/thegreatlogout.org/.venv/bin/python -m server.offsite_backup
+TimeoutStartSec=900
+UMask=0077
+NoNewPrivileges=true
+LockPersonality=true
+RestrictSUIDSGID=true

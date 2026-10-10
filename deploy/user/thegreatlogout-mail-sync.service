@@ -1,0 +1,14 @@
+[Unit]
+Description=The Great Logout campaign-only mailbox sync
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/deploy/apps/thegreatlogout.org
+EnvironmentFile=/home/deploy/apps/thegreatlogout.org/.env.admin
+ExecStart=/home/deploy/apps/thegreatlogout.org/.venv/bin/python -m server.mail_sync
+TimeoutStartSec=180
+TimeoutStopSec=15
+UMask=0077
+NoNewPrivileges=true
+LockPersonality=true
+RestrictSUIDSGID=true

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+<p class="eyebrow">Recherche & nächste Schritte</p>
+<h1>Gut vorbereitet ins Gespräch</h1>
+<p class="lead">Aktuelle Anlässe und bisherige Gespräche werden zu begründeten Vorschlägen. Empfänger und Text entscheidest du gemeinsam im Review.</p>
+<section class="card">
+<h2>Recherche</h2>
+<p>{{ 'KI-Zugang eingerichtet.' if ai_ready else 'KI-Zugang noch nicht eingerichtet.' }} {{ 'Tägliche Recherche und bis zu drei neue Entwürfe pro Tag sind aktiviert.' if automation_active else 'Automatische Recherche ist noch nicht aktiviert. Einzelne Aufträge können vorbereitet werden.' }}</p>
+<form method="post" action="/outreach/jobs"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="kind" value="radar"><button>Heutige Recherche einplanen</button></form>
+<p class="muted">Nur aktuelle Quellen mit konkretem Kontaktbezug. <a href="/opportunities">Anlässe prüfen →</a></p>
+</section>
+<section class="card"><h2>Empfohlene nächste Schritte</h2>
+{% for c in report.suggestions %}<article><h3><a href="/contacts/{{ c.id }}">{{ c.organization }}</a></h3><p>{{ c.reason }} · Letzte Nachricht vor {{ c.days }} Tagen.</p><form method="post" action="/outreach/jobs"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="kind" value="draft"><input type="hidden" name="contact_id" value="{{ c.id }}"><input type="hidden" name="opportunity_id" value="{{ c.opportunity_id or 0 }}"><button>Entwurf vorbereiten</button></form><hr></article>{% else %}<p>Aktuell keine zusätzlichen Wiedervorlagen. Vorbereitete Entwürfe findest du im <a href="/review">Review</a>.</p>{% endfor %}
+</section>
+<section class="card table-wrap"><h2>Was funktioniert?</h2>
+<p>Freigaben, Änderungen und Ablehnungen zeigen, welche Vorschläge für dich passen. Erst ab fünf geprüften Entwürfen pro Kommunikationswinkel beeinflusst diese Erfahrung die Priorisierung leicht.</p>
+<table><thead><tr><th>Zielgruppe / Winkel</th><th>Entwürfe</th><th>Freigegeben</th><th>Versendet</th><th>Bearbeitet</th><th>Abgelehnt</th><th>Später</th></tr></thead><tbody>
+{% for g in report.groups %}<tr><td>{{ g.category }}<br>{{ g.framing or 'Ohne Winkel' }}</td><td>{{ g.drafts }}</td><td>{{ g.approved }}</td><td>{{ g.sent }}</td><td>{{ g.edited }}</td><td>{{ g.rejected }}</td><td>{{ g.deferred }}</td></tr>{% else %}<tr><td colspan="7">Noch keine Entwürfe ausgewertet.</td></tr>{% endfor %}</tbody></table>
+<p>{{ report.attributed_replies }} versendete Entwürfe haben eine eindeutig zugeordnete Antwort. Historische Antworten werden keinem neuen Entwurf zugerechnet.</p>
+</section>
+<section class="card"><h2>Hintergrundläufe</h2>
+<p class="muted">Heute {{ report.usage.calls }} KI-Aufrufe · {{ report.usage.input_tokens }} Eingabe- und {{ report.usage.output_tokens }} Ausgabetokens.</p>
+{% for j in report.jobs %}<p><strong>{{ 'Recherche' if j.kind=='radar' else 'Entwurf' }}</strong> · {{ {'queued':'Eingeplant','running':'In Arbeit','done':'Abgeschlossen','failed':'Fehlgeschlagen'}.get(j.status,j.status) }} · {{ j.created_at[:10] }}<br>{{ j.result }}</p>{% if j.status=='failed' and j.attempts<3 %}<form method="post" action="/outreach/jobs/{{ j.id }}/retry"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="secondary">Erneut einplanen</button></form>{% endif %}{% else %}<p>Noch keine Aufträge.</p>{% endfor %}
+</section>
+{% endblock %}

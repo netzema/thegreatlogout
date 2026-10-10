@@ -18,9 +18,24 @@ structurally critical without sounding bureaucratic or promotional.
 - `thegreatlogout-guide.service` runs the FastAPI guide API on `127.0.0.1:8788`.
 - `thegreatlogout-send-due.timer` starts the due-email job every 15 minutes.
 - Guide subscribers and send state live in `data/thegreatlogout.db`.
-- Consent-based first-party analytics are proxied to the NDS backend on
-  `127.0.0.1:8060` and shown in `admin.netzldatasolutions.at`.
+- Independent production deployment (cutover verified 10 October 2026): `thegreatlogout-admin.service` runs the admin
+  and consent-based analytics collector on `127.0.0.1:8789`, exposed at
+  `admin.thegreatlogout.org`. See `deploy/README.md` for the verified cutover.
+- Admin data lives in `data/admin.db`; guide data remains separate. Runtime
+  code must not import or query the NDS application. Explicit one-time migration
+  utilities may read only authorized source data.
+- The deploy user's `thegreatlogout-mail-sync.timer` runs every five minutes;
+  lingering is enabled. The system-level mailbox timer stays disabled.
+- The campaign owns its login, analytics key, mailbox sync and backup timer.
+  Automatic outreach sending stays disabled until separately configured.
 - Postmark is the only external transactional-email service.
+- `server.outreach` researches public sources and prepares review-only drafts through
+  the OpenAI Responses API. No outreach transport exists. Never treat a job,
+  draft, approval or export as a real send. Existing assigned mail history is
+  sufficient address evidence; recipient and message are reviewed together.
+- User timers schedule assistive outreach and encrypted Nextcloud backups.
+  Limits, activation and recovery are documented in `deploy/ASSISTED_OUTREACH.md`.
+  Never display the recovery key, API credentials or raw correspondence.
 - DNS is hosted at INWX. Cloudflare and GitHub Pages are no longer in the live
   request path; legacy material remains temporarily for rollback.
 
