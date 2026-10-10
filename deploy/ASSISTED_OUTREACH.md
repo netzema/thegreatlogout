@@ -11,15 +11,20 @@ prepares messages and never sends outreach automatically.
   unmatched messages. Existing blocks and manually selected addresses survive.
 - A real API connection and a real draft for an existing dialogue succeeded.
   The draft remains unapproved. Its campaign mechanism was reviewed and clarified.
-- The real research/extraction flow completed without accepting an insufficiently
-  supported current opportunity. Empty results are a valid outcome.
+- The first broad discovery run created eight new contacts and eight opportunities
+  (two events and six publications). A subsequent worker run created one unapproved
+  GPT-6.1 Sol draft for a newly discovered contact. Empty results remain valid.
+  Six contacts had observed website links, one also a contact-page link. No new
+  email addresses or contact permissions were inferred.
 - Encrypted external backup uploaded, downloaded, decrypted, checksum-verified
   and restored into isolated temporary databases; both integrity checks passed.
 - Both new user timers are installed, enabled and active. Automatic research and
   bounded draft scheduling are configured; no outreach transport is installed.
 - The base outreach admin was activated at 15:08 UTC and the writing-note editor
   at 15:23 UTC. For future Python route changes, use the restart below. The agent's
-  deploy account cannot perform it with passwordless sudo.
+  deploy account cannot perform it with passwordless sudo. Broad discovery already
+  runs in fresh worker processes. Restart the admin to load the updated manual
+  queue validation for upcoming events announced more than 30 days ago.
 
 ```bash
 sudo systemctl restart thegreatlogout-admin.service
@@ -67,19 +72,43 @@ contact/context fingerprints deduplicate generated drafts and jobs across reruns
 Interrupted jobs become visible failures. Failed jobs can be retried explicitly
 up to three attempts; failures do not log provider payloads or contact data.
 
-Research sends organization names and categories to OpenAI web search. A second
-structured extraction pass proposes at most five opportunities. The server
-rejects unknown contacts, sources absent from the search evidence, private URL
-forms, future/older-than-14-day dates and weak-fit proposals. Sources remain
-clickable and their accuracy/relevance is part of review; a citation is not an
-independent verification of every model claim.
+Research is now broad discovery rather than a search over the contact list.
+`server.discovery` performs three independent web-search passes: events/current
+happenings/campaigns; publications/studies/media/culture; and public statements,
+creators/organizations/viral debates. It searches DACH and international sources
+in German and English. No stored contacts or private correspondence are supplied
+to these searches or extraction. It also works with an empty contact database.
+A fourth API call extracts up to eight source-backed contact/opportunity pairs,
+with at most two accepted opportunities per organization per run.
 
-Priority is transparent: topic fit (model assessment, 0–60), freshness (0–14),
-existing dialogue (0 or 10), contact priority (3–9), and a small review-history
-adjustment (at most ±5, only after five reviewed drafts for that framing).
-Follow-ups require a due date, an unanswered incoming message, an existing
-dialogue after 14 days, or a new opportunity. Repeatedly unanswered contacts
-without a new reason do not receive automatic reminders.
+Publications and current debates must be dated within the last 14 days. Upcoming
+events may take place in the next 90 days with an announcement from the last
+180 days. Both the opportunity and the proposed contact's public identity/role
+must reference observed search sources. The server rejects absent/private URLs,
+invalid dates, weak fit, and attempts to recreate blocked/paused/closed contacts.
+Virality must have supporting evidence, not merely an interesting headline.
+Source and claim accuracy still require review; citations are not independent
+verification of every model claim.
+
+New contacts are saved as `researched` with permission `unknown`, a source link,
+a stated public role, and observed official website/contact-page links where
+available. Email addresses are deliberately not inferred or populated by the
+model. The existing recipient-and-message review accepts an address when it is
+available. Existing addresses, chosen people, permissions and contact notes are
+preserved. Contact matching happens locally using normalized organization names,
+persisted discovery identities and known official domains. Common social/hosting
+domains cannot merge unrelated actors. Ambiguous matches are skipped. Discovery
+never extends authorized IMAP domains or imports unrelated mail.
+
+Priority is transparent: topic fit (model assessment, 0–75), freshness (0–14,
+or 10 for upcoming events), first conversation (10 when no history exists),
+and a small review-history adjustment (at most ±5, after five reviewed drafts).
+Scores are capped at 100. Scheduling prioritizes up to two strong opportunities
+before existing-dialogue follow-ups, filling unused slots with further opportunities.
+Within opportunities, new conversation partners come first. Only one queued
+automatic draft per contact is selected. The existing three-job daily cap remains.
+Follow-ups still require a due date, an unanswered incoming message, an existing
+dialogue after 14 days, or a new opportunity. Expired events cannot generate drafts.
 
 Drafting uses campaign facts, limited notes, the last four non-automated messages
 and the chosen opportunity. Each text excerpt is limited to 2,000 characters;
@@ -154,7 +183,9 @@ runtime code reads another application's settings or database.
 | `OUTREACH_BACKUP_REMOTE` | Dedicated rclone directory on the authorized Nextcloud remote |
 
 Each request has an output-token cap, a timeout and disabled response storage.
-Search is limited to two tool calls. The call budget is an operational limit,
+Each search request is limited to two tool calls. A broad research run uses
+three searches plus one extraction call, allowing at most six search tool calls
+and four API calls within the existing daily budget. The call budget is an operational limit,
 not a euro-denominated spending cap; enforce a monetary budget at the provider
 as needed. OpenAI's abuse-monitoring retention still applies. References:
 [web search](https://developers.openai.com/api/docs/guides/tools-web-search),
@@ -191,14 +222,18 @@ delivery state before re-enabling the guide send timer.
 
 ## Validation
 
-The base implementation passed 70 Python tests. The lowercase-opening correction
+The broad discovery update passed the full 81-test Python suite and then all
+37 discovery/outreach tests after adjusting queue priorities, plus the browser
+flow and its 21 responsive route checks. The base implementation passed 70 Python tests. The lowercase-opening correction
 passed all 36 writing-style and outreach tests, including a regression for an
 English greeting that preserves later sentence capitalization. A real GPT-6.1 Sol
 call with synthetic English correspondence followed the corrected rule before
 normalization. The suite exercises guide scheduling/idempotency/unsubscribe/tracking
 flags, admin authorization, CSRF, recipient inheritance, conflicts, integrated
 review, stale approvals, deferral, source/date validation, duplicate runs,
-API budgets, prompt minimization, writing-note persistence/CSRF/concurrent edits,
+API budgets, prompt minimization, broad discovery from an empty contact list,
+source/date validation, safe contact matching, growth scheduling alongside replies,
+upcoming-event expiry, writing-note persistence/CSRF/concurrent edits,
 recipient-name evidence, punctuation rules, stale generation, failed jobs, reply attribution and encrypted
 backup round-trips including a wrong-key failure. All data in these tests is
 synthetic. Real provider and Nextcloud checks are recorded above separately.
@@ -207,7 +242,8 @@ The browser fixture in `tests/browser_fixture.py` uses its own database and TLS
 certificate under `TGL_BROWSER_FIXTURE`. Run it with the project Python after
 creating a one-day self-signed fixture certificate named `cert.pem`/`key.pem`.
 `tests/browser_outreach.cjs` uses Playwright (`PLAYWRIGHT_MODULE` can point to an
-existing installation). It checks login, saving/reloading the writing note, draft creation, deferral, editing,
+existing installation). It checks login, new-contact provenance links and opportunity badges,
+saving/reloading the writing note, draft creation, deferral, editing,
 approval, export, synthetic delivery logging and logout, and seven admin routes
 at 1440, 390 and 320 px without page errors or document overflow. It never uses
 production credentials or sends mail.

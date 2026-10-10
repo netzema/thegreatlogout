@@ -144,7 +144,13 @@ def ensure_schema(path=None):
         """)
 
         for table, additions in {
-            "contacts": [("email_source", "TEXT NOT NULL DEFAULT ''")],
+            "contacts": [
+                ("email_source", "TEXT NOT NULL DEFAULT ''"),
+                ("discovery_key", "TEXT"),
+                ("discovery_source", "TEXT NOT NULL DEFAULT ''"),
+                ("website", "TEXT NOT NULL DEFAULT ''"),
+                ("contact_url", "TEXT NOT NULL DEFAULT ''"),
+            ],
             "drafts": [
                 ("generation_key", "TEXT"),
                 ("generation_model", "TEXT NOT NULL DEFAULT ''"),
@@ -159,6 +165,9 @@ def ensure_schema(path=None):
                 ("score", "INTEGER NOT NULL DEFAULT 0"),
                 ("score_reason", "TEXT NOT NULL DEFAULT ''"),
                 ("framing", "TEXT NOT NULL DEFAULT ''"),
+                ("kind", "TEXT NOT NULL DEFAULT ''"),
+                ("event_at", "TEXT NOT NULL DEFAULT ''"),
+                ("discovered_new", "INTEGER NOT NULL DEFAULT 0"),
             ],
         }.items():
             existing = {r[1] for r in db.execute(f"PRAGMA table_info({table})")}
@@ -168,6 +177,7 @@ def ensure_schema(path=None):
         db.executescript("""
         CREATE UNIQUE INDEX IF NOT EXISTS draft_generation ON drafts(generation_key);
         CREATE UNIQUE INDEX IF NOT EXISTS opportunity_source ON opportunities(source_key);
+        CREATE UNIQUE INDEX IF NOT EXISTS contact_discovery ON contacts(discovery_key);
         CREATE TABLE IF NOT EXISTS automation_jobs (
             id INTEGER PRIMARY KEY, kind TEXT NOT NULL, contact_id INTEGER REFERENCES contacts(id),
             opportunity_id INTEGER REFERENCES opportunities(id), dedup_key TEXT NOT NULL UNIQUE,

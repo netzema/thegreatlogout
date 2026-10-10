@@ -8,7 +8,7 @@ import ipaddress
 import json
 import os
 import re
-from datetime import date, timedelta
+from datetime import date
 from urllib.parse import urlsplit, urlunsplit
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -38,21 +38,6 @@ class StrictModel(BaseModel):
     model_config = ConfigDict(extra="forbid", strict=True)
 
 
-class Opportunity(StrictModel):
-    title: str = Field(min_length=1, max_length=200)
-    source_url: str = Field(max_length=1000)
-    published_at: str = Field(max_length=10)
-    contact_id: int
-    reason: str = Field(min_length=1, max_length=1500)
-    cta: str = Field(min_length=1, max_length=500)
-    framing: str = Field(min_length=1, max_length=100)
-    fit: int = Field(ge=0, le=3)
-
-
-class RadarResult(StrictModel):
-    opportunities: list[Opportunity] = Field(max_length=5)
-
-
 class DraftResult(StrictModel):
     should_draft: bool
     subject: str = Field(max_length=200)
@@ -72,8 +57,11 @@ def digest(value):
 
 
 def public_url(value):
-    parts = urlsplit(value)
-    host = parts.hostname or ""
+    try:
+        parts = urlsplit(value)
+        host = parts.hostname or ""
+    except ValueError:
+        return ""
     if (
         parts.scheme not in {"https", "http"}
         or not host
@@ -125,107 +113,9 @@ def learned_bonus(db, framing):
 
 
 def radar():
-    with storage.database() as db:
-        contacts = [
-            dict(c)
-            for c in db.execute(
-                "SELECT id,organization,category FROM contacts WHERE permission!='blocked' "
-                "AND status NOT IN ('paused','closed') ORDER BY priority,id LIMIT 100"
-            )
-        ]
-    if not contacts:
-        return 0
-    research, sources = ai_client.request(
-        "radar_search",
-        BOUNDARY
-        + CAMPAIGN
-        + " Suche aktuelle Primärquellen zu Plattformmacht, süchtig machenden Feeds, digitalem Wohlbefinden "
-        "und passenden Arbeiten der Organisationen. Nur Veröffentlichungen der letzten 14 Tage. "
-        "Notiere Titel, Publikationsdatum, Quelllink und belegten konkreten Anlass. "
-        "Keine juristische Beratung. Es ist richtig, keine geeigneten Funde zu liefern.",
-        {"today": str(today()), "organizations": contacts},
-        search=True,
-    )
-    allowed = {public_url(s) for s in sources} - {""}
-    if not allowed:
-        return 0
-    structured, _ = ai_client.request(
-        "radar_extract",
-        BOUNDARY
-        + "Extrahiere maximal fünf gute Kommunikationsanlässe aus den Recherchebelegen. "
-        "Nur angegebene Kontakt-IDs und Quelllinks. Keine E-Mail-Adressen recherchieren. "
-        "Bewerte inhaltliche Passung von 0 bis 3. Bei unklarem Datum oder schwachem Anlass weglassen.",
-        {
-            "research": research[:22000],
-            "sources": sorted(allowed),
-            "contacts": contacts,
-        },
-        schema=RadarResult.model_json_schema(),
-    )
-    result = RadarResult.model_validate(structured)
-    created = 0
-    valid_ids = {c["id"] for c in contacts}
-    with storage.database() as db:
-        for item in result.opportunities:
-            source = public_url(item.source_url)
-            try:
-                published = date.fromisoformat(item.published_at)
-            except ValueError:
-                continue
-            age = (today() - published).days
-            if (
-                source not in allowed
-                or item.contact_id not in valid_ids
-                or not 0 <= age <= 14
-                or item.fit < 2
-            ):
-                continue
-            if not eligible(db, item.contact_id):
-                continue
-            c = db.execute(
-                "SELECT * FROM contacts WHERE id=?", (item.contact_id,)
-            ).fetchone()
-            dialogue = bool(
-                db.execute(
-                    "SELECT 1 FROM messages WHERE contact_id=? "
-                    "AND direction='inbound' AND automated=0",
-                    (c["id"],),
-                ).fetchone()
-            )
-            learning = learned_bonus(db, item.framing)
-            score = min(
-                100,
-                item.fit * 20
-                + max(0, 14 - age)
-                + (10 if dialogue else 0)
-                + (4 - c["priority"]) * 3
-                + learning,
-            )
-            reason = (
-                f"Passung {item.fit}/3; Quelle {age} Tage alt; "
-                f"bestehender Dialog {'ja' if dialogue else 'nein'}; Priorität {c['priority']}; "
-                f"Review-Erfahrung {learning:+d} Punkte. Passung ist eine KI-Einschätzung."
-            )
-            cur = db.execute(
-                """INSERT OR IGNORE INTO opportunities
-                (contact_id,title,source_url,reason,cta,created_at,source_key,published_at,score,score_reason,framing)
-                VALUES (?,?,?,?,?,?,?,?,?,?,?)""",
-                (
-                    c["id"],
-                    item.title,
-                    source,
-                    item.reason,
-                    item.cta,
-                    storage.now(),
-                    digest([source, c["id"]]),
-                    item.published_at,
-                    score,
-                    reason,
-                    item.framing,
-                ),
-            )
-            created += cur.rowcount
-    return created
+    from server.discovery import run
+
+    return run()
 
 
 def redact(text, *, include_signature=False):
@@ -253,10 +143,7 @@ def draft_context(db, cid, opportunity_id=None):
         ).fetchone()
         if not opportunity:
             raise ValueError("Anlass nicht mehr verfügbar")
-        if (
-            opportunity["published_at"]
-            and (today() - date.fromisoformat(opportunity["published_at"])).days > 30
-        ):
+        if not current_opportunity(opportunity, max_age=30):
             raise ValueError("Anlass ist nicht mehr aktuell")
     context = {
         "today": str(today()),
@@ -271,14 +158,25 @@ def draft_context(db, cid, opportunity_id=None):
                 "direction": h["direction"],
                 "date": h["occurred_at"][:10],
                 "subject": redact(h["subject"]),
-                "text": redact(h["body"], include_signature=h["direction"] == "inbound"),
+                "text": redact(
+                    h["body"], include_signature=h["direction"] == "inbound"
+                ),
             }
             for h in reversed(history)
         ],
         "opportunity": (
             {
                 k: opportunity[k]
-                for k in ("title", "source_url", "reason", "cta", "framing")
+                for k in (
+                    "title",
+                    "source_url",
+                    "reason",
+                    "cta",
+                    "framing",
+                    "kind",
+                    "event_at",
+                )
+                if k not in {"kind", "event_at"} or opportunity[k]
             }
             if opportunity
             else None
@@ -376,6 +274,18 @@ def generate_draft(cid, opportunity_id=None):
         return result.rowcount
 
 
+def current_opportunity(row, *, max_age=14):
+    try:
+        if row["kind"] == "event":
+            return 0 <= (date.fromisoformat(row["event_at"]) - today()).days <= 90
+        return (
+            not row["published_at"]
+            or 0 <= (today() - date.fromisoformat(row["published_at"])).days <= max_age
+        )
+    except ValueError:
+        return False
+
+
 def followups(db):
     suggestions = []
     for c in db.execute(
@@ -407,11 +317,17 @@ def followups(db):
             "AND automated=0",
             (c["id"],),
         ).fetchone()
-        opportunity = db.execute(
-            "SELECT id FROM opportunities WHERE contact_id=? AND status='open' "
-            "AND (published_at='' OR published_at>=?) ORDER BY score DESC,id DESC LIMIT 1",
-            (c["id"], str(today() - timedelta(days=14))),
-        ).fetchone()
+        opportunity = next(
+            (
+                o
+                for o in db.execute(
+                    "SELECT * FROM opportunities WHERE contact_id=? AND status='open' ORDER BY score DESC,id DESC",
+                    (c["id"],),
+                )
+                if current_opportunity(o)
+            ),
+            None,
+        )
         explicit = bool(c["next_date"] and c["next_date"] <= str(today()))
         due_reply = last["direction"] == "inbound" and not last["reviewed_at"]
         if not (due_reply or explicit or (elapsed >= 14 and (dialogue or opportunity))):
@@ -431,7 +347,7 @@ def followups(db):
                 "organization": c["organization"],
                 "reason": reason,
                 "days": elapsed,
-                "opportunity_id": opportunity[0] if opportunity else None,
+                "opportunity_id": opportunity["id"] if opportunity else None,
             }
         )
     return suggestions
@@ -477,10 +393,6 @@ def schedule():
         if os.getenv("OUTREACH_AUTOMATION_ENABLED") != "1":
             return
         enqueue(db, "radar", daily=True)
-        for suggestion in followups(db)[:3]:
-            enqueue(
-                db, "draft", suggestion["id"], suggestion["opportunity_id"], daily=True
-            )
         remaining = max(
             0,
             3
@@ -490,15 +402,34 @@ def schedule():
                 (str(today()),),
             ).fetchone()[0],
         )
+        pending = {
+            r[0]
+            for r in db.execute(
+                "SELECT contact_id FROM automation_jobs WHERE kind='draft' AND status IN ('queued','running')"
+            )
+        }
+        opportunities, selected = [], set(pending)
         for o in db.execute(
             "SELECT * FROM opportunities WHERE status='open' AND score>=65 "
-            "AND published_at>=? ORDER BY score DESC,id DESC LIMIT 20",
-            (str(today() - timedelta(days=14)),),
+            "AND NOT EXISTS(SELECT 1 FROM drafts WHERE contact_id=opportunities.contact_id "
+            "AND status IN ('draft','approved','deferred')) "
+            "ORDER BY EXISTS(SELECT 1 FROM messages WHERE contact_id=opportunities.contact_id),score DESC,id DESC",
         ).fetchall():
+            cid = o["contact_id"]
+            if cid not in selected and current_opportunity(o) and eligible(db, cid):
+                opportunities.append((cid, o["id"]))
+                selected.add(cid)
+        # Give discovery the first two slots while retaining room for current dialogues.
+        followup_candidates = [(s["id"], s["opportunity_id"]) for s in followups(db)]
+        for cid, oid in opportunities[:2] + followup_candidates + opportunities[2:]:
             if remaining <= 0:
                 break
-            if eligible(db, o["contact_id"]):
-                remaining -= enqueue(db, "draft", o["contact_id"], o["id"], daily=True)
+            if cid in pending:
+                continue
+            added = enqueue(db, "draft", cid, oid, daily=True)
+            remaining -= added
+            if added:
+                pending.add(cid)
 
 
 def process_one():

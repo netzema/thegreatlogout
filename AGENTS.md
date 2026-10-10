@@ -33,6 +33,9 @@ structurally critical without sounding bureaucratic or promotional.
   the OpenAI Responses API. No outreach transport exists. Never treat a job,
   draft, approval or export as a real send. Existing assigned mail history is
   sufficient address evidence; recipient and message are reviewed together.
+- `server.discovery` searches public themes independently of existing contacts and
+  creates source-backed contacts with unknown permission. Existing contacts are
+  matched locally afterward. Discovery never expands the IMAP import scope.
 - User timers schedule assistive outreach and encrypted Nextcloud backups.
   Limits, activation and recovery are documented in `deploy/ASSISTED_OUTREACH.md`.
   Never display the recovery key, API credentials or raw correspondence.

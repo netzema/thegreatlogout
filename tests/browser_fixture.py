@@ -29,13 +29,13 @@ def main():
             ),
         )
         db.execute(
-            "INSERT INTO contacts(organization,email,permission,created_at,updated_at) "
-            "VALUES ('Synthetic partner','partner@example.test','existing',?,?)",
+            "INSERT INTO contacts(organization,email,permission,discovery_source,website,contact_url,created_at,updated_at) "
+            "VALUES ('Synthetic partner','partner@example.test','existing','https://example.org/research','https://example.org/','https://example.org/contact',?,?)",
             (admin_db.now(), admin_db.now()),
         )
         db.execute(
-            "INSERT INTO opportunities(contact_id,title,source_url,reason,cta,created_at,score,score_reason) "
-            "VALUES (1,'Synthetic research','https://example.org/research','A relevant topic','Exchange feedback',?,80,'Synthetic score')",
+            "INSERT INTO opportunities(contact_id,title,source_url,reason,cta,created_at,score,score_reason,kind,discovered_new) "
+            "VALUES (1,'Synthetic research','https://example.org/research','A relevant topic','Exchange feedback',?,80,'Synthetic score','campaign',1)",
             (admin_db.now(),),
         )
     uvicorn.run(

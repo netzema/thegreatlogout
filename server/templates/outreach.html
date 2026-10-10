@@ -7,7 +7,7 @@
 <h2>Recherche</h2>
 <p>{{ 'KI-Zugang eingerichtet.' if ai_ready else 'KI-Zugang noch nicht eingerichtet.' }} {{ 'Tägliche Recherche und bis zu drei neue Entwürfe pro Tag sind aktiviert.' if automation_active else 'Automatische Recherche ist noch nicht aktiviert. Einzelne Aufträge können vorbereitet werden.' }}</p>
 <form method="post" action="/outreach/jobs"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="kind" value="radar"><button>Heutige Recherche einplanen</button></form>
-<p class="muted">Nur aktuelle Quellen mit konkretem Kontaktbezug. <a href="/opportunities">Anlässe prüfen →</a></p>
+<p class="muted">Breite Suche nach Events, Veröffentlichungen, Kampagnen und öffentlichen Debatten. Neue Akteure werden mit Quellenverweis als Kontakte angelegt. Bestehende Kontakte werden erst danach auf Dubletten geprüft. <a href="/opportunities">Anlässe prüfen →</a></p>
 </section>
 <section class="card"><h2>Empfohlene nächste Schritte</h2>
 {% for c in report.suggestions %}<article><h3><a href="/contacts/{{ c.id }}">{{ c.organization }}</a></h3><p>{{ c.reason }} · Letzte Nachricht vor {{ c.days }} Tagen.</p><form method="post" action="/outreach/jobs"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="kind" value="draft"><input type="hidden" name="contact_id" value="{{ c.id }}"><input type="hidden" name="opportunity_id" value="{{ c.opportunity_id or 0 }}"><button>Entwurf vorbereiten</button></form><hr></article>{% else %}<p>Aktuell keine zusätzlichen Wiedervorlagen. Vorbereitete Entwürfe findest du im <a href="/review">Review</a>.</p>{% endfor %}

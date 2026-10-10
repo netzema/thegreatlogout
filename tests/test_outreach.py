@@ -286,11 +286,25 @@ def test_draft_minimizes_mail_data_and_has_no_tools(client, monkeypatch):
 
 def test_radar_requires_cited_recent_source_and_deduplicates(client, monkeypatch):
     source = "https://example.org/research/new"
+    with admin_db.database() as db:
+        organization = db.execute(
+            "SELECT organization FROM contacts WHERE id=1"
+        ).fetchone()[0]
     good = dict(
         title="New research",
+        kind="publication",
         source_url=source,
         published_at=str(outreach.today()),
-        contact_id=1,
+        event_at="",
+        contact=dict(
+            organization=organization,
+            person="",
+            category="science",
+            source_url=source,
+            website="",
+            contact_url="",
+            relationship="Publishes the research",
+        ),
         reason="Direct fit with campaign",
         cta="Discuss results",
         framing="research",
@@ -299,14 +313,19 @@ def test_radar_requires_cited_recent_source_and_deduplicates(client, monkeypatch
     bad = [
         dict(good, source_url="https://invented.example.org/article"),
         dict(good, published_at="2020-01-01"),
-        dict(good, contact_id=999),
+        dict(
+            good,
+            contact=dict(
+                good["contact"], source_url="https://invented.example.org/person"
+            ),
+        ),
         dict(good, fit=1),
     ]
 
     def respond(purpose, *a, **kw):
         return (
             ("Research", [source])
-            if purpose == "radar_search"
+            if purpose != "discovery_extract"
             else ({"opportunities": [good, *bad]}, set())
         )
 

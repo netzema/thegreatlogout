@@ -20,7 +20,7 @@ Dabei geht es nicht nur um Bildschirmzeit. Es geht auch um die wachsende Macht g
 
 Die Website bietet einen 7-Tage-E-Mail-Guide, einen Post-Generator für teilbare Ausstiegsbotschaften und Hintergrundtexte zur Motivation der Kampagne.
 
-The internal admin also provides source-backed opportunity research, individual draft preparation, follow-up suggestions, and review/outcome reporting. Existing assigned messages supply contact addresses automatically. Every outreach message still requires human review and manual delivery. Encrypted off-server recovery copies are tested after upload. Operational details and activation status: [`deploy/ASSISTED_OUTREACH.md`](deploy/ASSISTED_OUTREACH.md).
+The internal admin also provides broad, source-backed discovery of new public contacts and opportunities, individual draft preparation, follow-up suggestions, and review/outcome reporting. Existing assigned messages supply contact addresses automatically. Every outreach message still requires human review and manual delivery. Encrypted off-server recovery copies are tested after upload. Operational details and activation status: [`deploy/ASSISTED_OUTREACH.md`](deploy/ASSISTED_OUTREACH.md).
 
 ## Self-hosted architecture
 
