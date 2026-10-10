@@ -19,7 +19,7 @@ from fastapi.templating import Jinja2Templates
 from pwdlib import PasswordHash
 
 from server import admin_db as storage
-from server import analytics, outreach
+from server import analytics, outreach, writing_style
 from server.contact_history import inherit_addresses, valid_address
 
 ADMIN_ORIGIN = os.getenv("ADMIN_ORIGIN", "https://admin.thegreatlogout.org").rstrip("/")
@@ -764,13 +764,29 @@ def guide(request: Request):
 
 @app.get("/settings", response_class=HTMLResponse)
 def settings(request: Request):
+    with storage.database() as db:
+        note, version = writing_style.read(db)
     return render(
         request,
         "settings.html",
+        writing_note=note,
+        writing_version=version,
         imap=bool(
             os.getenv("OUTREACH_IMAP_USER") and os.getenv("OUTREACH_IMAP_PASSWORD")
         ),
     )
+
+
+@app.post("/settings/writing")
+async def change_writing_note(request: Request):
+    data = await form(request)
+    note = field(data, "writing_note", 6000, True)
+    with storage.database() as db:
+        try:
+            writing_style.save(db, note, integer(data, "version"))
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from None
+    return redirect("/settings?writing_saved=1")
 
 
 @app.post("/settings/password")

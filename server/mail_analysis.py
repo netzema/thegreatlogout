@@ -10,7 +10,7 @@ from server.admin_db import database
 ANALYSIS_VERSION = 1
 
 
-def fresh_text(body):
+def fresh_text(body, *, include_signature=False):
     lines = []
     for line in body.splitlines():
         if line.lstrip().startswith(">") or re.match(
@@ -19,7 +19,7 @@ def fresh_text(body):
             re.IGNORECASE,
         ):
             break
-        if line.strip() == "--":
+        if line.strip() == "--" and not include_signature:
             break
         lines.append(line)
     return "\n".join(lines).strip()

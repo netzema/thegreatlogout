@@ -40,6 +40,9 @@ def ensure_schema(path=None):
     with database(path) as db:
         db.executescript("""
         PRAGMA journal_mode=WAL;
+        CREATE TABLE IF NOT EXISTS writing_preferences (
+            id INTEGER PRIMARY KEY CHECK(id=1), note TEXT NOT NULL,
+            version INTEGER NOT NULL, updated_at TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY, email TEXT NOT NULL UNIQUE,
             password_hash TEXT NOT NULL, active INTEGER NOT NULL DEFAULT 1);

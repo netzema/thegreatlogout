@@ -17,7 +17,8 @@ prepares messages and never sends outreach automatically.
   and restored into isolated temporary databases; both integrity checks passed.
 - Both new user timers are installed, enabled and active. Automatic research and
   bounded draft scheduling are configured; no outreach transport is installed.
-- The updated admin process still needs the root restart below. The agent's
+- The base outreach admin was activated at 15:08 UTC. The new writing-note editor
+  still needs the root restart below. The agent's
   deploy account cannot perform it with passwordless sudo. New template controls
   are hidden until the process loads the new routes.
 
@@ -89,6 +90,48 @@ analytics are supplied. Draft generation has no tools. Source material is treate
 as data, not instructions. A changed history or new contact block during an API
 call prevents saving its stale result. Model output may decline to draft.
 
+### Writing preferences and model choice
+
+The authenticated Settings page offers an editable writing note (up to 6,000
+characters). It is stored in `admin.db` and included in encrypted backups.
+Concurrent edits are rejected. The note is part of the generation fingerprint:
+a change while a request is running prevents saving a stale draft. Existing
+reviewed or edited drafts are preserved. The initial note is in
+`server/writing_style.py`; the owner's production copy is already persisted.
+
+The note asks for ordinary hyphens, straight apostrophes and double quotation
+marks, an uppercase opening after a greeting comma, and no semicolons. Lists
+remain allowed, as explicitly clarified by the owner. Deterministic normalization
+also enforces these punctuation rules on generated subject/body/rationale and
+capitalizes openings following common German/English greetings. Semicolons that
+slip through are replaced with commas. These mechanical rules also remain in
+force when the free-form note is edited, as explained beside the editor.
+
+Draft context now includes the stored contact person and bounded, redacted
+incoming signatures in addition to outgoing salutations. Quoted history stays
+excluded. The model uses the current dialogue to identify the actual addressee,
+retains the established form of address, and stays neutral when evidence is
+ambiguous. Names are personal data, not anonymized identifiers. Generation does
+not automatically rewrite contact records; the resulting salutation is reviewed
+with the whole draft.
+
+On 10 October 2026, the campaign was changed from GPT-6 Astra to GPT-6.1 Sol for
+both drafts and research. Official Standard prices per million input/output
+tokens: GPT-6.1 Sol $2/$10, GPT-6 Sol $2/$10, GPT-5.6 Sol $4/$20 (promotional),
+GPT-6 Astra $10/$50. These rates cover ordinary contexts, not long-context or
+speed premiums; search adds $0.01 per tool call plus retrieved-content tokens.
+Sources: [GPT-6.1 Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol),
+[pricing](https://developers.openai.com/api/docs/pricing).
+
+GPT-6.1 Sol supports the existing Responses API, structured outputs and web search.
+The choice favors the newer Sol at the same ordinary token rates as GPT-6 Sol.
+Two real API calls against synthetic German/English conversations verified direct
+addressing (including a name absent from the contact record), campaign facts, formatting and
+unapproved storage. They used 878/249 and 873/249 input/output tokens respectively,
+about $0.00425 per sample before any cache adjustments. A separate real web-search
+call completed with sources. These small checks demonstrate compatibility, not
+a comprehensive quality comparison or a guarantee of future per-draft costs.
+
 The Outreach page shows decisions, edits, sends, explicitly attributable replies,
 next actions, queue state and daily token counts. Review experience gently
 influences priority; it never automatically changes permissions or approves mail.
@@ -103,7 +146,7 @@ runtime code reads another application's settings or database.
 | Variable | Purpose / default |
 | --- | --- |
 | `OPENAI_API_KEY` | Campaign-owned copy of the authorized API credential |
-| `OUTREACH_AI_MODEL` | `gpt-6-astra` |
+| `OUTREACH_AI_MODEL` | `gpt-6.1-sol` |
 | `OUTREACH_AI_DAILY_CALLS` | 12, hard upper bound 50; failed requests count |
 | `OUTREACH_AUTOMATION_ENABLED` | `1` enables automatic daily queueing |
 | `OUTREACH_FROM`, `OUTREACH_REPLY_TO` | Campaign sender for exported drafts; inherited from the existing guide configuration |
@@ -147,10 +190,11 @@ delivery state before re-enabling the guide send timer.
 
 ## Validation
 
-61 Python tests passed. The suite exercises guide scheduling/idempotency/unsubscribe/tracking
+70 Python tests passed. The suite exercises guide scheduling/idempotency/unsubscribe/tracking
 flags, admin authorization, CSRF, recipient inheritance, conflicts, integrated
 review, stale approvals, deferral, source/date validation, duplicate runs,
-API budgets, prompt minimization, failed jobs, reply attribution and encrypted
+API budgets, prompt minimization, writing-note persistence/CSRF/concurrent edits,
+recipient-name evidence, punctuation rules, stale generation, failed jobs, reply attribution and encrypted
 backup round-trips including a wrong-key failure. All data in these tests is
 synthetic. Real provider and Nextcloud checks are recorded above separately.
 
@@ -158,7 +202,7 @@ The browser fixture in `tests/browser_fixture.py` uses its own database and TLS
 certificate under `TGL_BROWSER_FIXTURE`. Run it with the project Python after
 creating a one-day self-signed fixture certificate named `cert.pem`/`key.pem`.
 `tests/browser_outreach.cjs` uses Playwright (`PLAYWRIGHT_MODULE` can point to an
-existing installation). It checks login, draft creation, deferral, editing,
+existing installation). It checks login, saving/reloading the writing note, draft creation, deferral, editing,
 approval, export, synthetic delivery logging and logout, and seven admin routes
 at 1440, 390 and 320 px without page errors or document overflow. It never uses
 production credentials or sends mail.

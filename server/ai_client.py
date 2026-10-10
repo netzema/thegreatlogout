@@ -13,7 +13,7 @@ class AIError(Exception):
 
 
 def model():
-    return os.getenv("OUTREACH_AI_MODEL", "gpt-6-astra")
+    return os.getenv("OUTREACH_AI_MODEL", "gpt-6.1-sol")
 
 
 def configured():

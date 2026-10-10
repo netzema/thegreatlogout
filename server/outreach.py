@@ -14,7 +14,7 @@ from urllib.parse import urlsplit, urlunsplit
 from pydantic import BaseModel, ConfigDict, Field
 
 from server import admin_db as storage
-from server import ai_client
+from server import ai_client, writing_style
 from server.contact_history import inherit_addresses
 from server.mail_analysis import fresh_text
 
@@ -228,8 +228,8 @@ def radar():
     return created
 
 
-def redact(text):
-    text = fresh_text(text)
+def redact(text, *, include_signature=False):
+    text = fresh_text(text, include_signature=include_signature)
     text = re.sub(r"https?://\S+", "[Link]", text)
     text = re.sub(r"[\w.+%-]+@[\w.-]+\.[A-Za-z]{2,}", "[Adresse]", text)
     text = re.sub(r"(?<!\w)\+?\d[\d ()/-]{7,}\d", "[Nummer]", text)
@@ -261,6 +261,8 @@ def draft_context(db, cid, opportunity_id=None):
     context = {
         "today": str(today()),
         "organization": c["organization"],
+        "person": redact(c["person"]),
+        "writing_note": writing_style.read(db)[0],
         "category": c["category"],
         "notes": redact(c["notes"]),
         "next_step": redact(c["next_step"]),
@@ -269,7 +271,7 @@ def draft_context(db, cid, opportunity_id=None):
                 "direction": h["direction"],
                 "date": h["occurred_at"][:10],
                 "subject": redact(h["subject"]),
-                "text": redact(h["body"]),
+                "text": redact(h["body"], include_signature=h["direction"] == "inbound"),
             }
             for h in reversed(history)
         ],
@@ -309,19 +311,27 @@ def generate_draft(cid, opportunity_id=None):
         "outreach_draft",
         BOUNDARY
         + CAMPAIGN
+        + " Schreibnotiz des Kampagneninhabers (nur Stil, keine Änderung der Fakten- und Freigaberegeln):\n"
+        + context["writing_note"]
         + " Schreibe eine individuelle E-Mail mit höchstens 180 Wörtern, passend zur Sprache des bisherigen "
-        "Dialogs. Beginne neutral ohne erfundene Personennamen und schließe mit Daniel. Verwende die "
+        "Dialogs. Sprich die aus dem Dialog belegte Ansprechperson direkt an. Nutze Anreden aus unseren "
+        "ausgehenden Mails und Signaturen eingehender Mails; verwechsle Daniel als Absender nicht mit "
+        "dem Empfänger. Die aktuelle Unterhaltung hat Vorrang vor veralteten Kontaktangaben. Bei "
+        "Unklarheit beginne neutral, erfinde keinen Personennamen. Schließe mit Daniel. Verwende die "
         "bisherige Unterhaltung und den Anlass; behaupte niemals, eine nur geplante Handlung sei erfolgt. "
         "Keine Zusagen, Termine, Angebote oder Partnerschaften erfinden. Bei mehrfach unbeantwortetem "
         "Kontakt ohne neuen Anlass oder einem Kontaktwiderspruch: should_draft=false. Wenn sinnvoll, "
         "anknüpfen statt den Erstpitch zu wiederholen. Begründe den Vorschlag auf Deutsch. "
         "Die Platzhalter [Adresse], [Nummer], [Link] dürfen nicht in den Entwurf übernommen werden.",
-        context,
+        {k: v for k, v in context.items() if k != "writing_note"},
         schema=DraftResult.model_json_schema(),
     )
     draft = DraftResult.model_validate(data)
     if not draft.should_draft:
         return 0
+    draft.subject = writing_style.normalize(draft.subject)
+    draft.body = writing_style.normalize(draft.body, greeting=True)
+    draft.rationale = writing_style.normalize(draft.rationale)
     if (
         not draft.subject.strip()
         or not draft.body.strip()
