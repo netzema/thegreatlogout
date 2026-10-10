@@ -17,7 +17,22 @@ def main():
     analytics.KEY_PATH = directory / "analytics.key"
     os.environ["DATABASE_PATH"] = str(directory / "absent.db")
     os.environ["ADMIN_ORIGIN"] = "https://127.0.0.1:8795"
-    from server import admin
+    from server import admin, ai_client, outreach
+    import threading
+
+    # Only this isolated fixture executes synthetic jobs immediately after a click.
+    ai_client.configured = lambda: True
+    ai_client.request = lambda *args, **kwargs: (
+        {
+            "should_draft": True,
+            "subject": "A timely research conversation",
+            "body": "Hello,\n\nyour research connects with our campaign. Could we exchange feedback?\n\nDaniel",
+            "rationale": "Synthetischer Anlass für den Browsertest.",
+            "framing": "research",
+        },
+        set(),
+    )
+    outreach.wake_worker = lambda: threading.Timer(0.3, outreach.process_one).start()
 
     admin_db.ensure_schema()
     with admin_db.database() as db:

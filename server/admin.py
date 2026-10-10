@@ -145,8 +145,9 @@ async def security(request, call_next):
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["Referrer-Policy"] = "same-origin"
+    script_policy = "'self'" if request.url.path == "/opportunities" else "'none'"
     response.headers["Content-Security-Policy"] = (
-        "default-src 'self'; script-src 'none'; style-src 'self'; "
+        f"default-src 'self'; script-src {script_policy}; style-src 'self'; "
         "img-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'"
     )
     return response
@@ -699,7 +700,10 @@ async def reviewed_message(request: Request, message_id: int):
 
 @app.get("/opportunities", response_class=HTMLResponse)
 def opportunities(request: Request):
+    from server.preparation import refresh
+
     with storage.database() as db:
+        refresh(db)
         rows = db.execute(
             "SELECT opportunities.*, contacts.organization FROM opportunities LEFT JOIN contacts "
             "ON contacts.id=opportunities.contact_id ORDER BY opportunities.id DESC"
@@ -722,7 +726,7 @@ async def new_opportunity(request: Request):
     with storage.database() as db:
         if cid:
             contact(db, cid)
-        db.execute(
+        inserted = db.execute(
             "INSERT INTO opportunities (contact_id,title,source_url,reason,cta,created_at) VALUES (?,?,?,?,?,?)",
             (
                 cid,
@@ -733,7 +737,20 @@ async def new_opportunity(request: Request):
                 storage.now(),
             ),
         )
-    return redirect("/opportunities")
+        if cid:
+            from server import preparation
+
+            try:
+                preparation.enqueue(db, cid, inserted.lastrowid)
+            except ValueError:
+                preparation.state(
+                    db,
+                    inserted.lastrowid,
+                    "needs_attention",
+                    "Kontakt pausiert, gesperrt oder Widerspruch ungeprüft.",
+                )
+    outreach.wake_worker()
+    return redirect("/opportunities?notice=queued" if cid else "/opportunities")
 
 
 @app.get("/guide", response_class=HTMLResponse)
@@ -828,17 +845,37 @@ def outreach_page(request: Request):
 async def queue_outreach(request: Request):
     data = await form(request)
     kind = choice(data, "kind", {"radar", "draft"})
+    cid = integer(data, "contact_id") or None
+    oid = integer(data, "opportunity_id") or None
+    notice = "queued"
+    target = "/opportunities" if oid else "/outreach"
     with storage.database() as db:
         try:
-            outreach.enqueue(
-                db,
-                kind,
-                integer(data, "contact_id") or None,
-                integer(data, "opportunity_id") or None,
-            )
-        except ValueError as exc:
-            raise HTTPException(400, str(exc)) from None
-    return redirect("/outreach")
+            if oid and kind == "draft":
+                from server import preparation
+
+                o = db.execute(
+                    "SELECT * FROM opportunities WHERE id=? AND contact_id=?",
+                    (oid, cid),
+                ).fetchone()
+                if not o:
+                    raise ValueError("Anlass passt nicht zum Kontakt")
+                if o["preparation_draft_id"] and o["preparation_state"] in {
+                    "ready",
+                    "reviewed",
+                }:
+                    return redirect(f"/review#draft-{o['preparation_draft_id']}")
+                added = preparation.enqueue(db, cid, oid, retry=True)
+            else:
+                added = outreach.enqueue(db, kind, cid, oid)
+            if not added:
+                notice = "existing"
+        except ValueError:
+            notice = "unavailable"
+    outreach.wake_worker()
+    return redirect(
+        f"{target}?notice={notice}" + (f"#opportunity-{oid}" if oid else "")
+    )
 
 
 @app.post("/outreach/jobs/{job_id}/retry")
@@ -849,7 +886,8 @@ async def retry_outreach(request: Request, job_id: int):
             "UPDATE automation_jobs SET status='queued',result='' WHERE id=? AND status='failed' AND attempts<3",
             (job_id,),
         )
-    return redirect("/outreach")
+    outreach.wake_worker()
+    return redirect("/outreach?notice=queued")
 
 
 @app.post("/opportunities/{opportunity_id}/dismiss")

@@ -250,7 +250,7 @@ def run():
                 f"neuer Gesprächspartner {novelty}; Review-Erfahrung {learning:+d}. "
                 "Passung ist eine KI-Einschätzung."
             )
-            db.execute(
+            inserted = db.execute(
                 "INSERT INTO opportunities(contact_id,title,source_url,reason,cta,created_at,source_key,"
                 "published_at,score,score_reason,framing,kind,event_at,discovered_new) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 (
@@ -270,6 +270,9 @@ def run():
                     int(is_new),
                 ),
             )
+            from server.preparation import enqueue
+
+            enqueue(db, cid, inserted.lastrowid)
             per_contact[cid] = per_contact.get(cid, 0) + 1
             created += 1
     return created

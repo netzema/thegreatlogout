@@ -23,8 +23,7 @@ prepares messages and never sends outreach automatically.
 - The base outreach admin was activated at 15:08 UTC and the writing-note editor
   at 15:23 UTC. For future Python route changes, use the restart below. The agent's
   deploy account cannot perform it with passwordless sudo. Broad discovery already
-  runs in fresh worker processes. Restart the admin to load the updated manual
-  queue validation for upcoming events announced more than 30 days ago.
+  runs in fresh worker processes. Restart the admin to load the complete-preparation queue routes, immediate worker wakeup and the narrowly scoped progress-script policy for `/opportunities`. Worker processes already load the new pipeline.
 
 ```bash
 sudo systemctl restart thegreatlogout-admin.service
@@ -64,13 +63,22 @@ alone never creates a send record.
 ## Research, drafts and scheduling
 
 The deploy user's `thegreatlogout-outreach.timer` checks the queue every five
-minutes. With `OUTREACH_AUTOMATION_ENABLED=1`, one daily research job and at most
-three automatic draft jobs per UTC date are queued. Explicitly requested draft
-jobs can exceed that count but remain within the API call limit. A shared file
-lock prevents worker overlap. Source/contact keys deduplicate opportunities;
-contact/context fingerprints deduplicate generated drafts and jobs across reruns.
-Interrupted jobs become visible failures. Failed jobs can be retried explicitly
-up to three attempts; failures do not log provider payloads or contact data.
+minutes. With `OUTREACH_AUTOMATION_ENABLED=1`, one daily research job is queued.
+Every accepted current opportunity gets a complete preparation job, including
+multiple different opportunities for the same organization. Manual research also
+queues preparation immediately. The independent limit of three automatic jobs
+per UTC date now applies only to additional followups without an opportunity.
+The manual button returns visible status and wakes the user worker when
+`OUTREACH_WORKER_WAKE_ENABLED=1`. Opportunity cards refresh while work is pending
+and link directly to the corresponding review draft. Existing drafts are reused.
+
+A shared file lock prevents worker overlap. Opportunity and context keys prevent
+duplicate work. Each worker processes up to 24 jobs, stopping between jobs after
+ten minutes; the timer continues remaining work. API-budget exhaustion waits
+until the next UTC day instead of discarding work. Interrupted jobs show a
+retryable failure, including on the affected opportunity. Retries preserve
+completed research and existing drafts. No provider payloads or addresses enter
+operational logs.
 
 Research is now broad discovery rather than a search over the contact list.
 `server.discovery` performs three independent web-search passes: events/current
@@ -92,9 +100,18 @@ verification of every model claim.
 
 New contacts are saved as `researched` with permission `unknown`, a source link,
 a stated public role, and observed official website/contact-page links where
-available. Email addresses are deliberately not inferred or populated by the
-model. The existing recipient-and-message review accepts an address when it is
-available. Existing addresses, chosen people, permissions and contact notes are
+available. `server.contact_research` fetches those official pages and observed
+contact links, falling back to a bounded search for cited official contact pages.
+Addresses must occur literally in fetched text or mailto links (including ordinary
+at/dot obfuscation). Generic official inboxes or matching named contacts are
+preferred. Ambiguous personal contact choices require a model-selected index
+from the fetched candidates and a verbatim role/contact quotation from that page;
+no model-generated address is accepted. An evidenced name can fill an empty
+person field. Redirects and DNS are checked on every fetch, with connections
+pinned to public IPs. Fetches have page, response-size and timeout limits.
+No reachable, unambiguous address produces a visible partial package with its
+draft, rather than a guessed address or a false ready state. The recipient and
+text are reviewed together. Existing addresses, chosen people, permissions and contact notes are
 preserved. Contact matching happens locally using normalized organization names,
 persisted discovery identities and known official domains. Common social/hosting
 domains cannot merge unrelated actors. Ambiguous matches are skipped. Discovery
@@ -103,10 +120,9 @@ never extends authorized IMAP domains or imports unrelated mail.
 Priority is transparent: topic fit (model assessment, 0–75), freshness (0–14,
 or 10 for upcoming events), first conversation (10 when no history exists),
 and a small review-history adjustment (at most ±5, after five reviewed drafts).
-Scores are capped at 100. Scheduling prioritizes up to two strong opportunities
-before existing-dialogue follow-ups, filling unused slots with further opportunities.
-Within opportunities, new conversation partners come first. Only one queued
-automatic draft per contact is selected. The existing three-job daily cap remains.
+Scores are capped at 100. All current accepted opportunities are prepared,
+ordered by score. Separate occasions can have separate drafts for one contact;
+standalone followups still avoid an additional active draft for that contact.
 Follow-ups still require a due date, an unanswered incoming message, an existing
 dialogue after 14 days, or a new opportunity. Expired events cannot generate drafts.
 
@@ -177,7 +193,8 @@ runtime code reads another application's settings or database.
 | --- | --- |
 | `OPENAI_API_KEY` | Campaign-owned copy of the authorized API credential |
 | `OUTREACH_AI_MODEL` | `gpt-6.1-sol` |
-| `OUTREACH_AI_DAILY_CALLS` | 12, hard upper bound 50; failed requests count |
+| `OUTREACH_AI_DAILY_CALLS` | 40, hard upper bound 50; failed requests count |
+| `OUTREACH_WORKER_WAKE_ENABLED` | `1` starts the user worker after a manual queue action |
 | `OUTREACH_AUTOMATION_ENABLED` | `1` enables automatic daily queueing |
 | `OUTREACH_FROM`, `OUTREACH_REPLY_TO` | Campaign sender for exported drafts; inherited from the existing guide configuration |
 | `OUTREACH_BACKUP_REMOTE` | Dedicated rclone directory on the authorized Nextcloud remote |
@@ -185,7 +202,9 @@ runtime code reads another application's settings or database.
 Each request has an output-token cap, a timeout and disabled response storage.
 Each search request is limited to two tool calls. A broad research run uses
 three searches plus one extraction call, allowing at most six search tool calls
-and four API calls within the existing daily budget. The call budget is an operational limit,
+and four API calls within the daily budget. Contact research can add a search and
+evidence selection; drafting adds one call per new draft. The former 12-call
+default could not cover a complete eight-opportunity batch and has been raised to 40. The call budget is an operational limit,
 not a euro-denominated spending cap; enforce a monetary budget at the provider
 as needed. OpenAI's abuse-monitoring retention still applies. References:
 [web search](https://developers.openai.com/api/docs/guides/tools-web-search),
@@ -219,6 +238,26 @@ databases; restore databases, the matching analytics key and secrets with owner
 deploy/mode 600; remove only the preserved stale WAL/SHM files; restart services
 and check health. Do not replay mail merely because a backup was restored: inspect
 delivery state before re-enabling the guide send timer.
+
+## Complete opportunity packages (10 October 2026)
+
+The complete-preparation update passed 100 Python tests, lint, JavaScript syntax
+checks, and the isolated browser flow with 21 responsive route checks. The browser
+now also clicks the preparation button, waits for the live status update, follows
+the review link and verifies the prepared recipient and draft. Tests cover all
+opportunities including several for one contact, duplicate clicks, partial-package
+retry, next-day budget resumption, explicit declines, public-address evidence,
+unchanged permission/import scope, private DNS and redirect rejection, interrupted
+jobs, and the page-specific script policy. The pre-existing guide, review, style
+and backup checks remain in the full suite.
+
+All ten existing production opportunities now have a recipient with provenance
+and their own unapproved draft. Eight discovered contacts received evidenced
+professional addresses, retaining permission `unknown`. No message was sent or
+approved. The old unrelated draft was preserved. One remaining source initially
+blocked direct fetching; its official programme contact was researched on a
+broadcasting partner's programme listing and added as evidence for a successful retry.
+All ten prepared drafts pass the saved punctuation and greeting normalization check.
 
 ## Validation
 

@@ -201,7 +201,7 @@ def test_upcoming_event_with_older_announcement_queues_review_draft_and_expires(
         assert context["opportunity"]["event_at"] == event["event_at"]
         assert (
             db.execute(
-                "SELECT count(*) FROM automation_jobs WHERE kind='draft'"
+                "SELECT count(*) FROM automation_jobs WHERE kind='prepare'"
             ).fetchone()[0]
             == 1
         )
@@ -248,7 +248,7 @@ def test_shared_social_host_is_not_an_organization_identity():
     )
 
 
-def test_discovery_gets_slots_alongside_existing_dialogue(client, monkeypatch):
+def test_all_discovery_preparations_alongside_existing_dialogue(client, monkeypatch):
     from test_outreach import message
 
     with admin_db.database() as db:
@@ -270,6 +270,8 @@ def test_discovery_gets_slots_alongside_existing_dialogue(client, monkeypatch):
         jobs = db.execute(
             "SELECT contact_id FROM automation_jobs WHERE kind='draft' ORDER BY id"
         ).fetchall()
-        assert len(jobs) == 3
-        assert jobs[0][0] != 1 and jobs[1][0] != 1 and jobs[2][0] == 1
-        assert all(j[0] != 5 for j in jobs)
+        assert [j[0] for j in jobs] == [1]
+        prepared = db.execute(
+            "SELECT contact_id FROM automation_jobs WHERE kind='prepare'"
+        ).fetchall()
+        assert {j[0] for j in prepared} == {2, 3, 4, 5}

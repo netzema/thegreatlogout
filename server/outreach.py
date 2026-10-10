@@ -8,6 +8,8 @@ import ipaddress
 import json
 import os
 import re
+import subprocess
+import time
 from datetime import date
 from urllib.parse import urlsplit, urlunsplit
 
@@ -201,8 +203,9 @@ def generate_draft(cid, opportunity_id=None):
         if db.execute("SELECT 1 FROM drafts WHERE generation_key=?", (key,)).fetchone():
             return 0
         if db.execute(
-            "SELECT 1 FROM drafts WHERE contact_id=? AND status IN ('draft','approved','deferred')",
-            (cid,),
+            "SELECT 1 FROM drafts WHERE contact_id=? AND status IN ('draft','approved','deferred') "
+            "AND (? IS NULL OR opportunity_id=?)",
+            (cid, opportunity_id, opportunity_id),
         ).fetchone():
             return 0
     data, _ = ai_client.request(
@@ -219,13 +222,21 @@ def generate_draft(cid, opportunity_id=None):
         "bisherige Unterhaltung und den Anlass; behaupte niemals, eine nur geplante Handlung sei erfolgt. "
         "Keine Zusagen, Termine, Angebote oder Partnerschaften erfinden. Bei mehrfach unbeantwortetem "
         "Kontakt ohne neuen Anlass oder einem Kontaktwiderspruch: should_draft=false. Wenn sinnvoll, "
-        "anknüpfen statt den Erstpitch zu wiederholen. Begründe den Vorschlag auf Deutsch. "
+        "anknüpfen statt den Erstpitch zu wiederholen. Für einen konkreten neuen Anlass bereite "
+        "immer ein passendes Anschreiben vor, außer ein belegter Widerspruch verhindert dies. "
+        "Begründe den Vorschlag auf Deutsch. "
         "Die Platzhalter [Adresse], [Nummer], [Link] dürfen nicht in den Entwurf übernommen werden.",
         {k: v for k, v in context.items() if k != "writing_note"},
         schema=DraftResult.model_json_schema(),
     )
     draft = DraftResult.model_validate(data)
     if not draft.should_draft:
+        if opportunity_id:
+            with storage.database() as db:
+                db.execute(
+                    "UPDATE opportunities SET preparation_note=? WHERE id=?",
+                    (writing_style.normalize(draft.rationale), opportunity_id),
+                )
         return 0
     draft.subject = writing_style.normalize(draft.subject)
     draft.body = writing_style.normalize(draft.body, greeting=True)
@@ -246,8 +257,9 @@ def generate_draft(cid, opportunity_id=None):
         if current_key != key:
             raise ValueError("Verlauf wurde während der Erstellung geändert")
         if db.execute(
-            "SELECT 1 FROM drafts WHERE contact_id=? AND status IN ('draft','approved','deferred')",
-            (cid,),
+            "SELECT 1 FROM drafts WHERE contact_id=? AND status IN ('draft','approved','deferred') "
+            "AND (? IS NULL OR opportunity_id=?)",
+            (cid, opportunity_id, opportunity_id),
         ).fetchone():
             return 0
         result = db.execute(
@@ -354,6 +366,10 @@ def followups(db):
 
 
 def enqueue(db, kind, cid=None, opportunity_id=None, *, daily=False):
+    if opportunity_id and kind in {"draft", "prepare"}:
+        from server.preparation import enqueue as enqueue_preparation
+
+        return enqueue_preparation(db, cid, opportunity_id)
     if kind == "radar":
         key = "radar:" + str(today())
     else:
@@ -367,8 +383,9 @@ def enqueue(db, kind, cid=None, opportunity_id=None, *, daily=False):
         ):
             return 0
         if db.execute(
-            "SELECT 1 FROM drafts WHERE contact_id=? AND status IN ('draft','approved','deferred')",
-            (cid,),
+            "SELECT 1 FROM drafts WHERE contact_id=? AND status IN ('draft','approved','deferred') "
+            "AND (? IS NULL OR opportunity_id=?)",
+            (cid, opportunity_id, opportunity_id),
         ).fetchone():
             return 0
         _, context_key, _ = draft_context(db, cid, opportunity_id)
@@ -393,43 +410,26 @@ def schedule():
         if os.getenv("OUTREACH_AUTOMATION_ENABLED") != "1":
             return
         enqueue(db, "radar", daily=True)
-        remaining = max(
-            0,
-            3
-            - db.execute(
-                "SELECT count(*) FROM automation_jobs WHERE kind='draft' "
-                "AND created_at>=?",
-                (str(today()),),
-            ).fetchone()[0],
+        from server import preparation
+
+        preparation.refresh(db)
+        db.execute(
+            "UPDATE automation_jobs SET status='queued' WHERE status='waiting_budget' AND finished_at<?",
+            (str(today()),),
         )
-        pending = {
-            r[0]
-            for r in db.execute(
-                "SELECT contact_id FROM automation_jobs WHERE kind='draft' AND status IN ('queued','running')"
-            )
-        }
-        opportunities, selected = [], set(pending)
         for o in db.execute(
-            "SELECT * FROM opportunities WHERE status='open' AND score>=65 "
-            "AND NOT EXISTS(SELECT 1 FROM drafts WHERE contact_id=opportunities.contact_id "
-            "AND status IN ('draft','approved','deferred')) "
-            "ORDER BY EXISTS(SELECT 1 FROM messages WHERE contact_id=opportunities.contact_id),score DESC,id DESC",
+            "SELECT * FROM opportunities WHERE status='open' ORDER BY score DESC,id"
         ).fetchall():
-            cid = o["contact_id"]
-            if cid not in selected and current_opportunity(o) and eligible(db, cid):
-                opportunities.append((cid, o["id"]))
-                selected.add(cid)
-        # Give discovery the first two slots while retaining room for current dialogues.
-        followup_candidates = [(s["id"], s["opportunity_id"]) for s in followups(db)]
-        for cid, oid in opportunities[:2] + followup_candidates + opportunities[2:]:
-            if remaining <= 0:
-                break
-            if cid in pending:
-                continue
-            added = enqueue(db, "draft", cid, oid, daily=True)
-            remaining -= added
-            if added:
-                pending.add(cid)
+            if (
+                o["contact_id"]
+                and current_opportunity(o, max_age=30)
+                and eligible(db, o["contact_id"])
+            ):
+                preparation.enqueue(db, o["contact_id"], o["id"])
+        # Additional followups retain their independent limit; every occasion is prepared.
+        for suggestion in followups(db):
+            if not suggestion["opportunity_id"]:
+                enqueue(db, "draft", suggestion["id"], daily=True)
 
 
 def process_one():
@@ -444,6 +444,10 @@ def process_one():
         db.execute("BEGIN IMMEDIATE")
         # Process lock is held by main; any 'running' job is from an interrupted prior run.
         db.execute(
+            "UPDATE opportunities SET preparation_state='failed',preparation_note='Lauf unterbrochen; bitte erneut vorbereiten.' "
+            "WHERE id IN (SELECT opportunity_id FROM automation_jobs WHERE kind='prepare' AND status='running')"
+        )
+        db.execute(
             "UPDATE automation_jobs SET status='failed',result='Lauf unterbrochen; erneut einplanen' "
             "WHERE status='running'"
         )
@@ -457,12 +461,18 @@ def process_one():
             (row["id"],),
         )
     try:
-        count = (
-            radar()
-            if row["kind"] == "radar"
-            else generate_draft(row["contact_id"], row["opportunity_id"])
-        )
+        if row["kind"] == "radar":
+            count = radar()
+            schedule()
+        elif row["kind"] == "prepare":
+            from server.preparation import run
+
+            count = run(row["contact_id"], row["opportunity_id"])
+        else:
+            count = generate_draft(row["contact_id"], row["opportunity_id"])
         status, message = "done", f"{count} neue Vorschläge"
+    except ai_client.AIBudgetExceeded as exc:
+        count, status, message = 0, "waiting_budget", str(exc)
     except ai_client.AIError as exc:
         count, status, message = 0, "failed", str(exc)
     except Exception:
@@ -473,6 +483,16 @@ def process_one():
             "Verarbeitung fehlgeschlagen; Daten oder Antwort prüfen",
         )
     with storage.database() as db:
+        if row["kind"] == "prepare":
+            from server.preparation import state
+
+            if status != "done":
+                state(db, row["opportunity_id"], status, message)
+            else:
+                message = db.execute(
+                    "SELECT preparation_note FROM opportunities WHERE id=?",
+                    (row["opportunity_id"],),
+                ).fetchone()[0]
         db.execute(
             "UPDATE automation_jobs SET status=?,result=?,finished_at=? WHERE id=?",
             (status, message, storage.now(), row["id"]),
@@ -515,6 +535,34 @@ def report(db):
     }
 
 
+def wake_worker():
+    """Wake the installed user worker after a committed web request."""
+    if os.getenv("OUTREACH_WORKER_WAKE_ENABLED") != "1":
+        return
+    runtime = f"/run/user/{os.getuid()}"
+    try:
+        subprocess.run(
+            [
+                "systemctl",
+                "--user",
+                "--no-block",
+                "start",
+                "thegreatlogout-outreach.service",
+            ],
+            env={
+                **os.environ,
+                "XDG_RUNTIME_DIR": runtime,
+                "DBUS_SESSION_BUS_ADDRESS": f"unix:path={runtime}/bus",
+            },
+            timeout=5,
+            check=False,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        pass  # The recurring worker also picks up the durable queue.
+
+
 def main():
     storage.ensure_schema()
     lock_path = storage.DB_PATH.parent / "outreach.lock"
@@ -525,8 +573,9 @@ def main():
         except BlockingIOError:
             return
         schedule()
-        for _ in range(4):
-            if not process_one():
+        deadline = time.monotonic() + 600
+        for _ in range(24):
+            if time.monotonic() >= deadline or not process_one():
                 break
 
 

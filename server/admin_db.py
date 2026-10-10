@@ -160,6 +160,9 @@ def ensure_schema(path=None):
                 ("original_body", "TEXT NOT NULL DEFAULT ''"),
             ],
             "opportunities": [
+                ("preparation_state", "TEXT NOT NULL DEFAULT ''"),
+                ("preparation_note", "TEXT NOT NULL DEFAULT ''"),
+                ("preparation_draft_id", "INTEGER"),
                 ("source_key", "TEXT"),
                 ("published_at", "TEXT NOT NULL DEFAULT ''"),
                 ("score", "INTEGER NOT NULL DEFAULT 0"),

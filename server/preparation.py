@@ -1,0 +1,133 @@
+"""One review package per opportunity, with resumable contact research and drafting."""
+
+from server import admin_db as storage
+from server import contact_research
+
+
+def state(db, oid, status, note, draft_id=None):
+    db.execute(
+        "UPDATE opportunities SET preparation_state=?,preparation_note=?,preparation_draft_id=coalesce(?,preparation_draft_id) WHERE id=?",
+        (status, note, draft_id, oid),
+    )
+
+
+def enqueue(db, cid, oid, *, retry=False):
+    from server.outreach import draft_context
+
+    draft_context(db, cid, oid)
+    job = db.execute(
+        "SELECT * FROM automation_jobs WHERE dedup_key=?", (f"prepare:{oid}",)
+    ).fetchone()
+    if job:
+        if retry and job["status"] in {"failed", "done"}:
+            db.execute(
+                "UPDATE automation_jobs SET status='queued',result='',finished_at=NULL WHERE id=?",
+                (job["id"],),
+            )
+            state(db, oid, "queued", "Kontakt und Anschreiben werden vorbereitet.")
+            return 1
+        return 0
+    db.execute(
+        "INSERT INTO automation_jobs(kind,contact_id,opportunity_id,dedup_key,created_at) VALUES ('prepare',?,?,?,?)",
+        (cid, oid, f"prepare:{oid}", storage.now()),
+    )
+    state(db, oid, "queued", "Kontakt und Anschreiben werden automatisch vorbereitet.")
+    return 1
+
+
+def run(cid, oid):
+    from server.outreach import draft_context, generate_draft
+
+    with storage.database() as db:
+        draft_context(db, cid, oid)
+        state(
+            db,
+            oid,
+            "running",
+            "Kontaktadresse recherchieren und Anschreiben vorbereiten …",
+        )
+        existing = db.execute(
+            "SELECT id,status FROM drafts WHERE opportunity_id=? ORDER BY id DESC LIMIT 1",
+            (oid,),
+        ).fetchone()
+        if existing and existing["status"] in {"sent", "rejected"}:
+            state(
+                db,
+                oid,
+                "reviewed",
+                "Dieser Vorschlag wurde bereits entschieden.",
+                existing["id"],
+            )
+            return 0
+    address_ready = contact_research.enrich(cid)
+    count = 0 if existing else generate_draft(cid, oid)
+    with storage.database() as db:
+        # Recheck after API work. A concurrent dismissal/objection must not become ready.
+        draft_context(db, cid, oid)
+        draft = db.execute(
+            "SELECT id,status FROM drafts WHERE opportunity_id=? ORDER BY id DESC LIMIT 1",
+            (oid,),
+        ).fetchone()
+        address_ready = address_ready and bool(
+            db.execute("SELECT email FROM contacts WHERE id=?", (cid,)).fetchone()[0]
+        )
+        if draft and address_ready:
+            state(
+                db,
+                oid,
+                "ready",
+                "Kontaktadresse und Anschreiben sind vorbereitet. Bitte gemeinsam prüfen und freigeben.",
+                draft["id"],
+            )
+        elif draft:
+            state(
+                db,
+                oid,
+                "needs_attention",
+                "Anschreiben vorbereitet. Auf den erreichbaren offiziellen Quellen konnte keine eindeutige berufliche E-Mail-Adresse belegt werden.",
+                draft["id"],
+            )
+        else:
+            note = db.execute(
+                "SELECT preparation_note FROM opportunities WHERE id=?", (oid,)
+            ).fetchone()[0]
+            state(
+                db,
+                oid,
+                "needs_attention",
+                note
+                if note and not note.endswith("…")
+                else "Es konnte kein passender Entwurf erstellt werden. Bitte erneut vorbereiten.",
+            )
+    return count
+
+
+def refresh(db):
+    """Reflect review decisions and manual recipient edits without another AI call."""
+    for o in db.execute(
+        "SELECT o.*,c.email FROM opportunities o JOIN contacts c ON c.id=o.contact_id WHERE o.preparation_draft_id IS NOT NULL AND o.status='open'"
+    ).fetchall():
+        draft = db.execute(
+            "SELECT status FROM drafts WHERE id=?", (o["preparation_draft_id"],)
+        ).fetchone()
+        if not draft:
+            continue
+        if draft[0] in {"sent", "rejected"}:
+            state(
+                db, o["id"], "reviewed", "Dieser Vorschlag wurde bereits entschieden."
+            )
+        elif o["preparation_state"] in {"ready", "needs_attention"}:
+            if o["email"]:
+                state(
+                    db,
+                    o["id"],
+                    "ready",
+                    "Kontaktadresse und Anschreiben sind vorbereitet. Bitte gemeinsam prüfen und freigeben.",
+                )
+            else:
+                state(
+                    db,
+                    o["id"],
+                    "needs_attention",
+                    "Anschreiben vorbereitet. Eine belegte berufliche E-Mail-Adresse fehlt noch.",
+                )

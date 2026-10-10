@@ -12,6 +12,10 @@ class AIError(Exception):
     pass
 
 
+class AIBudgetExceeded(AIError):
+    pass
+
+
 def model():
     return os.getenv("OUTREACH_AI_MODEL", "gpt-6.1-sol")
 
@@ -29,8 +33,8 @@ def request(purpose, instructions, data, schema=None, search=False):
             "SELECT count(*) FROM automation_calls WHERE created_at>=?",
             (storage.now()[:10],),
         ).fetchone()[0]
-        if count >= min(50, max(1, int(os.getenv("OUTREACH_AI_DAILY_CALLS", "12")))):
-            raise AIError("Tageslimit erreicht")
+        if count >= min(50, max(1, int(os.getenv("OUTREACH_AI_DAILY_CALLS", "40")))):
+            raise AIBudgetExceeded("Tageslimit erreicht. Fortsetzung automatisch morgen.")
         call_id = db.execute(
             "INSERT INTO automation_calls(purpose,created_at) VALUES (?,?)",
             (purpose, storage.now()),
