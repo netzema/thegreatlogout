@@ -7,7 +7,7 @@ from server import admin_db as storage
 DEFAULT_NOTE = """Schreibe menschlich, direkt und persönlich, ohne Werbesprache oder künstliche Begeisterung.
 Verwende einen normalen Bindestrich (-), keine langen Gedankenstriche.
 Verwende ausschließlich gerade Apostrophe (') und gerade doppelte Anführungszeichen (").
-Beginne den Text nach der Anrede mit Komma trotzdem mit einem Großbuchstaben.
+Nach einer Anrede mit Komma beginnt der folgende Absatz mit einem kleingeschriebenen Wort, auch auf Englisch. Beispiel: "Dear Alex,\n\nyou mentioned ..." und "Hallo Alex,\n\ndanke für ...". Beginne dort nicht mit "You", "Thank" oder "Danke". Wähle bei Bedarf einen anderen Satzanfang, damit Eigennamen, das englische "I" und die höfliche Anrede "Sie" nicht fälschlich kleingeschrieben werden. Diese Regel gilt nur unmittelbar nach der Anrede, nicht für spätere Satzanfänge.
 Verwende keine Semikolons. Aufzählungen sind erlaubt, wenn sie wirklich helfen.
 Erkenne die tatsächlich angeschriebene Person aus dem bisherigen Dialog: besonders aus unseren Anreden und den Signaturen eingehender Nachrichten. Berücksichtige die gespeicherte Ansprechperson. Übernimm die bisherige Anrede und das Du oder Sie. Bei widersprüchlichen oder fehlenden Belegen bleibe neutral und erfinde keinen Namen.
 Knüpfe konkret an den bisherigen Austausch an und vermeide einen erneuten allgemeinen Erstpitch."""
@@ -56,7 +56,7 @@ def normalize(text, *, greeting=False):
     if greeting:
         text = re.sub(
             r"\A(\s*(?:Hallo|Hi|Hello|Hey|Dear|Liebe\w*|Guten\w*|Sehr geehrte\w*)[^\n]{0,100},\s+)([a-zäöü])",
-            lambda match: match[1] + match[2].upper(),
+            lambda match: match[1] + match[2].lower(),
             text,
             count=1,
             flags=re.IGNORECASE,

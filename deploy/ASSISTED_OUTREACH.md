@@ -17,10 +17,9 @@ prepares messages and never sends outreach automatically.
   and restored into isolated temporary databases; both integrity checks passed.
 - Both new user timers are installed, enabled and active. Automatic research and
   bounded draft scheduling are configured; no outreach transport is installed.
-- The base outreach admin was activated at 15:08 UTC. The new writing-note editor
-  still needs the root restart below. The agent's
-  deploy account cannot perform it with passwordless sudo. New template controls
-  are hidden until the process loads the new routes.
+- The base outreach admin was activated at 15:08 UTC and the writing-note editor
+  at 15:23 UTC. For future Python route changes, use the restart below. The agent's
+  deploy account cannot perform it with passwordless sudo.
 
 ```bash
 sudo systemctl restart thegreatlogout-admin.service
@@ -100,11 +99,13 @@ reviewed or edited drafts are preserved. The initial note is in
 `server/writing_style.py`; the owner's production copy is already persisted.
 
 The note asks for ordinary hyphens, straight apostrophes and double quotation
-marks, an uppercase opening after a greeting comma, and no semicolons. Lists
-remain allowed, as explicitly clarified by the owner. Deterministic normalization
+marks, a lowercase opening after a greeting comma, including English, and no
+semicolons. Lists remain allowed, as explicitly clarified by the owner. Deterministic normalization
 also enforces these punctuation rules on generated subject/body/rationale and
-capitalizes openings following common German/English greetings. Semicolons that
-slip through are replaced with commas. These mechanical rules also remain in
+lowercases openings following common German/English greetings. The model is
+explicitly instructed to choose an opening that does not require a capitalized
+proper name, English "I", or formal German "Sie". Later sentence starts retain
+their normal capitalization. Semicolons that slip through are replaced with commas. These mechanical rules also remain in
 force when the free-form note is edited, as explained beside the editor.
 
 Draft context now includes the stored contact person and bounded, redacted
@@ -190,7 +191,11 @@ delivery state before re-enabling the guide send timer.
 
 ## Validation
 
-70 Python tests passed. The suite exercises guide scheduling/idempotency/unsubscribe/tracking
+The base implementation passed 70 Python tests. The lowercase-opening correction
+passed all 36 writing-style and outreach tests, including a regression for an
+English greeting that preserves later sentence capitalization. A real GPT-6.1 Sol
+call with synthetic English correspondence followed the corrected rule before
+normalization. The suite exercises guide scheduling/idempotency/unsubscribe/tracking
 flags, admin authorization, CSRF, recipient inheritance, conflicts, integrated
 review, stale approvals, deferral, source/date validation, duplicate runs,
 API budgets, prompt minimization, writing-note persistence/CSRF/concurrent edits,
