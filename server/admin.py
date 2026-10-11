@@ -531,7 +531,7 @@ async def decide(request: Request, draft_id: int):
             "INSERT INTO reviews (draft_id,user_id,action,note,created_at) VALUES (?,?,?,?,?)",
             (draft_id, request.state.user["id"], action, note, storage.now()),
         )
-    return redirect("/review")
+    return redirect(f"/review#draft-{draft_id}")
 
 
 @app.post("/drafts/{draft_id}/export")

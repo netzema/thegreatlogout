@@ -3,3 +3,5 @@
 h1,h2,h3,p{overflow-wrap:anywhere}
 
 .check{display:flex;align-items:flex-start;gap:10px}.check input{width:auto;flex:none;margin-top:5px}
+
+.card:target { outline: 2px solid var(--accent, #b6ef5a); outline-offset: 3px; scroll-margin-top: 1rem; }

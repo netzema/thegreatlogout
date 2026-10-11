@@ -294,3 +294,15 @@ node --check assets/analytics.js
 node --check scripts/generate_de_site.js
 git diff --check
 ```
+
+## Approval feedback (11 October 2026)
+
+Approval redirects to the affected draft anchor. Approved cards show the stored
+approval and pending manual send prominently, with the export action before the
+message and editing forms. Repeating or changing a decision is under a separate
+disclosure. Opportunity cards distinguish approval, deferral and pending review;
+edited drafts return to the appropriate review state. Approval and export still
+create no send record or transport job. Validated with 101 Python tests and the
+browser flow including the approval anchor, visible confirmation, export and
+21 responsive route checks. Restart the admin service to load the changed route
+and opportunity-state handling; templates and styles are read from disk.

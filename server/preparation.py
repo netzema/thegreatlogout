@@ -116,7 +116,27 @@ def refresh(db):
             state(
                 db, o["id"], "reviewed", "Dieser Vorschlag wurde bereits entschieden."
             )
-        elif o["preparation_state"] in {"ready", "needs_attention"}:
+        elif draft[0] == "approved":
+            state(
+                db,
+                o["id"],
+                "approved",
+                "Empfänger und Text sind freigegeben. Noch nicht versendet. Im Review den Mailentwurf herunterladen und im Mailprogramm senden.",
+            )
+        elif draft[0] == "deferred":
+            state(
+                db,
+                o["id"],
+                "deferred",
+                "Dieser Entwurf ist bis zur Wiedervorlage zurückgestellt.",
+            )
+        elif o["preparation_state"] in {
+            "ready",
+            "needs_attention",
+            "approved",
+            "deferred",
+            "reviewed",
+        }:
             if o["email"]:
                 state(
                     db,

@@ -407,3 +407,35 @@ def test_progress_script_is_allowed_only_on_opportunities(client):
     assert (
         "script-src 'none'" in client.get("/review").headers["content-security-policy"]
     )
+
+
+def test_approval_shows_next_step_and_tracks_edit_and_deferral(client, monkeypatch):
+    token = login(client)
+    with admin_db.database() as db:
+        oid = occasion(db)
+        db.execute(
+            "UPDATE contacts SET email='review@example.test',permission='existing' WHERE id=1"
+        )
+    monkeypatch.setattr(ai_client, "request", lambda *a, **kw: (proposal(), set()))
+    preparation.run(1, oid)
+    response = post(client, "/drafts/1/review", token, action="approved", version=1)
+    assert response.status_code == 200
+    assert response.history[0].headers["location"] == "/review#draft-1"
+    assert "Empfänger und Text sind freigegeben. Noch nicht versendet." in response.text
+    assert response.text.index("Mailentwurf herunterladen") < response.text.index(
+        "Warum dieser Vorschlag?"
+    )
+    assert "Freigabe ändern oder zurückstellen" in response.text
+    opportunities = client.get("/opportunities")
+    assert "Freigegeben - Versand ausständig" in opportunities.text
+    assert "Zum Mailentwurf" in opportunities.text
+    assert "Zur Freigabe</a>" not in opportunities.text
+    with admin_db.database() as db:
+        assert db.execute("SELECT count(*) FROM messages").fetchone()[0] == 0
+        assert db.execute("SELECT count(*) FROM automation_jobs").fetchone()[0] == 0
+    assert post(client, "/drafts/1/export", token, version=2).status_code == 200
+    post(client, "/drafts/1/review", token, action="deferred", version=2)
+    assert "Zurückgestellt" in client.get("/opportunities").text
+    with admin_db.database() as db:
+        db.execute("UPDATE drafts SET status='draft'")
+    assert "Zur Freigabe</a>" in client.get("/opportunities").text
