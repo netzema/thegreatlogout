@@ -34,6 +34,28 @@ def main():
     )
     outreach.wake_worker = lambda: threading.Timer(0.3, outreach.process_one).start()
 
+    if os.getenv("TGL_BROWSER_DIRECT_SEND") == "1":
+        from server import outreach_delivery
+
+        os.environ.update(
+            OUTREACH_DIRECT_SEND_ENABLED="1",
+            OUTREACH_SMTP_USER="sender@example.test",
+            OUTREACH_SMTP_PASSWORD="synthetic-password",
+            OUTREACH_FROM="sender@example.test",
+            OUTREACH_REPLY_TO="reply@example.test",
+        )
+        outreach_delivery.submit = lambda row: ("sent", "Vom Testserver angenommen.")
+
+        def archive_fixture(row):
+            with admin_db.database() as db:
+                db.execute(
+                    "UPDATE outreach_deliveries SET archive_status='done' WHERE draft_id=?",
+                    (row["draft_id"],),
+                )
+            return "done"
+
+        outreach_delivery.archive = archive_fixture
+
     admin_db.ensure_schema()
     with admin_db.database() as db:
         db.execute(

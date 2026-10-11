@@ -1,0 +1,29 @@
+{% set delivery = deliveries.get(d.id) if deliveries is defined else none %}
+{% if delivery and delivery.status in ['sending','unknown'] %}
+<div class="notice" role="status"><strong>{{ 'Versand läuft' if delivery.status=='sending' else 'Versandstatus unklar' }}</strong><p>{{ delivery.note or 'Die Nachricht wird übertragen. Bitte nicht erneut senden. Den Status kannst du durch Neuladen prüfen.' }}</p><a href="/review#draft-{{ d.id }}">Versandstatus neu laden</a></div>
+{% if delivery.status=='unknown' %}
+<details><summary>Versandergebnis nach Prüfung klären</summary>
+<p>Prüfe das Postfach beziehungsweise die Versandprotokolle des Mailanbieters. Eine fehlende Gesendet-Kopie allein beweist nicht, dass die Nachricht nicht versendet wurde. Solange das Ergebnis unklar ist, bleibt ein erneuter Versand gesperrt.</p>
+<form method="post" action="/drafts/{{ d.id }}/delivery-resolve">
+<input type="hidden" name="csrf" value="{{ csrf }}">
+<label>Ergebnis<select name="decision"><option value="sent">Versand bestätigt</option><option value="not_sent">Sicher nicht versendet</option></select></label>
+<label>Tatsächliches Versanddatum, falls versendet<input type="date" name="occurred_at"></label>
+<label>Wie wurde das Ergebnis geprüft?<input name="note" required maxlength="1000"></label>
+<label class="check"><input type="checkbox" name="confirm" value="checked" required> Ergebnis anhand der Versandnachweise geprüft</label>
+<button>Prüfergebnis speichern</button></form></details>
+{% endif %}
+{% else %}
+<div class="notice" role="status"><strong>Empfänger und Text sind freigegeben. Noch nicht versendet.</strong>
+{% if direct_send_available is defined and direct_send_available %}
+<p>Nächster Schritt: Mit „Jetzt senden“ wird genau dieser freigegebene Entwurf an den angezeigten Empfänger gesendet und der Versand im Verlauf gespeichert.</p>
+{% else %}{% if direct_send_available is defined %}<p>Direkter Versand ist noch nicht aktiviert.</p>{% endif %}<p>Nächster Schritt: Mailentwurf herunterladen, im Mailprogramm öffnen und dort senden. Danach unten den tatsächlichen Versand bestätigen.</p>{% endif %}</div>
+{% if delivery and delivery.status=='failed' %}<p class="notice" role="alert">{{ delivery.note }}</p>{% endif %}
+{% if direct_send_available is defined and direct_send_available %}
+<p><strong>Von:</strong> {{ direct_sender }}<br><strong>An:</strong> {{ d.approved_recipient }}<br><strong>Antworten an:</strong> {{ direct_reply_to }}</p>
+<form method="post" action="/drafts/{{ d.id }}/send"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="version" value="{{ d.version }}"><button name="confirm" value="send">Jetzt senden</button></form>
+<details><summary>Alternativ im Mailprogramm senden</summary>
+{% endif %}
+<form method="post" action="/drafts/{{ d.id }}/export"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="version" value="{{ d.version }}"><button class="secondary">Mailentwurf herunterladen</button></form>
+<details><summary>Tatsächlichen Versand bestätigen</summary><form method="post" action="/messages"><input type="hidden" name="csrf" value="{{ csrf }}"><input type="hidden" name="contact_id" value="{{ d.contact_id }}"><input type="hidden" name="draft_id" value="{{ d.id }}"><input type="hidden" name="version" value="{{ d.version }}"><input type="hidden" name="direction" value="outbound"><label>Tatsächliches Versanddatum<input type="date" name="occurred_at" required></label><button>Als versendet protokollieren</button></form></details>
+{% if direct_send_available is defined and direct_send_available %}</details>{% endif %}
+{% endif %}

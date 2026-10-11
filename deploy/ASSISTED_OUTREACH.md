@@ -19,7 +19,7 @@ prepares messages and never sends outreach automatically.
 - Encrypted external backup uploaded, downloaded, decrypted, checksum-verified
   and restored into isolated temporary databases; both integrity checks passed.
 - Both new user timers are installed, enabled and active. Automatic research and
-  bounded draft scheduling are configured; no outreach transport is installed.
+  bounded draft scheduling are configured. The later explicit SMTP extension and its activation status are documented below.
 - The base outreach admin was activated at 15:08 UTC and the writing-note editor
   at 15:23 UTC. For future Python route changes, use the restart below. The agent's
   deploy account cannot perform it with passwordless sudo. Broad discovery already
@@ -306,3 +306,76 @@ create no send record or transport job. Validated with 101 Python tests and the
 browser flow including the approval anchor, visible confirmation, export and
 21 responsive route checks. Restart the admin service to load the changed route
 and opportunity-state handling; templates and styles are read from disk.
+
+## Explicit direct sending (11 October 2026)
+
+`server.outreach_delivery` now implements direct submission through the existing
+mailbox. Approval still sends nothing. The additional **Jetzt senden** action
+submits exactly the current approved recipient and message. No research job,
+timer, approval, export or retry timer invokes SMTP. Postmark remains the guide's
+transactional provider. The mailbox is used for these individual reviewed emails.
+
+Configuration belongs only in the campaign's restricted `.env.admin`:
+
+- `OUTREACH_DIRECT_SEND_ENABLED=1` enables the explicit send control after access
+  has been verified. Default is disabled.
+- `OUTREACH_SMTP_HOST=smtp.mailbox.org` and `OUTREACH_SMTP_PORT=587` use mandatory
+  STARTTLS with certificate verification. Port 465 instead uses implicit TLS.
+  There is no plaintext fallback.
+- `OUTREACH_SMTP_USER` defaults to the configured IMAP identity when unset.
+  `OUTREACH_SMTP_PASSWORD` defaults to the IMAP app password only when unset;
+  a separate app password with SMTP access can be supplied.
+- Existing `OUTREACH_FROM` and `OUTREACH_REPLY_TO` are shown before sending.
+  The From identity must be authorized for the sending mailbox.
+- Existing IMAP credentials and `OUTREACH_SENT_FOLDER` are used only to check for
+  and append the accepted message's Sent copy. The background importer stays
+  read-only and its domain scope is unchanged.
+
+The initial probe found that the former app password was not authorized for SMTP.
+The owner supplied a replacement with SMTP and IMAP permissions and retired the
+old credential. Both campaign settings now use that replacement. A real probe on
+port 587 successfully negotiated TLS, authenticated, received a 250 response for
+the existing envelope sender, then reset the transaction. IMAP authentication and
+read-only access to the Sent folder also succeeded. No RCPT or DATA command was
+issued and no message was submitted. Port 465 timed out from this host, so the
+verified deployment uses 587. `OUTREACH_DIRECT_SEND_ENABLED=1` is configured;
+restart `thegreatlogout-admin.service` to load the routes and environment. Its
+root-managed restart still requires the owner's sudo password. The next genuine
+send requires the owner's explicit UI click; the agent has sent no live message.
+
+Every draft has one durable delivery record containing its exact MIME snapshot,
+recipient, sender, reviewed version, requester and stable Message-ID. An atomic
+claim and a per-draft process lock prevent simultaneous clicks. A successful SMTP
+DATA acceptance records the outbound message and marks the draft sent once. This
+means acceptance by the submission server, not confirmed inbox delivery. Both
+plain text and escaped HTML contain the approved words, with no tracking images
+or rewritten links. Reply headers preserve the chosen conversation.
+
+Failures before content transmission or explicit server rejections are retryable
+only by another explicit send action. An interrupted process or uncertain result
+after transmission becomes `unknown`, without an automatic retry. Pending/unknown
+submissions block draft edits, recipient changes, exports and manual send logging.
+A review-only recovery form requires a documented check of provider evidence.
+Absence from Sent alone is not proof of non-delivery. Confirmed non-delivery
+invalidates the old approval; a new review is needed before retry. Confirmed delivery
+is recorded separately as `smtp-confirmed` rather than claimed as a provider ACK.
+
+An unsuccessful Sent-copy operation does not undo accepted submission. The contact
+page offers a separate copy-only retry that first searches for the Message-ID.
+It never invokes SMTP. Incoming synchronization deduplicates the copied message
+against the already-recorded outbound message. Operators must inspect pending or
+unknown submissions after restoring a backup: an older database snapshot cannot
+prove that messages sent after that snapshot were not delivered.
+
+Validation includes 119 passing Python tests, the existing guide scheduling,
+unsubscribe and tracking checks, and new tests for stale approval, blocked contacts,
+CSRF, explicit-send gating, concurrent/duplicate requests, SMTP rejection, ambiguous
+network failure, recovery, Sent-copy failure and import deduplication. A real local
+SMTP protocol server verified STARTTLS, authentication, MIME transfer and single
+submission without external recipients. The isolated direct-delivery browser fixture
+checks approval, send, status, Sent copy, duplicate requests and mobile layouts;
+it uses synthetic transport only. The existing export/manual-send browser flow
+and its 21 responsive route checks also pass.
+
+Official mailbox configuration reference:
+[Email configuration](https://kb.mailbox.org/en/business/e-mail/e-mail-configuration/).

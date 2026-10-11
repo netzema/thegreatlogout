@@ -112,17 +112,35 @@ def refresh(db):
         ).fetchone()
         if not draft:
             continue
-        if draft[0] in {"sent", "rejected"}:
+        if draft[0] == "sent":
+            state(db, o["id"], "sent", "Versand im Kontaktverlauf protokolliert.")
+        elif draft[0] == "rejected":
             state(
                 db, o["id"], "reviewed", "Dieser Vorschlag wurde bereits entschieden."
             )
         elif draft[0] == "approved":
-            state(
-                db,
-                o["id"],
-                "approved",
-                "Empfänger und Text sind freigegeben. Noch nicht versendet. Im Review den Mailentwurf herunterladen und im Mailprogramm senden.",
-            )
+            delivery = db.execute(
+                "SELECT status,note FROM outreach_deliveries WHERE draft_id=?",
+                (o["preparation_draft_id"],),
+            ).fetchone()
+            if delivery and delivery["status"] in {"sending", "unknown", "failed"}:
+                state(
+                    db,
+                    o["id"],
+                    {
+                        "sending": "sending",
+                        "unknown": "send_unknown",
+                        "failed": "send_failed",
+                    }[delivery["status"]],
+                    delivery["note"] or "Versand läuft. Bitte Status im Review prüfen.",
+                )
+            else:
+                state(
+                    db,
+                    o["id"],
+                    "approved",
+                    "Empfänger und Text sind freigegeben. Noch nicht versendet. Nächster Schritt im Review.",
+                )
         elif draft[0] == "deferred":
             state(
                 db,
@@ -136,6 +154,10 @@ def refresh(db):
             "approved",
             "deferred",
             "reviewed",
+            "sent",
+            "sending",
+            "send_unknown",
+            "send_failed",
         }:
             if o["email"]:
                 state(

@@ -30,7 +30,9 @@ structurally critical without sounding bureaucratic or promotional.
   Automatic outreach sending stays disabled until separately configured.
 - Postmark is the only external transactional-email service.
 - `server.outreach` researches public sources and prepares review-only drafts through
-  the OpenAI Responses API. No outreach transport exists. Never treat a job,
+  the OpenAI Responses API. `server.outreach_delivery` adds explicitly clicked SMTP
+  submission of approved drafts through the existing mailbox. No timer sends
+  outreach, and ambiguous submissions must never be retried automatically. Never treat a job,
   draft, approval or export as a real send. Existing assigned mail history is
   sufficient address evidence; recipient and message are reviewed together.
 - `server.discovery` searches public themes independently of existing contacts and

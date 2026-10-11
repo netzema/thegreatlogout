@@ -47,6 +47,11 @@ def inherit_addresses(db):
             owners.setdefault(address, set()).add(cid)
     for cid, evidence in candidates.items():
         current = db.execute("SELECT * FROM contacts WHERE id=?", (cid,)).fetchone()
+        if db.execute(
+            "SELECT 1 FROM outreach_deliveries s JOIN drafts d ON d.id=s.draft_id WHERE d.contact_id=? AND s.status IN ('sending','unknown')",
+            (cid,),
+        ).fetchone():
+            continue
         usable = []
         for address, direction, mid in evidence:
             conflict = db.execute(

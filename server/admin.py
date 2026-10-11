@@ -19,7 +19,8 @@ from fastapi.templating import Jinja2Templates
 from pwdlib import PasswordHash
 
 from server import admin_db as storage
-from server import analytics, outreach, writing_style
+from server import analytics, outreach, writing_style, outreach_delivery
+from starlette.concurrency import run_in_threadpool
 from server.contact_history import inherit_addresses, valid_address
 
 ADMIN_ORIGIN = os.getenv("ADMIN_ORIGIN", "https://admin.thegreatlogout.org").rstrip("/")
@@ -100,6 +101,13 @@ def render(request, name, **context):
             **context,
         },
     )
+
+
+@app.exception_handler(outreach_delivery.DeliveryError)
+async def delivery_error(request, exc):
+    response = render(request, "delivery_error.html", message=str(exc))
+    response.status_code = 409
+    return response
 
 
 @app.middleware("http")
@@ -310,7 +318,18 @@ def contact_page(request: Request, contact_id: int):
         drafts = db.execute(
             "SELECT * FROM drafts WHERE contact_id=? ORDER BY id DESC", (contact_id,)
         ).fetchall()
-    return render(request, "contact.html", contact=row, history=history, drafts=drafts)
+        delivery_rows = db.execute(
+            "SELECT s.draft_id,s.status,s.note,s.archive_status,s.accepted_at FROM outreach_deliveries s JOIN drafts d ON d.id=s.draft_id WHERE d.contact_id=? ORDER BY s.updated_at DESC",
+            (contact_id,),
+        ).fetchall()
+    return render(
+        request,
+        "contact.html",
+        contact=row,
+        history=history,
+        drafts=drafts,
+        delivery_rows=delivery_rows,
+    )
 
 
 @app.post("/contacts")
@@ -352,6 +371,7 @@ async def save_contact(request: Request):
                         409, "Nachricht ist bereits zugeordnet. Bitte neu laden."
                     )
             if contact_id:
+                outreach_delivery.assert_editable(db, contact_id=contact_id)
                 previous = contact(db, contact_id)
                 if previous["email"] != email or previous["permission"] != values[5]:
                     db.execute(
@@ -401,6 +421,8 @@ async def save_draft(request: Request):
         storage.now(),
     )
     with storage.database() as db:
+        db.execute("BEGIN IMMEDIATE")
+        outreach_delivery.assert_editable(db, did)
         contact(db, cid)
         if (
             values[-2]
@@ -434,6 +456,13 @@ async def save_draft(request: Request):
 @app.get("/review", response_class=HTMLResponse)
 def review(request: Request):
     with storage.database() as db:
+        outreach_delivery.recover_stalled(db)
+        deliveries = {
+            r["draft_id"]: dict(r)
+            for r in db.execute(
+                "SELECT draft_id,status,note,archive_status FROM outreach_deliveries"
+            )
+        }
         drafts = db.execute("""SELECT drafts.*,contacts.organization,contacts.permission,contacts.notes,
             contacts.next_step,contacts.email,contacts.email_source FROM drafts JOIN contacts ON contacts.id=drafts.contact_id
             WHERE drafts.status!='sent' ORDER BY CASE drafts.status WHEN 'draft' THEN 0
@@ -462,6 +491,10 @@ def review(request: Request):
         contacts=contacts_list,
         replies=replies,
         address_issues=issues,
+        deliveries=deliveries,
+        direct_send_available=outreach_delivery.available(),
+        direct_sender=outreach_delivery.configuration()["sender"],
+        direct_reply_to=outreach_delivery.configuration()["reply_to"],
     )
 
 
@@ -477,6 +510,7 @@ async def decide(request: Request, draft_id: int):
         raise HTTPException(400, "Bitte ein zukünftiges Wiedervorlagedatum wählen.")
     with storage.database() as db:
         db.execute("BEGIN IMMEDIATE")
+        outreach_delivery.assert_editable(db, draft_id)
         row = db.execute("SELECT * FROM drafts WHERE id=?", (draft_id,)).fetchone()
         if (
             not row
@@ -487,6 +521,7 @@ async def decide(request: Request, draft_id: int):
         recipient = contact(db, row["contact_id"])
         approved_email = ""
         if action == "approved":
+            outreach_delivery.assert_editable(db, contact_id=recipient["id"])
             approved_email = field(data, "recipient", 254).lower() or recipient["email"]
             if (
                 not valid_address(approved_email)
@@ -534,10 +569,71 @@ async def decide(request: Request, draft_id: int):
     return redirect(f"/review#draft-{draft_id}")
 
 
+@app.post("/drafts/{draft_id}/send")
+async def send_draft(request: Request, draft_id: int):
+    data = await form(request)
+    if field(data, "confirm") != "send":
+        raise outreach_delivery.DeliveryError(
+            "Bitte den ausdrücklichen Versandknopf verwenden."
+        )
+    await run_in_threadpool(
+        outreach_delivery.send,
+        draft_id,
+        integer(data, "version"),
+        request.state.user["id"],
+    )
+    with storage.database() as db:
+        draft = db.execute(
+            "SELECT contact_id,status FROM drafts WHERE id=?", (draft_id,)
+        ).fetchone()
+    if draft and draft["status"] == "sent":
+        return redirect(f"/contacts/{draft['contact_id']}?delivery={draft_id}")
+    return redirect(f"/review#draft-{draft_id}")
+
+
+@app.post("/drafts/{draft_id}/delivery-resolve")
+async def resolve_delivery(request: Request, draft_id: int):
+    data = await form(request)
+    if field(data, "confirm") != "checked":
+        raise outreach_delivery.DeliveryError(
+            "Bitte das Ergebnis der Versandprüfung ausdrücklich bestätigen."
+        )
+    await run_in_threadpool(
+        outreach_delivery.resolve,
+        draft_id,
+        request.state.user["id"],
+        choice(data, "decision", {"sent", "not_sent"}),
+        field(data, "note", 1000, True),
+        date_field(data, "occurred_at"),
+    )
+    return redirect("/review")
+
+
+@app.post("/drafts/{draft_id}/archive")
+async def archive_delivery(request: Request, draft_id: int):
+    await form(request)
+    with outreach_delivery.delivery_lock(draft_id):
+        with storage.database() as db:
+            row = db.execute(
+                "SELECT * FROM outreach_deliveries WHERE draft_id=? AND status='sent'",
+                (draft_id,),
+            ).fetchone()
+            if not row:
+                raise outreach_delivery.DeliveryError(
+                    "Kein bestätigter Direktversand vorhanden."
+                )
+            cid = db.execute(
+                "SELECT contact_id FROM drafts WHERE id=?", (draft_id,)
+            ).fetchone()[0]
+        await run_in_threadpool(outreach_delivery.archive, dict(row))
+    return redirect(f"/contacts/{cid}?delivery={draft_id}")
+
+
 @app.post("/drafts/{draft_id}/export")
 async def export_draft(request: Request, draft_id: int):
     data = await form(request)
     with storage.database() as db:
+        outreach_delivery.assert_editable(db, draft_id)
         row = db.execute("SELECT * FROM drafts WHERE id=?", (draft_id,)).fetchone()
         if (
             not row
@@ -602,6 +698,7 @@ async def log_message(request: Request):
         db.execute("BEGIN IMMEDIATE")
         contact(db, cid)
         if did:
+            outreach_delivery.assert_editable(db, did)
             row = db.execute(
                 "SELECT * FROM drafts WHERE id=? AND contact_id=?", (did, cid)
             ).fetchone()
@@ -674,6 +771,10 @@ async def remove_message(request: Request, message_id: int):
                 "INSERT OR IGNORE INTO excluded_messages VALUES (?,?)",
                 (storage.message_fingerprint(row["message_id"]), storage.now()),
             )
+        for dependent in db.execute(
+            "SELECT id FROM drafts WHERE reply_message_id=?", (message_id,)
+        ):
+            outreach_delivery.assert_editable(db, dependent["id"])
         # A removed reply reference must never retain a send approval.
         db.execute(
             """UPDATE drafts SET reply_message_id=NULL, version=version+1,

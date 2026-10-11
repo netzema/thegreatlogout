@@ -80,6 +80,14 @@ def ensure_schema(path=None):
             id INTEGER PRIMARY KEY, draft_id INTEGER REFERENCES drafts(id),
             user_id INTEGER REFERENCES users(id), action TEXT NOT NULL,
             note TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS outreach_deliveries (
+            draft_id INTEGER PRIMARY KEY REFERENCES drafts(id),
+            draft_version INTEGER NOT NULL, user_id INTEGER NOT NULL REFERENCES users(id),
+            status TEXT NOT NULL, message_id TEXT NOT NULL UNIQUE,
+            mime BLOB NOT NULL, recipient TEXT NOT NULL, sender TEXT NOT NULL,
+            created_at TEXT NOT NULL, updated_at TEXT NOT NULL, accepted_at TEXT,
+            attempts INTEGER NOT NULL DEFAULT 1, note TEXT NOT NULL DEFAULT '',
+            archive_status TEXT NOT NULL DEFAULT 'pending');
         CREATE TABLE IF NOT EXISTS mail_cursors (
             folder TEXT PRIMARY KEY, uidvalidity TEXT NOT NULL, last_uid INTEGER NOT NULL);
         CREATE TABLE IF NOT EXISTS mail_seen (
