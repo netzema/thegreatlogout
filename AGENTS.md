@@ -35,6 +35,8 @@ structurally critical without sounding bureaucratic or promotional.
   outreach, and ambiguous submissions must never be retried automatically. Never treat a job,
   draft, approval or export as a real send. Existing assigned mail history is
   sufficient address evidence; recipient and message are reviewed together.
+  `server.mail_threads` preserves the selected conversation and subject for replies;
+  changing the conversation requires a fresh draft review.
 - `server.discovery` searches public themes independently of existing contacts and
   creates source-backed contacts with unknown permission. Existing contacts are
   matched locally afterward. Discovery never expands the IMAP import scope.

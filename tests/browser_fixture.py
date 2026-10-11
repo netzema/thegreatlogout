@@ -75,6 +75,11 @@ def main():
             "VALUES (1,'Synthetic research','https://example.org/research','A relevant topic','Exchange feedback',?,80,'Synthetic score','campaign',1)",
             (admin_db.now(),),
         )
+    if os.getenv("TGL_BROWSER_THREAD") == "1":
+        with admin_db.database() as db:
+            db.execute(
+                """INSERT INTO messages(contact_id,direction,message_id,subject,body,occurred_at,peer_addresses,references_json) VALUES (1,'inbound','<prior@example.test>','Existing conversation','Earlier feedback','2026-10-10','["partner@example.test"]','["<root@example.test>"]')"""
+            )
     uvicorn.run(
         admin.app,
         host="127.0.0.1",

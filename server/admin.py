@@ -19,7 +19,7 @@ from fastapi.templating import Jinja2Templates
 from pwdlib import PasswordHash
 
 from server import admin_db as storage
-from server import analytics, outreach, writing_style, outreach_delivery
+from server import analytics, outreach, writing_style, outreach_delivery, mail_threads
 from starlette.concurrency import run_in_threadpool
 from server.contact_history import inherit_addresses, valid_address
 
@@ -311,6 +311,8 @@ def contacts(request: Request, q: str = ""):
 def contact_page(request: Request, contact_id: int):
     with storage.database() as db:
         row = contact(db, contact_id)
+        reply_choices = mail_threads.choices(db, contact_id)
+        default_reply = mail_threads.latest(db, contact_id, row["email"])
         history = db.execute(
             "SELECT * FROM messages WHERE contact_id=? ORDER BY occurred_at DESC",
             (contact_id,),
@@ -329,6 +331,8 @@ def contact_page(request: Request, contact_id: int):
         history=history,
         drafts=drafts,
         delivery_rows=delivery_rows,
+        reply_choices=reply_choices,
+        default_reply=default_reply,
     )
 
 
@@ -424,18 +428,16 @@ async def save_draft(request: Request):
         db.execute("BEGIN IMMEDIATE")
         outreach_delivery.assert_editable(db, did)
         contact(db, cid)
-        if (
-            values[-2]
-            and not db.execute(
-                "SELECT id FROM messages WHERE id=? AND contact_id=?",
-                (values[-2], cid),
-            ).fetchone()
-        ):
-            raise HTTPException(400, "Antwortbezug passt nicht zum Kontakt.")
+        try:
+            previous = mail_threads.selected(db, cid, values[-2])
+        except ValueError as exc:
+            raise HTTPException(400, str(exc)) from exc
+        if previous:
+            values = (mail_threads.subject(previous), *values[1:])
         if did:
             changed = db.execute(
                 """UPDATE drafts SET subject=?,body=?,framing=?,campaign=?,reply_message_id=?,updated_at=?,
-                status='draft',version=version+1,review_at=NULL WHERE id=? AND contact_id=?
+                status='draft',version=version+1,review_at=NULL,approved_recipient='' WHERE id=? AND contact_id=?
                 AND version=? AND status!='sent' """,
                 (*values, did, cid, integer(data, "version")),
             )
@@ -467,6 +469,11 @@ def review(request: Request):
             contacts.next_step,contacts.email,contacts.email_source FROM drafts JOIN contacts ON contacts.id=drafts.contact_id
             WHERE drafts.status!='sent' ORDER BY CASE drafts.status WHEN 'draft' THEN 0
             WHEN 'approved' THEN 1 ELSE 2 END, drafts.updated_at DESC""").fetchall()
+        reply_choices = {
+            cid: mail_threads.choices(db, cid)
+            for cid in {d["contact_id"] for d in drafts}
+        }
+        reply_messages = {m["id"]: m for rows in reply_choices.values() for m in rows}
         unmatched = db.execute(
             "SELECT * FROM messages WHERE matched=0 ORDER BY occurred_at DESC"
         ).fetchall()
@@ -491,6 +498,8 @@ def review(request: Request):
         contacts=contacts_list,
         replies=replies,
         address_issues=issues,
+        reply_choices=reply_choices,
+        reply_messages=reply_messages,
         deliveries=deliveries,
         direct_send_available=outreach_delivery.available(),
         direct_sender=outreach_delivery.configuration()["sender"],
@@ -668,17 +677,10 @@ async def export_draft(request: Request, draft_id: int):
     if valid_address(reply_to):
         message["Reply-To"] = reply_to
     with storage.database() as db:
-        previous = db.execute(
-            "SELECT message_id FROM messages WHERE id=? AND contact_id=? AND message_id LIKE '<%>'",
-            (row["reply_message_id"], row["contact_id"]),
-        ).fetchone()
-    if (
-        previous
-        and "\r" not in previous["message_id"]
-        and "\n" not in previous["message_id"]
-    ):
-        message["In-Reply-To"] = previous["message_id"]
-        message["References"] = previous["message_id"]
+        try:
+            mail_threads.apply_headers(db, message, row)
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from exc
     message.set_content(row["body"])
     return Response(
         message.as_bytes(),
@@ -694,6 +696,7 @@ async def log_message(request: Request):
     direction = choice(data, "direction", {"inbound", "outbound"})
     did = integer(data, "draft_id") or None
     logged_mid = None
+    thread_headers = {}
     with storage.database() as db:
         db.execute("BEGIN IMMEDIATE")
         contact(db, cid)
@@ -711,6 +714,10 @@ async def log_message(request: Request):
                     409,
                     "Aktuelle Freigabe erforderlich; bereits protokollierte Sendungen werden nicht wiederholt.",
                 )
+            try:
+                thread_headers = mail_threads.headers(db, row)
+            except ValueError as exc:
+                raise HTTPException(409, str(exc)) from exc
             subject, body = row["subject"], row["body"]
             logged_mid = f"<tgl-draft-{did}-v{row['version']}@thegreatlogout.org>"
             direction = "outbound"
@@ -727,9 +734,19 @@ async def log_message(request: Request):
         if not occurred:
             raise HTTPException(400, "Datum erforderlich.")
         db.execute(
-            """INSERT INTO messages (contact_id,draft_id,direction,subject,body,occurred_at,message_id)
-            VALUES (?,?,?,?,?,?,?)""",
-            (cid, did, direction, subject, body, occurred, logged_mid),
+            """INSERT INTO messages (contact_id,draft_id,direction,subject,body,occurred_at,message_id,in_reply_to,references_json)
+            VALUES (?,?,?,?,?,?,?,?,?)""",
+            (
+                cid,
+                did,
+                direction,
+                subject,
+                body,
+                occurred,
+                logged_mid,
+                thread_headers.get("In-Reply-To", ""),
+                json.dumps(thread_headers.get("References", "").split()),
+            ),
         )
         db.execute(
             "UPDATE contacts SET status=?,updated_at=? WHERE id=?",

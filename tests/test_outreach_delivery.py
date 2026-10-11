@@ -537,3 +537,31 @@ def test_inflight_send_blocks_contact_edit(approved, client, transport):
     data["email"] = "changed@example.test"
     assert post(client, "/contacts", approved, **data).status_code == 409
     assert not transport.calls
+
+
+def test_sent_message_keeps_ancestors_for_next_followup(approved, client, transport):
+    from server import mail_threads
+    import json
+
+    with admin_db.database() as db:
+        db.execute(
+            "UPDATE messages SET references_json=? WHERE message_id='<earlier@example.test>'",
+            ('["<root@example.test>","<middle@example.test>"]',),
+        )
+    assert (
+        post(client, "/drafts/1/send", approved, version=2, confirm="send").status_code
+        == 200
+    )
+    with admin_db.database() as db:
+        sent = db.execute("SELECT * FROM messages WHERE draft_id=1").fetchone()
+        assert json.loads(sent["references_json"]) == [
+            "<root@example.test>",
+            "<middle@example.test>",
+            "<earlier@example.test>",
+        ]
+        assert mail_threads.references(db, sent) == [
+            "<root@example.test>",
+            "<middle@example.test>",
+            "<earlier@example.test>",
+            sent["message_id"],
+        ]

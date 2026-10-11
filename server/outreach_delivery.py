@@ -16,6 +16,7 @@ from email.parser import BytesParser
 from email.utils import format_datetime
 
 from server import admin_db as storage
+from server import mail_threads
 from server.contact_history import valid_address
 from server.outreach import eligible
 
@@ -100,18 +101,10 @@ def render_message(db, draft, cfg):
     message["Message-ID"] = (
         f"<tgl-draft-{draft['id']}-v{draft['version']}@thegreatlogout.org>"
     )
-    previous = db.execute(
-        "SELECT message_id FROM messages WHERE id=? AND contact_id=?",
-        (draft["reply_message_id"], draft["contact_id"]),
-    ).fetchone()
-    if (
-        previous
-        and previous[0]
-        and previous[0].startswith("<")
-        and not any(c in previous[0] for c in "\r\n")
-    ):
-        message["In-Reply-To"] = previous[0]
-        message["References"] = previous[0]
+    try:
+        mail_threads.apply_headers(db, message, draft)
+    except ValueError as exc:
+        raise DeliveryError(str(exc)) from exc
     message.set_content(draft["body"], cte="quoted-printable")
     # The same approved words in both formats, without trackers or external images.
     message.add_alternative(
@@ -272,9 +265,7 @@ def finish(db, row, *, accepted_at=None):
             stamp,
             row["sender"],
             json.dumps([row["recipient"]]),
-            json.dumps(
-                [str(message["In-Reply-To"])] if message.get("In-Reply-To") else []
-            ),
+            json.dumps(str(message.get("References", "")).split()),
         ),
     )
     db.execute(

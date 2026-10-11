@@ -379,3 +379,41 @@ and its 21 responsive route checks also pass.
 
 Official mailbox configuration reference:
 [Email configuration](https://kb.mailbox.org/en/business/e-mail/e-mail-configuration/).
+
+
+### Reply conversations (11 October 2026)
+
+Generated follow-ups choose the latest non-automated message with a valid
+Message-ID for the current recipient, including older imported messages outside
+the four-message drafting window. Known correspondence with another recipient
+is excluded from the automatic selection and drafting context. The selected
+message is included in the model context. Assigned legacy history without peer
+metadata remains usable.
+
+Review shows the selected conversation and links to its original message. The
+editor can select a different message assigned to the same contact or explicitly
+start a new conversation. Reply drafts retain the original subject (with `Re:`
+when needed); saving any change invalidates approval. SMTP rendering never
+silently changes an approved subject or body.
+
+SMTP, EML export and manual send logging share the reply metadata. `In-Reply-To`
+identifies the selected message and `References` preserves its ancestor chain.
+Missing chains can be reconstructed from locally assigned messages. Invalid IDs
+are excluded, cycles terminate, and very long chains retain the root and most
+recent links (30 total). Sent records retain these headers for later follow-ups.
+This follows [RFC 5322 section 3.6.4](https://www.rfc-editor.org/rfc/rfc5322#section-3.6.4).
+The receiving mail client's settings ultimately control conversation display.
+Existing accepted deliveries are immutable and are never resent by this change.
+
+The admin service needs a restart to load this Python update. The root-managed
+restart requires the owner's sudo password. Validation covers reply selection,
+subject preservation, cross-contact and malformed-header rejection, switching to
+a new conversation, approval invalidation, identical export/SMTP headers, and
+thread continuity after both direct and manually logged delivery. The isolated
+browser fixture supports `TGL_BROWSER_THREAD=1` for an existing conversation.
+
+Validated with 128 passing Python tests and the threaded direct-send browser flow,
+including desktop/mobile layouts and duplicate-send protection. Two existing
+unsent reply drafts received the matching conversation subject and a new version;
+their bodies and all accepted delivery records were preserved. A restricted local
+SQLite backup was taken before the update. No live email was sent for testing.

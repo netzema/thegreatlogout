@@ -16,7 +16,7 @@ from urllib.parse import urlsplit, urlunsplit
 from pydantic import BaseModel, ConfigDict, Field
 
 from server import admin_db as storage
-from server import ai_client, writing_style
+from server import ai_client, writing_style, mail_threads
 from server.contact_history import inherit_addresses
 from server.mail_analysis import fresh_text
 
@@ -134,9 +134,10 @@ def draft_context(db, cid, opportunity_id=None):
     c = db.execute("SELECT * FROM contacts WHERE id=?", (cid,)).fetchone()
     history = db.execute(
         "SELECT * FROM messages WHERE contact_id=? AND automated=0 "
-        "ORDER BY occurred_at DESC,id DESC LIMIT 4",
+        "ORDER BY occurred_at DESC,id DESC",
         (cid,),
     ).fetchall()
+    history = [h for h in history if mail_threads.matches_recipient(h, c["email"])][:4]
     opportunity = None
     if opportunity_id:
         opportunity = db.execute(
@@ -147,7 +148,18 @@ def draft_context(db, cid, opportunity_id=None):
             raise ValueError("Anlass nicht mehr verfügbar")
         if not current_opportunity(opportunity, max_age=30):
             raise ValueError("Anlass ist nicht mehr aktuell")
+    previous = mail_threads.latest(db, cid, c["email"])
+    if previous and all(h["id"] != previous["id"] for h in history):
+        history.append(previous)
     context = {
+        "reply_to": (
+            {
+                "subject": redact(previous["subject"]),
+                "date": previous["occurred_at"][:10],
+            }
+            if previous
+            else None
+        ),
         "today": str(today()),
         "organization": c["organization"],
         "person": redact(c["person"]),
@@ -185,14 +197,9 @@ def draft_context(db, cid, opportunity_id=None):
         ),
     }
     # Date is excluded: passage of time alone must not cause duplicate messages.
-    fingerprint = digest([cid, {k: v for k, v in context.items() if k != "today"}])
-    reply = next(
-        (
-            h["id"]
-            for h in history
-            if h["message_id"] and h["message_id"].startswith("<")
-        ),
-        None,
+    reply = previous["id"] if previous else None
+    fingerprint = digest(
+        [cid, reply, {k: v for k, v in context.items() if k != "today"}]
     )
     return context, fingerprint, reply
 
@@ -222,7 +229,9 @@ def generate_draft(cid, opportunity_id=None):
         "bisherige Unterhaltung und den Anlass; behaupte niemals, eine nur geplante Handlung sei erfolgt. "
         "Keine Zusagen, Termine, Angebote oder Partnerschaften erfinden. Bei mehrfach unbeantwortetem "
         "Kontakt ohne neuen Anlass oder einem Kontaktwiderspruch: should_draft=false. Wenn sinnvoll, "
-        "anknüpfen statt den Erstpitch zu wiederholen. Für einen konkreten neuen Anlass bereite "
+        "anknüpfen statt den Erstpitch zu wiederholen. Wenn reply_to gesetzt ist, wird als Antwort "
+        "in dieser Unterhaltung gesendet und ihr Betreff beibehalten. Schreibe eine passende Fortsetzung. "
+        "Für einen konkreten neuen Anlass bereite "
         "immer ein passendes Anschreiben vor, außer ein belegter Widerspruch verhindert dies. "
         "Begründe den Vorschlag auf Deutsch. "
         "Die Platzhalter [Adresse], [Nummer], [Link] dürfen nicht in den Entwurf übernommen werden.",
@@ -262,6 +271,8 @@ def generate_draft(cid, opportunity_id=None):
             (cid, opportunity_id, opportunity_id),
         ).fetchone():
             return 0
+        if reply:
+            draft.subject = mail_threads.subject(mail_threads.selected(db, cid, reply))
         result = db.execute(
             """INSERT OR IGNORE INTO drafts
             (contact_id,opportunity_id,subject,body,framing,campaign,created_at,updated_at,
