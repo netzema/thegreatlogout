@@ -180,3 +180,33 @@ def test_reassessment_uses_public_source_not_correspondence_or_old_ai_rationale(
 
     monkeypatch.setattr(contact_research, "fetch", unavailable)
     assert quality.assess(oid) == "watch"
+
+
+def test_held_drafts_are_counted_once_and_never_show_delivery_controls(client):
+    import re
+
+    login(client)
+    with admin_db.database() as db:
+        for draft_status, blocked in [
+            ("approved", True), ("deferred", True),
+            ("approved", False), ("rejected", False),
+        ]:
+            oid = occasion(db)
+            quality.save(db, oid, assessment(fit=1 if blocked else 3), EVIDENCE)
+            db.execute(
+                "INSERT INTO drafts(contact_id,opportunity_id,subject,body,status,created_at,updated_at) "
+                "VALUES (1,?,'Synthetic subject','Body',?,?,?)",
+                (oid, draft_status, admin_db.now(), admin_db.now()),
+            )
+    page = client.get("/review").text
+    counts = dict(re.findall(
+        r'data-review-filter="([^"]+)"[^>]*>.*?<span class="filter-count">(\d+)</span>',
+        page,
+    ))
+    assert counts["quality"] == "2"
+    assert counts["approved"] == "1"
+    assert counts["archive"] == "1"
+    held_card = re.search(r'<article[^>]+id="draft-1".*?</article>', page, re.S)[0]
+    assert "Versand gesperrt" in held_card
+    assert "Mailentwurf herunterladen" not in held_card
+    assert 'action="/drafts/1/send"' not in held_card

@@ -1,1 +1,28 @@
-{% extends 'base.html' %}{% from 'macros.html' import status, contact_fields %}{% block content %}<p class="eyebrow">Beziehungen</p><h1>Kontakte</h1><p class="lead">Deine Gespräche und nächsten Schritte an einem Ort.</p><form method="get" class="search-form" role="search"><label>Organisation oder Person<input name="q" value="{{ q }}" maxlength="100"></label><button>Suchen</button>{% if q %}<a class="button secondary" href="/contacts">Zurücksetzen</a>{% endif %}</form><section class="card table-wrap" tabindex="0" role="region" aria-label="Kontaktliste"><table class="contacts-table"><caption class="sr-only">Kontakte und nächste Schritte</caption><thead><tr><th>Organisation</th><th>Status</th><th>Nächster Schritt</th><th>Wiedervorlage</th></tr></thead><tbody>{% for c in contacts %}<tr><td><a href="/contacts/{{ c.id }}">{{ c.organization }}</a><br><small>{{ c.person }}</small></td><td><span class="badge">{{ status(c.status) }}</span></td><td>{{ c.next_step or '–' }}</td><td class="nowrap">{{ c.next_date[8:10] ~ '.' ~ c.next_date[5:7] ~ '.' ~ c.next_date[:4] if c.next_date else '–' }}</td></tr>{% else %}<tr><td colspan="4">{% if q %}Keine Treffer für „{{ q }}“. Versuche einen anderen Namen.{% else %}Noch keine Kontakte. Lege unten deinen ersten Kontakt an.{% endif %}</td></tr>{% endfor %}</tbody></table></section><details class="card"><summary>Kontakt hinzufügen</summary><form method="post" action="/contacts"><input type="hidden" name="csrf" value="{{ csrf }}">{{ contact_fields(none) }}<button>Kontakt speichern</button></form></details>{% endblock %}
+{% extends 'base.html' %}
+{% from 'macros.html' import status, contact_fields %}
+{% block content %}
+<p class="eyebrow">Beziehungen</p><h1>Kontakte</h1><p class="lead">Deine Gespräche und nächsten Schritte an einem Ort.</p>
+<details class="card add-contact"><summary>Kontakt hinzufügen</summary>
+  <form method="post" action="/contacts"><input type="hidden" name="csrf" value="{{ csrf }}">{{ contact_fields(none) }}<button>Kontakt speichern</button></form>
+</details>
+<form method="get" class="search-form" role="search">
+  <label>Organisation oder Person<input type="search" name="q" value="{{ q }}" maxlength="100" placeholder="Namen eingeben"></label>
+  <button>Suchen</button>{% if q %}<a class="button secondary" href="/contacts">Zurücksetzen</a>{% endif %}
+</form>
+<p class="muted result-count">{{ contacts|length }} {{ 'Treffer' if q else 'Kontakte angezeigt' }}{% if contacts|length == 500 %} · Maximal 500 Einträge. Grenze die Liste mit der Suche ein.{% endif %}</p>
+<section class="card table-wrap contact-list" tabindex="0" role="region" aria-label="Kontaktliste">
+  <table class="contacts-table" role="table"><caption class="sr-only">Kontakte und nächste Schritte</caption>
+    <thead><tr><th scope="col">Organisation</th><th scope="col">Status</th><th scope="col">Nächster Schritt</th><th scope="col">Wiedervorlage</th></tr></thead>
+    <tbody>
+    {% for c in contacts %}
+    <tr role="row">
+      <td role="cell" class="contact-name"><a href="/contacts/{{ c.id }}">{{ c.organization }}</a>{% if c.person %}<br><small>{{ c.person }}</small>{% endif %}</td>
+      <td role="cell" data-label="Status"><span class="badge">{{ status(c.status) }}</span></td>
+      <td role="cell" data-label="Nächster Schritt">{{ c.next_step or 'Noch offen' }}</td>
+      <td role="cell" data-label="Wiedervorlage" class="nowrap">{{ c.next_date[8:10] ~ '.' ~ c.next_date[5:7] ~ '.' ~ c.next_date[:4] if c.next_date else 'Nicht geplant' }}</td>
+    </tr>
+    {% else %}<tr><td colspan="4" class="empty">{% if q %}Keine Treffer für „{{ q }}“. Versuche einen anderen Namen.{% else %}Noch keine Kontakte. Lege oben deinen ersten Kontakt an.{% endif %}</td></tr>{% endfor %}
+    </tbody>
+  </table>
+</section>
+{% endblock %}

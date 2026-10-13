@@ -177,3 +177,35 @@ hr { border: 0; border-top: 1px solid var(--line); margin: 24px 0; }
 @media (prefers-reduced-motion: no-preference) {
   a, button { transition: background-color .15s, border-color .15s, color .15s; }
 }
+
+/* Task-focused review and mobile contact list. */
+.review-search { display: flex; align-items: end; justify-content: space-between; gap: 20px; max-width: 900px; margin: -4px 0 24px; }
+.review-search label { flex: 1; max-width: 460px; margin: 0; }
+.review-search p { font-size: 13px; padding-bottom: 12px; margin: 0; }
+.context-details { border: 1px solid var(--line); border-radius: 8px; padding: 0 16px; background: #1c251b; }
+.context-details[open] { padding-bottom: 16px; }
+.context-details > summary { font-size: 13px; min-height: 44px; }
+.context-details[open] > summary { margin-bottom: 8px; }
+.context-details p, .context-details li { font-size: 14px; }
+.supporting-context { color: var(--muted); }
+.supporting-context > summary { font-weight: 500; }
+.view-switch { display: flex; flex-wrap: wrap; gap: 8px; margin: 20px 0 24px; }
+.view-switch a { display: block; border: 1px solid var(--line); padding: 10px 14px; border-radius: 7px; font-size: 13px; color: var(--muted); }
+.view-switch a[aria-current] { background: #2a3824; color: var(--green); border-color: #849969; }
+.add-contact > summary { color: var(--green); }
+.result-count { font-size: 13px; margin-bottom: 12px; }
+@media (max-width: 760px) {
+  .review-search { display: block; }
+  .review-search p { padding: 8px 0 0; }
+  .contact-list { border: 0; padding: 0; background: none; overflow: visible; }
+  .contacts-table { display: block; min-width: 0; }
+  .contacts-table caption { display: block; }
+  .contacts-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .contacts-table tbody { display: block; }
+  .contacts-table tbody tr { display: block; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 12px; }
+  .contacts-table td { display: block; padding: 8px 0; border: 0; white-space: normal; }
+  .contacts-table td[data-label]::before { content: attr(data-label); display: block; color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+  .contacts-table .contact-name { padding-top: 0; font-size: 17px; font-weight: 600; }
+  .contacts-table .contact-name small { font-weight: 400; }
+  .contacts-table td:last-child { padding-bottom: 0; }
+}

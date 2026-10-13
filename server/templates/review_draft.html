@@ -1,0 +1,77 @@
+<article class="card review-card" id="draft-{{ d.id }}" data-review-group="{{ 'quality' if d.quality is defined and not d.quality.allowed else 'drafts' if d.status=='draft' else 'approved' if d.status=='approved' else 'archive' }}" data-review-search="{{ d.organization }} {{ d.subject }}">
+<p class="eyebrow">{{ status(d.status) }} · Version {{ d.version }}</p>
+<h2>
+<a href="/contacts/{{ d.contact_id }}">{{ d.organization }}</a>
+</h2>{% if d.quality is defined and d.opportunity_id %}<details class="context-details" {% if not d.quality.allowed %}open{% endif %}>
+<summary>{{ {'good':'Gute Passung','watch':'Vorerst beobachten','poor':'Kein sinnvoller Startpunkt','unassessed':'Passung noch nicht geprüft'}.get(d.quality.tier,'Passung') }}{% if d.quality.tier!='unassessed' %} · {{ d.quality.score }}/100{% endif %}</summary>
+<p>{{ d.quality.reason }}</p>{% if d.quality.allowed and d.quality.startpoint %}<p>
+<strong>Gesprächseinstieg:</strong> {{ d.quality.startpoint }}</p>{% endif %}
+{% if not d.quality.allowed %}<p>Vorerst nicht anschreiben. Erst ein neuer, belegter Anlass rechtfertigt eine Anfrage.</p>{% endif %}<small>KI-Einschätzung, keine Erfolgswahrscheinlichkeit. Direkter Bezug, Zuständigkeit und Gesprächseinstieg zählen.</small>
+</details>{% endif %}
+{% if d.editorial is defined and d.editorial.status %}<details class="context-details editorial-review" {% if d.editorial.unresolved or not d.editorial.current or d.editorial.candidate %}open{% endif %}>
+<summary>{% if not d.editorial.current %}Textprüfung nicht mehr aktuell{% elif d.editorial.status=='ready' %}Textprüfung abgeschlossen{% elif d.editorial.status=='no_fit' %}Gesprächseinstieg fehlt{% elif d.editorial.status=='english' %}Englischer Entwurf{% else %}Text braucht Überarbeitung{% endif %}</summary>{% if not d.editorial.current %}<p>Der Entwurf wurde seit der Prüfung geändert. Bitte die aktuelle Version prüfen.</p>{% else %}{% if d.editorial.candidate %}<p>Die Prüfung bezieht sich auf die folgende Überarbeitung. Dein bisheriger Text wurde noch nicht ersetzt.</p>
+<details>
+<summary>Geprüfte Überarbeitung ansehen</summary>
+<h3>{{ d.editorial.candidate.subject }}</h3>
+<p class="prose">{{ d.editorial.candidate.body }}</p>
+</details>{% endif %}
+{% if d.editorial.summary %}<p>{{ d.editorial.summary }}</p>{% endif %}
+{% if d.editorial.issues %}<ul>{% for issue in d.editorial.issues %}<li>{% if issue.passage %}<q>{{ issue.passage }}</q> – {% endif %}{{ issue.instruction }}</li>{% endfor %}</ul>{% endif %}{% endif %}
+{% if d.editorial.unresolved %}<p>Bitte unter „Entwurf bearbeiten“ überarbeiten und anschließend selbst prüfen.</p>{% elif d.editorial.status=='ready' %}<small>Auf Inhalt und Sprache geprüft. Deine Freigabe ist weiterhin erforderlich.</small>{% endif %}</details>{% endif %}
+{% if d.status=='approved' %}{% if (d.quality is not defined or d.quality.allowed) and (d.editorial is not defined or not d.editorial.unresolved) %}{% include 'delivery_controls.html' %}{% else %}<p class="notice error">Versand gesperrt. Bitte zuerst die offenen Prüfpunkte klären.</p>{% endif %}{% endif %}
+{% if assisted_workflow is defined %}<p>
+<strong>Empfänger:</strong> {{ d.email or 'Noch offen – unten ergänzen' }}</p>{% endif %}
+{% if reply_messages is defined %}{% set previous = reply_messages.get(d.reply_message_id) %}<div class="message-context">{% if previous %}<strong>Antwort im bisherigen Verlauf</strong>
+<p>{{ previous.subject }}</p>
+<p>
+<a href="/contacts/{{ d.contact_id }}#message-{{ previous.id }}">Bezugsnachricht ansehen →</a>
+</p>{% elif d.reply_message_id %}<strong>Antwortbezug nicht verfügbar</strong>
+<p>Bitte unter „Entwurf bearbeiten“ eine Unterhaltung auswählen.</p>{% else %}<small>Neue Unterhaltung</small>{% endif %}</div>{% endif %}<div class="message-preview">
+<h3>{{ d.subject }}</h3>
+<p class="prose">{{ d.body }}</p>
+</div>
+<details class="supporting-context">
+<summary>Hintergrund & Quellen</summary>
+<h3>Bisheriger Stand</h3>
+<p class="prose">{{ d.notes }}</p>
+<p>{{ d.next_step }}</p>{% if d.email_source %}<p class="muted">Adressquelle: {{ d.email_source }}</p>{% endif %}{% if d.rationale %}<h3>Warum dieser Vorschlag?</h3>
+<p>{{ d.rationale }}</p>
+<small>KI-Entwurf · Aussagen und Ton bitte prüfen.</small>{% endif %}</details>
+<p class="muted">{{ d.framing }}{% if d.campaign %} · {{ d.campaign }}{% endif %}</p>{% if d.status=='approved' %}<details>
+<summary>Freigabe ändern oder zurückstellen</summary>{% endif %}<form method="post" action="/drafts/{{ d.id }}/review">
+<input type="hidden" name="csrf" value="{{ csrf }}">
+<input type="hidden" name="version" value="{{ d.version }}">{% if assisted_workflow is defined %}<label>Empfänger für diesen Entwurf<input type="email" name="recipient" value="{{ d.email }}" maxlength="254">
+</label>{% if d.permission=='unknown' %}<label class="check">
+<input type="checkbox" name="contact_review" value="confirmed"> Kontaktaufnahme mit diesem Empfänger im Rahmen dieser Nachricht bestätigen</label>{% elif d.permission=='blocked' %}<p class="notice error">Kontakt gesperrt. Keine Freigabe möglich.</p>{% endif %}<details>
+<summary>Notiz & Wiedervorlage (optional)</summary>
+<label>Bei „Später“ wieder vorlegen am<input type="date" name="deferred_until" value="{{ d.deferred_until }}">
+</label>{% endif %}<label>Entscheidungsnotiz<input name="note" maxlength="1000" value="{{ d.review_note }}">
+</label>{% if assisted_workflow is defined %}</details>{% endif %}<div class="actions">
+<button name="action" value="approved" {% if d.permission=='blocked' or (d.quality is defined and not d.quality.allowed) or (d.editorial is defined and d.editorial.unresolved) %}disabled{% endif %}>Empfänger & Text freigeben</button>
+<button class="secondary" name="action" value="deferred">Später</button>
+<button class="danger" name="action" value="rejected">Ablehnen</button>
+</div>
+</form>{% if d.status=='approved' %}</details>{% endif %}<details>
+<summary>Entwurf bearbeiten</summary>
+<form method="post" action="/drafts">
+<input type="hidden" name="csrf" value="{{ csrf }}">
+<input type="hidden" name="contact_id" value="{{ d.contact_id }}">
+<input type="hidden" name="id" value="{{ d.id }}">{% if reply_choices is defined %}<label>Unterhaltung<select name="reply_message_id">
+<option value="" {% if not d.reply_message_id %}selected{% endif %}>Neue Unterhaltung</option>{% for m in reply_choices.get(d.contact_id, []) %}<option value="{{ m.id }}" {% if d.reply_message_id==m.id %}selected{% endif %}>{{ m.occurred_at[:10] }} · {{ m.subject }}</option>{% endfor %}</select>
+</label>
+<p class="muted">Bei einer Antwort wird beim Speichern der Betreff der bisherigen Unterhaltung übernommen. Für einen eigenen Betreff „Neue Unterhaltung“ wählen.</p>{% else %}<input type="hidden" name="reply_message_id" value="{{ d.reply_message_id or 0 }}">{% endif %}<input type="hidden" name="version" value="{{ d.version }}">
+<label>Betreff<input name="subject" value="{{ d.subject }}" required maxlength="200">
+</label>
+<label for="draft-body-{{ d.id }}">Nachricht</label>
+<textarea id="draft-body-{{ d.id }}" class="message" name="body" required maxlength="20000">{{ d.body }}</textarea>
+<details>
+<summary>Kampagnendetails (optional)</summary>
+<label>Kommunikationswinkel<input name="framing" value="{{ d.framing }}" maxlength="100">
+</label>
+<label>Kampagnenkennung<input name="campaign" value="{{ d.campaign }}" maxlength="100">
+</label>
+</details>
+<button>Ändern & erneut prüfen</button>
+</form>
+</details>
+</article>
