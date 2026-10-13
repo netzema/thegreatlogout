@@ -27,9 +27,9 @@ LABELS = {
     "de": {
         "tagline": "Gemeinsam raus aus süchtig machenden Feeds",
         "greeting": "Hallo",
-        "signoff": "Bis bald außerhalb des Feeds,",
+        "signoff": "Viele Grüße,",
         "receiving": "Du bekommst diese E-Mail, weil du dich für den Logout-Guide angemeldet hast.",
-        "unsubscribe": "Abmelden",
+        "unsubscribe": "Vom Logout-Guide abmelden",
         "open_generator": "Post im Generator anpassen",
         "open_in_generator": "Diesen Post anpassen",
         "post_option": "Vorschlag",
@@ -37,8 +37,8 @@ LABELS = {
         "square_svg": "Quadrat herunterladen",
         "vertical_svg": "Hochformat herunterladen",
         "reflections": "Drei Fragen für dich",
-        "feedback_title": "Wie ist es dir ergangen?",
-        "feedback": "Wenn du magst, antworte einfach auf diese E-Mail und erzähl uns davon.",
+        "feedback_title": "Wie geht es dir mit dem Ausstieg?",
+        "feedback": "Wenn du magst, antworte auf diese E-Mail. Uns interessiert, was sich verändert hat, was fehlt und was schwierig bleibt.",
     },
 }
 

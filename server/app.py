@@ -213,7 +213,7 @@ def unsubscribe(token: Annotated[str, Query(min_length=20, max_length=200)]) -> 
     language = subscriber["language"] if subscriber else "en"
     if language == "de":
         title = "Du bist abgemeldet."
-        copy = "Du erhältst keine weiteren E-Mails aus dem Logout-Guide."
+        copy = "Du erhältst keine weiteren E-Mails zum Logout-Guide."
         back = "Zur Website"
     else:
         title = "You are unsubscribed."
@@ -243,7 +243,7 @@ def post_svg(
         f'<tspan x="50%" y="{start_y + index * line_height}">{html.escape(line)}</tspan>'
         for index, line in enumerate(lines)
     )
-    tagline = "Ein gemeinsamer Social-Media-Ausstieg" if lang.startswith("de") else "A collective social media exit"
+    tagline = "Gemeinsam raus aus Social Media" if lang.startswith("de") else "A collective social media exit"
     svg = f"""<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="{height}" viewBox="0 0 1080 {height}"><rect width="100%" height="100%" fill="#070807"/><defs><pattern id="grid" width="120" height="120" patternUnits="userSpaceOnUse"><path d="M 120 0 L 0 0 0 120" fill="none" stroke="#202320" stroke-width="2"/></pattern></defs><rect width="100%" height="100%" fill="url(#grid)"/><text text-anchor="middle" font-family="Arial, sans-serif" font-size="{font_size}" font-weight="800" fill="{fill}">{tspans}</text><text x="108" y="{height - 156}" font-family="Arial, sans-serif" font-size="28" font-weight="800" fill="#f4f4ef">The Great Logout</text><text x="108" y="{height - 124}" font-family="Arial, sans-serif" font-size="23" fill="#a4aaa1">{html.escape(tagline)}</text><text x="972" y="{height - 124}" text-anchor="end" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#B6FF3B">thegreatlogout.org</text></svg>"""
     filename = "great-logout-vertical.svg" if vertical else "great-logout-square.svg"
     return Response(

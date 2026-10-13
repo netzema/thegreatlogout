@@ -166,8 +166,14 @@ def ensure_schema(path=None):
                 ("deferred_until", "TEXT NOT NULL DEFAULT ''"),
                 ("approved_recipient", "TEXT NOT NULL DEFAULT ''"),
                 ("original_body", "TEXT NOT NULL DEFAULT ''"),
+                ("editorial_status", "TEXT NOT NULL DEFAULT ''"),
+                ("editorial_report", "TEXT NOT NULL DEFAULT '{}'"),
+                ("editorial_version", "INTEGER NOT NULL DEFAULT 0"),
             ],
             "opportunities": [
+                ("quality_tier", "TEXT NOT NULL DEFAULT 'unassessed'"),
+                ("quality_json", "TEXT NOT NULL DEFAULT '{}'"),
+                ("quality_checked_at", "TEXT NOT NULL DEFAULT ''"),
                 ("preparation_state", "TEXT NOT NULL DEFAULT ''"),
                 ("preparation_note", "TEXT NOT NULL DEFAULT ''"),
                 ("preparation_draft_id", "INTEGER"),
@@ -200,4 +206,12 @@ def ensure_schema(path=None):
             output_tokens INTEGER NOT NULL DEFAULT 0);
         CREATE TABLE IF NOT EXISTS contact_address_issues (
             contact_id INTEGER PRIMARY KEY REFERENCES contacts(id), reason TEXT NOT NULL);
+        CREATE TABLE IF NOT EXISTS draft_revisions (
+            id INTEGER PRIMARY KEY, draft_id INTEGER NOT NULL REFERENCES drafts(id),
+            version INTEGER NOT NULL, subject TEXT NOT NULL, body TEXT NOT NULL,
+            rationale TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL,
+            UNIQUE(draft_id,version));
         """)
+        from server import draft_editor
+
+        draft_editor.ensure_schema(db)

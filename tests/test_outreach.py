@@ -52,6 +52,23 @@ def proposal(**changes):
     return result
 
 
+def draft_response(purpose, *args, candidate=None, **kwargs):
+    """Supply distinct synthetic drafting and English editorial responses."""
+    if purpose == "outreach_text_review":
+        return dict(
+            verdict="ready",
+            summary="The synthetic draft is ready for human review.",
+            natural_english=True,
+            personal_voice=True,
+            grounded_connection=True,
+            credible_ask=True,
+            factually_supported=True,
+            issues=[],
+        ), set()
+    assert purpose in {"outreach_draft", "outreach_revision"}
+    return candidate if candidate is not None else proposal(), set()
+
+
 def test_inherit_assigned_addresses_idempotent_preserves_block_and_manual_choice(
     client,
 ):
@@ -94,9 +111,12 @@ def test_complete_generated_review_export_sync_reply_flow(client, monkeypatch):
         message(db, direction="inbound", message_id="<prior@example.test>")
         message(db)
         contact_history.inherit_addresses(db)
-    monkeypatch.setattr(ai_client, "request", lambda *a, **kw: (proposal(), set()))
+    monkeypatch.setattr(ai_client, "request", draft_response)
     assert outreach.generate_draft(1) == 1
     assert outreach.generate_draft(1) == 0
+    with admin_db.database() as db:
+        draft = db.execute("SELECT status,editorial_status FROM drafts").fetchone()
+        assert tuple(draft) == ("draft", "ready")
     review = client.get("/review")
     assert (
         "peer@example.test" in review.text and "Warum dieser Vorschlag?" in review.text
@@ -236,10 +256,11 @@ def test_draft_concurrency_rechecks_history_and_permission(client, monkeypatch):
     with admin_db.database() as db:
         message(db)
 
-    def changed(*a, **kw):
-        with admin_db.database() as db:
-            db.execute("UPDATE contacts SET permission='blocked' WHERE id=1")
-        return proposal(), set()
+    def changed(purpose, *a, **kw):
+        if purpose == "outreach_draft":
+            with admin_db.database() as db:
+                db.execute("UPDATE contacts SET permission='blocked' WHERE id=1")
+        return draft_response(purpose, *a, **kw)
 
     monkeypatch.setattr(ai_client, "request", changed)
     with pytest.raises(ValueError):
@@ -257,7 +278,11 @@ def test_draft_concurrency_rechecks_history_and_permission(client, monkeypatch):
     ],
 )
 def test_no_unsafe_or_unnecessary_drafts(client, monkeypatch, value):
-    monkeypatch.setattr(ai_client, "request", lambda *a, **kw: (value, set()))
+    monkeypatch.setattr(
+        ai_client,
+        "request",
+        lambda purpose, *a, **kw: draft_response(purpose, *a, candidate=value, **kw),
+    )
     try:
         assert outreach.generate_draft(1) == 0
     except ValueError:
@@ -277,8 +302,10 @@ def test_draft_minimizes_mail_data_and_has_no_tools(client, monkeypatch):
         raw = json.dumps(data)
         assert "private@example.test" not in raw and "Private signature" not in raw
         assert kwargs.get("search") is not True
+        if purpose == "outreach_text_review":
+            instructions = data["writing_instructions"]
         assert "untrusted" in instructions
-        return proposal(), set()
+        return draft_response(purpose, instructions, data, **kwargs)
 
     monkeypatch.setattr(ai_client, "request", inspect)
     assert outreach.generate_draft(1) == 1
@@ -309,6 +336,10 @@ def test_radar_requires_cited_recent_source_and_deduplicates(client, monkeypatch
         cta="Discuss results",
         framing="research",
         fit=3,
+        contact_fit=3,
+        opening_fit=3,
+        startpoint="Discuss the concrete exit campaign",
+        source_quote="Research on a visible platform exit campaign",
     )
     bad = [
         dict(good, source_url="https://invented.example.org/article"),
@@ -324,7 +355,7 @@ def test_radar_requires_cited_recent_source_and_deduplicates(client, monkeypatch
 
     def respond(purpose, *a, **kw):
         return (
-            ("Research", [source])
+            ("Research on a visible platform exit campaign", [source])
             if purpose != "discovery_extract"
             else ({"opportunities": [good, *bad]}, set())
         )
@@ -353,7 +384,7 @@ def test_radar_links_exclude_private_or_active_urls(url):
 
 def test_queued_worker_idempotent_and_errors_do_not_leak(client, monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "test-only")
-    monkeypatch.setattr(ai_client, "request", lambda *a, **kw: (proposal(), set()))
+    monkeypatch.setattr(ai_client, "request", draft_response)
     with admin_db.database() as db:
         assert outreach.enqueue(db, "draft", 1) == 1
         assert outreach.enqueue(db, "draft", 1) == 0
@@ -408,7 +439,7 @@ def test_followup_references_sent_mail_and_manual_log_sync_is_idempotent(
     with admin_db.database() as db:
         message(db, message_id="<old-sent@example.test>")
         contact_history.inherit_addresses(db)
-    monkeypatch.setattr(ai_client, "request", lambda *a, **kw: (proposal(), set()))
+    monkeypatch.setattr(ai_client, "request", draft_response)
     outreach.generate_draft(1)
     post(client, "/drafts/1/review", token, version=1, action="approved")
     exported = post(client, "/drafts/1/export", token, version=2)

@@ -2,9 +2,9 @@ import json
 
 import pytest
 
-from server import admin_db, ai_client, outreach, writing_style
+from server import admin_db, ai_client, draft_editor, outreach, writing_style
 from test_admin import login, post
-from test_outreach import message, proposal
+from test_outreach import draft_response, message, proposal
 
 
 def test_note_edit_persists_escapes_and_rejects_stale_or_invalid_updates(client):
@@ -83,13 +83,28 @@ def test_note_and_person_reach_model_with_inbound_signature_but_no_addresses(
         )
 
     def inspect(purpose, instructions, data, **kwargs):
+        if purpose == "outreach_text_review":
+            instructions = data["writing_instructions"]
+            data = data["context"]
         assert "Kurz und persönlich schreiben." in instructions
+        assert draft_editor.GERMAN_PROMPT in instructions
         assert data["person"] == "Alex Beispiel"
         assert "Alex Beispiel" in data["history"][-1]["text"]
         assert all(
             x not in json.dumps(data)
             for x in ("alex@example.test", "+43 123 456789", "PRIVATE QUOTE")
         )
+        if purpose == "outreach_text_review":
+            return dict(
+                verdict="ready",
+                summary="Geprüft",
+                natural_german=True,
+                personal_voice=True,
+                grounded_connection=True,
+                credible_ask=True,
+                factually_supported=True,
+                issues=[],
+            ), set()
         return proposal(
             body="Hallo Alex,\n\nDanke für „Feedback“ — das freut mich; Alex’s Idee hilft.\nDaniel"
         ), set()
@@ -104,10 +119,11 @@ def test_note_and_person_reach_model_with_inbound_signature_but_no_addresses(
 
 
 def test_note_changed_during_generation_discards_stale_draft(client, monkeypatch):
-    def changed(*args, **kwargs):
-        with admin_db.database() as db:
-            writing_style.save(db, "Neue Schreibnotiz", 0)
-        return proposal(), set()
+    def changed(purpose, *args, **kwargs):
+        if purpose == "outreach_draft":
+            with admin_db.database() as db:
+                writing_style.save(db, "Neue Schreibnotiz", 0)
+        return draft_response(purpose, *args, **kwargs)
 
     monkeypatch.setattr(ai_client, "request", changed)
     with pytest.raises(ValueError, match="während der Erstellung"):
@@ -121,3 +137,34 @@ def test_current_sol_default_and_explicit_override(monkeypatch):
     assert ai_client.model() == "gpt-6.1-sol"
     monkeypatch.setenv("OUTREACH_AI_MODEL", "explicit-test-model")
     assert ai_client.model() == "explicit-test-model"
+
+
+@pytest.mark.parametrize(
+    "opening",
+    [
+        "Maria hat geantwortet.",
+        "Datenschutz ist wichtig.",
+        "Lesen hilft.",
+        "I remember our exchange.",
+        "Sie hatten gefragt.",
+        "Ihr Vorschlag passt.",
+        "Ihre Studie passt.",
+        "Ihnen danke ich.",
+        "DSA rules apply.",
+        "MOMENT berichtet.",
+        "OpenAI published a paper.",
+        "Thanksgiving is approaching.",
+    ],
+)
+def test_required_capitalization_survives_greeting_normalization(opening):
+    body = "Hallo Alex,\n\n" + opening
+    assert writing_style.normalize(body, greeting=True) == body
+
+
+def test_regular_opening_word_is_lowercased_as_whole_word_only():
+    assert (
+        writing_style.normalize(
+            "Dear Alex,\n\nThank you. Daniel replied.", greeting=True
+        )
+        == "Dear Alex,\n\nthank you. Daniel replied."
+    )

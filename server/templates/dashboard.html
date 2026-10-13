@@ -1,1 +1,25 @@
-{% extends 'base.html' %}{% block content %}<p class="eyebrow">Überblick</p><h1>Was braucht deine Entscheidung?</h1><p class="lead">Gute Anlässe erkennen, Gespräche weiterführen und bewusst entscheiden.</p><div class="grid">{% for value,label,link in [(counts.reviews,'Entwürfe & Freigaben','/review'),(counts.contacts,'Kontakte','/contacts'),(counts.answers,'Erfasste Antworten','/review'),(counts.unmatched,'Offene Zuordnungen','/review')] %}<a class="card kpi" href="{{ link }}"><strong>{{ value }}</strong><span>{{ label }}</span></a>{% endfor %}</div><section class="card"><h2>Wiedervorlagen</h2><p class="muted">Ein fälliger Termin ist ein Anlass zur Prüfung. Er löst keinen Versand aus.</p>{% for c in due %}<p><a href="/contacts/{{ c.id }}">{{ c.organization }}</a> · {{ c.next_date }}<br>{{ c.next_step }}</p>{% else %}<p class="empty">Keine fälligen Wiedervorlagen. Lege nächste Schritte direkt beim Kontakt fest.</p>{% endfor %}</section><section class="card"><h2>Betrieb</h2>{% for job in jobs %}<p><strong>{{ job.name }}</strong> · {{ job.status }} · {{ job.finished_at }} · {{ job.processed }} verarbeitet</p>{% else %}<p class="muted">Noch kein Hintergrundlauf protokolliert.</p>{% endfor %}<p>Outreach-Nachrichten werden vorbereitet und geprüft. Der automatische Versand ist deaktiviert.</p></section>{% endblock %}
+{% extends 'base.html' %}
+{% block content %}
+<p class="eyebrow">Dein Arbeitsbereich</p>
+<div class="page-heading"><div><h1>Alles im Blick.</h1><p class="lead">Hier geht es mit deinen Kontakten und Nachrichten weiter.</p></div><a class="button" href="/review">Nachrichten prüfen <span aria-hidden="true">→</span></a></div>
+<div class="grid kpi-grid">
+  {% for value,label,link in [(counts.reviews,'Entwürfe & Freigaben','/review'),(counts.answers,'Antworten prüfen','/review#replies'),(counts.unmatched,'Kontakte zuordnen','/review#unmatched'),(counts.contacts,'Kontakte insgesamt','/contacts')] %}
+  <a class="card kpi" href="{{ link }}"><strong>{{ value }}</strong><span>{{ label }}</span></a>
+  {% endfor %}
+</div>
+<div class="split">
+  <section class="card"><div class="section-heading"><h2>Als Nächstes</h2><span class="badge">{{ counts.reviews + counts.answers + counts.unmatched }} offen</span></div>
+    <a class="task-row" href="/review"><span><strong>Entwürfe prüfen & freigeben</strong><small>{{ counts.reviews }} Nachrichten warten auf deine Entscheidung.</small></span><span aria-hidden="true">→</span></a>
+    <a class="task-row" href="/opportunities"><span><strong>Passende Anlässe entdecken</strong><small>Neue Gesprächsanlässe aus der Recherche.</small></span><span aria-hidden="true">→</span></a>
+    <a class="task-row" href="/contacts"><span><strong>Gespräche weiterführen</strong><small>Verlauf ansehen und nächste Schritte festhalten.</small></span><span aria-hidden="true">→</span></a>
+  </section>
+  <section class="card"><div class="section-heading"><h2>Fällige Wiedervorlagen</h2><span class="badge">{{ due|length }}</span></div>
+    {% for c in due %}<a class="task-row" href="/contacts/{{ c.id }}"><span><strong>{{ c.organization }}</strong><small>{{ c.next_step or 'Nächsten Schritt festlegen' }}</small></span><span class="row-end">{{ c.next_date[8:10] }}.{{ c.next_date[5:7] }}.{{ c.next_date[:4] }}<br><span aria-hidden="true">→</span></span></a>
+    {% else %}<div class="empty"><p>Für heute ist nichts fällig.</p><small>Neue Wiedervorlagen legst du beim Kontakt fest.</small></div>{% endfor %}
+  </section>
+</div>
+<details class="card"><summary>Hintergrundläufe & Betrieb</summary>
+  {% for job in jobs %}<p><strong>{{ job.name }}</strong> · {{ job.status }}<br><small>{{ job.finished_at }} · {{ job.processed }} verarbeitet</small></p>{% else %}<p class="muted">Noch kein Hintergrundlauf protokolliert.</p>{% endfor %}
+  <p class="muted">Outreach-Nachrichten werden nur nach deiner Freigabe und einem ausdrücklichen Versandauftrag gesendet.</p>
+</details>
+{% endblock %}

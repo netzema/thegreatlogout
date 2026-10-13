@@ -4,7 +4,7 @@ import pytest
 
 from server import admin_db, ai_client, contact_research, outreach, preparation
 from test_admin import login, post
-from test_outreach import proposal
+from test_outreach import draft_response, proposal
 
 
 def occasion(db, cid=1, title="New public campaign"):
@@ -28,7 +28,7 @@ def test_every_opportunity_including_same_contact_and_low_score(client, monkeypa
             "SELECT * FROM automation_jobs WHERE kind='prepare'"
         ).fetchall()
         assert len(jobs) == 5
-    monkeypatch.setattr(ai_client, "request", lambda *a, **kw: (proposal(), set()))
+    monkeypatch.setattr(ai_client, "request", draft_response)
     for oid in ids:
         assert preparation.run(1, oid) == 1
         assert preparation.run(1, oid) == 0
@@ -68,7 +68,7 @@ def test_button_feedback_dedup_and_ready_review_link(client, monkeypatch):
     assert "bereits vorhanden" in second.text
     with admin_db.database() as db:
         assert db.execute("SELECT count(*) FROM automation_jobs").fetchone()[0] == 1
-    monkeypatch.setattr(ai_client, "request", lambda *a, **kw: (proposal(), set()))
+    monkeypatch.setattr(ai_client, "request", draft_response)
     preparation.run(1, oid)
     assert "Zur Freigabe" in client.get("/opportunities").text
     response = client.post(
@@ -92,7 +92,7 @@ def test_missing_address_preserves_draft_and_retry_does_not_duplicate(
         oid = occasion(db)
         db.execute("UPDATE contacts SET email='' WHERE id=1")
     monkeypatch.setattr(contact_research, "enrich", lambda cid: False)
-    monkeypatch.setattr(ai_client, "request", lambda *a, **kw: (proposal(), set()))
+    monkeypatch.setattr(ai_client, "request", draft_response)
     preparation.run(1, oid)
     preparation.run(1, oid)
     with admin_db.database() as db:
@@ -159,7 +159,13 @@ def test_decline_and_block_are_visible_without_drafts(client, monkeypatch):
         should_draft=False,
         rationale="Die konkrete Quelle ist nicht ausreichend belegt.",
     )
-    monkeypatch.setattr(ai_client, "request", lambda *a, **kw: (response, set()))
+    monkeypatch.setattr(
+        ai_client,
+        "request",
+        lambda purpose, *a, **kw: draft_response(
+            purpose, *a, candidate=response, **kw
+        ),
+    )
     preparation.run(1, oid)
     with admin_db.database() as db:
         o = db.execute("SELECT * FROM opportunities").fetchone()
@@ -398,15 +404,14 @@ def test_interrupted_preparation_surfaces_failure(client, monkeypatch):
         )
 
 
-def test_progress_script_is_allowed_only_on_opportunities(client):
+def test_local_scripts_are_limited_to_interactive_admin_pages(client):
     login(client)
-    assert (
-        "script-src 'self'"
-        in client.get("/opportunities").headers["content-security-policy"]
-    )
-    assert (
-        "script-src 'none'" in client.get("/review").headers["content-security-policy"]
-    )
+    for path in ["/opportunities", "/review"]:
+        policy = client.get(path).headers["content-security-policy"]
+        assert "script-src 'self'" in policy
+        assert "unsafe-inline" not in policy
+    for path in ["/", "/contacts", "/contacts/1", "/settings", "/analytics", "/guide"]:
+        assert "script-src 'none'" in client.get(path).headers["content-security-policy"]
 
 
 def test_approval_shows_next_step_and_tracks_edit_and_deferral(client, monkeypatch):
@@ -416,7 +421,7 @@ def test_approval_shows_next_step_and_tracks_edit_and_deferral(client, monkeypat
         db.execute(
             "UPDATE contacts SET email='review@example.test',permission='existing' WHERE id=1"
         )
-    monkeypatch.setattr(ai_client, "request", lambda *a, **kw: (proposal(), set()))
+    monkeypatch.setattr(ai_client, "request", draft_response)
     preparation.run(1, oid)
     response = post(client, "/drafts/1/review", token, action="approved", version=1)
     assert response.status_code == 200

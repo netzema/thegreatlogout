@@ -1,3 +1,42 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>{% block title %}Kampagnenverwaltung{% endblock %} · The Great Logout</title><link rel="stylesheet" href="/static/admin.css"></head><body>
-<header><a class="brand" href="/"><span>⎋</span> The Great Logout</a>{% if user %}<nav aria-label="Hauptnavigation"><a href="/">Übersicht</a><a href="/review">Review</a><a href="/contacts">Kontakte</a><a href="/opportunities">Anlässe</a>{% if assisted_workflow is defined %}<a href="/outreach">Outreach</a>{% endif %}<a href="/analytics">Webanalyse</a><a href="/guide">Guide</a><a href="/settings">Einstellungen</a></nav><form action="/logout" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="secondary">Abmelden</button></form>{% endif %}</header>
-<main>{% set notice = request.query_params.get('notice') %}{% if notice %}<p class="notice" role="status">{{ {'queued':'Vorbereitung eingeplant. Der Hintergrundlauf startet in Kürze. Der Fortschritt wird bei den Anlässen angezeigt.', 'existing':'Dieser Auftrag ist bereits vorhanden. Den aktuellen Stand findest du unten oder im Review.', 'unavailable':'Vorbereitung derzeit nicht möglich: Der Anlass ist nicht mehr aktuell oder der Kontakt ist pausiert, gesperrt oder noch ungeprüft.'}.get(notice,'') }}</p>{% endif %}{% block content %}{% endblock %}<footer>The Great Logout · Eigenständige Kampagnenverwaltung</footer></main></body></html>
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  {% set current = request.url.path %}
+  {% set titles = {'/':'Übersicht','/review':'Nachrichten prüfen','/contacts':'Kontakte','/opportunities':'Anlässe','/outreach':'Recherche','/analytics':'Webanalyse','/guide':'E-Mail-Guide','/settings':'Einstellungen'} %}
+  <title>{% block title %}{{ titles.get(current, 'Kontakt' if current.startswith('/contacts/') else 'Kampagnenverwaltung') }}{% endblock %} · The Great Logout</title>
+  <link rel="icon" href="/static/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+  <link rel="stylesheet" href="/static/admin.css?v=3">
+</head>
+<body class="{{ 'admin-layout' if user else 'public-layout' }}">
+<a class="skip-link" href="#main">Zum Inhalt</a>
+<header class="sidebar">
+  <a class="brand" href="/"><span class="brand-mark" aria-hidden="true"><img src="/static/the-great-logout-mark.svg" alt="" width="34" height="34" decoding="async"></span><span>The Great Logout<small>Kampagnenverwaltung</small></span></a>
+  {% if user %}
+  {% set navigation %}<nav aria-label="Hauptnavigation">
+    {% for heading, links in [('Arbeitsbereich', [('/', 'Übersicht', 'overview'),('/review','Nachrichten prüfen','review'),('/contacts','Kontakte','contacts'),('/opportunities','Anlässe','opportunities'),('/outreach','Recherche','outreach')]), ('Kampagne', [('/analytics','Webanalyse','analytics'),('/guide','E-Mail-Guide','guide'),('/settings','Einstellungen','settings')])] %}
+    <div class="nav-group"><p class="nav-label">{{ heading }}</p>
+      {% for href, label, icon in links %}{% if href != '/outreach' or assisted_workflow is defined %}
+      <a href="{{ href }}" {% if current == href or (href == '/contacts' and current.startswith('/contacts/')) %}aria-current="page"{% endif %}>
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="{{ {'overview':'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z','review':'M4 4h16v16H4z M8 11l3 3 5-6','contacts':'M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2 M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M17 4a4 4 0 0 1 0 7 M22 21v-2a4 4 0 0 0-3-4','opportunities':'M12 3v3 M12 18v3 M3 12h3 M18 12h3 M6 6l2 2 M16 16l2 2 M6 18l2-2 M16 8l2-2 M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8','outreach':'M10 3a7 7 0 1 0 0 14 7 7 0 0 0 0-14 M15 15l6 6','analytics':'M4 3v17h17 M9 16v-5 M14 16V7 M19 16V4','guide':'M3 5h18v14H3z M3 5l9 7 9-7','settings':'M4 6h16 M4 12h16 M4 18h16 M8 3v6 M16 9v6 M10 15v6'}[icon] }}"/></svg>
+        {{ label }}
+      </a>{% endif %}{% endfor %}
+    </div>{% endfor %}
+  </nav>{% endset %}
+  <div class="desktop-navigation">{{ navigation }}</div>
+  <details class="mobile-navigation"><summary>{{ titles.get(current, 'Kontakte' if current.startswith('/contacts/') else 'Menü') }}<span class="muted">Menü</span></summary>{{ navigation }}</details>
+  <div class="sidebar-bottom"><a class="website-link" href="https://thegreatlogout.org/de/" target="_blank" rel="noopener noreferrer">Kampagnenseite <span aria-hidden="true">↗</span><span class="sr-only"> (neuer Tab)</span></a><form action="/logout" method="post"><input type="hidden" name="csrf" value="{{ csrf }}"><button class="secondary">Abmelden</button></form></div>
+  {% endif %}
+</header>
+<main id="main" tabindex="-1">
+  {% set notice = request.query_params.get('notice') %}
+  {% set notices = {'queued':'Vorbereitung eingeplant. Den Fortschritt findest du bei den Anlässen.', 'existing':'Dieser Auftrag ist bereits vorhanden. Den Stand findest du bei den Anlässen oder unter „Nachrichten prüfen“.', 'unavailable':'Vorbereitung nicht möglich. Bitte Anlass und Kontaktstatus prüfen.'} %}
+  {% if notice in notices %}<p class="notice" role="status">{{ notices[notice] }}</p>{% endif %}
+  {% block content %}{% endblock %}
+  <footer>The Great Logout <span aria-hidden="true">·</span> Bewusst in Verbindung bleiben.</footer>
+</main>
+</body>
+</html>

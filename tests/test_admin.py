@@ -696,3 +696,33 @@ def test_remove_matched_reply_invalidates_draft_approval(client):
         assert row["body"] == "Reviewed draft"
         assert db.execute("PRAGMA foreign_key_check").fetchall() == []
     assert post(client, "/drafts/1/export", token, version=2).status_code == 409
+
+
+def test_dashboard_counts_only_actionable_replies(client):
+    login(client)
+    with admin_db.database() as db:
+        for matched, automated, reviewed, direction in [
+            (1, 0, None, "inbound"),
+            (1, 0, admin_db.now(), "inbound"),
+            (1, 1, None, "inbound"),
+            (0, 0, None, "inbound"),
+            (1, 0, None, "outbound"),
+        ]:
+            db.execute(
+                "INSERT INTO messages(contact_id,direction,subject,body,occurred_at,"
+                "matched,automated,reviewed_at) VALUES (?,?,?,?,?,?,?,?)",
+                (
+                    1 if matched else None,
+                    direction,
+                    "Dashboard fixture",
+                    "Synthetic message",
+                    admin_db.now(),
+                    matched,
+                    automated,
+                    reviewed,
+                ),
+            )
+    response = client.get("/")
+    assert response.context["counts"]["answers"] == 1
+    assert response.context["counts"]["unmatched"] == 1
+    assert len(client.get("/review").context["replies"]) == 1

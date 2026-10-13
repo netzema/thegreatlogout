@@ -19,7 +19,15 @@ from fastapi.templating import Jinja2Templates
 from pwdlib import PasswordHash
 
 from server import admin_db as storage
-from server import analytics, outreach, writing_style, outreach_delivery, mail_threads
+from server import (
+    analytics,
+    outreach,
+    writing_style,
+    outreach_delivery,
+    mail_threads,
+    preparation,
+    opportunity_quality as quality,
+)
 from starlette.concurrency import run_in_threadpool
 from server.contact_history import inherit_addresses, valid_address
 
@@ -153,7 +161,9 @@ async def security(request, call_next):
     response.headers["X-Content-Type-Options"] = "nosniff"
     response.headers["X-Frame-Options"] = "DENY"
     response.headers["Referrer-Policy"] = "same-origin"
-    script_policy = "'self'" if request.url.path == "/opportunities" else "'none'"
+    script_policy = (
+        "'self'" if request.url.path in {"/opportunities", "/review"} else "'none'"
+    )
     response.headers["Content-Security-Policy"] = (
         f"default-src 'self'; script-src {script_policy}; style-src 'self'; "
         "img-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'"
@@ -278,7 +288,7 @@ def dashboard(request: Request):
             for key, query in {
                 "contacts": "SELECT count(*) FROM contacts",
                 "reviews": "SELECT count(*) FROM drafts WHERE status IN ('draft','approved')",
-                "answers": "SELECT count(*) FROM messages WHERE direction='inbound'",
+                "answers": "SELECT count(*) FROM messages WHERE direction='inbound' AND matched=1 AND automated=0 AND reviewed_at IS NULL",
                 "unmatched": "SELECT count(*) FROM messages WHERE matched=0",
             }.items()
         }
@@ -435,9 +445,17 @@ async def save_draft(request: Request):
         if previous:
             values = (mail_threads.subject(previous), *values[1:])
         if did:
+            db.execute(
+                """INSERT OR IGNORE INTO draft_revisions
+                (draft_id,version,subject,body,rationale,created_at)
+                SELECT id,version,subject,body,rationale,? FROM drafts
+                WHERE id=? AND contact_id=? AND version=? AND status!='sent'""",
+                (storage.now(), did, cid, integer(data, "version")),
+            )
             changed = db.execute(
                 """UPDATE drafts SET subject=?,body=?,framing=?,campaign=?,reply_message_id=?,updated_at=?,
-                status='draft',version=version+1,review_at=NULL,approved_recipient='' WHERE id=? AND contact_id=?
+                status='draft',version=version+1,review_at=NULL,approved_recipient='',
+                editorial_status='',editorial_report='{}',editorial_version=0 WHERE id=? AND contact_id=?
                 AND version=? AND status!='sent' """,
                 (*values, did, cid, integer(data, "version")),
             )
@@ -469,6 +487,34 @@ def review(request: Request):
             contacts.next_step,contacts.email,contacts.email_source FROM drafts JOIN contacts ON contacts.id=drafts.contact_id
             WHERE drafts.status!='sent' ORDER BY CASE drafts.status WHEN 'draft' THEN 0
             WHEN 'approved' THEN 1 ELSE 2 END, drafts.updated_at DESC""").fetchall()
+        assessments = {
+            o["id"]: quality.summary(o)
+            for o in db.execute("SELECT * FROM opportunities")
+        }
+        drafts = [
+            dict(
+                d,
+                editorial=preparation.editorial_summary(d),
+                quality=assessments.get(
+                    d["opportunity_id"],
+                    {
+                        "tier": "manual",
+                        "score": 0,
+                        "reason": "",
+                        "startpoint": "",
+                        "allowed": True,
+                    },
+                ),
+            )
+            for d in drafts
+        ]
+        drafts.sort(
+            key=lambda d: (
+                not d["quality"]["allowed"],
+                -(d["quality"]["score"] if d["opportunity_id"] else 0),
+                -d["id"],
+            )
+        )
         reply_choices = {
             cid: mail_threads.choices(db, cid)
             for cid in {d["contact_id"] for d in drafts}
@@ -530,6 +576,10 @@ async def decide(request: Request, draft_id: int):
         recipient = contact(db, row["contact_id"])
         approved_email = ""
         if action == "approved":
+            try:
+                quality.require_draft(db, row)
+            except ValueError as exc:
+                raise HTTPException(409, str(exc)) from exc
             outreach_delivery.assert_editable(db, contact_id=recipient["id"])
             approved_email = field(data, "recipient", 254).lower() or recipient["email"]
             if (
@@ -568,7 +618,9 @@ async def decide(request: Request, draft_id: int):
             (approved_email, defer_until if action == "deferred" else "", draft_id),
         )
         db.execute(
-            "UPDATE drafts SET status=?,review_note=?,review_at=?,updated_at=?,version=version+1 WHERE id=?",
+            """UPDATE drafts SET status=?,review_note=?,review_at=?,updated_at=?,
+            editorial_version=CASE WHEN editorial_version=version THEN version+1 ELSE editorial_version END,
+            version=version+1 WHERE id=?""",
             (action, note, storage.now(), storage.now(), draft_id),
         )
         db.execute(
@@ -650,6 +702,10 @@ async def export_draft(request: Request, draft_id: int):
             or row["version"] != integer(data, "version")
         ):
             raise HTTPException(409, "Aktuelle Freigabe erforderlich.")
+        try:
+            quality.require_draft(db, row)
+        except ValueError as exc:
+            raise HTTPException(409, str(exc)) from exc
         recipient = contact(db, row["contact_id"])
         if (
             recipient["permission"] not in {"allowed", "existing"}
@@ -817,20 +873,30 @@ async def reviewed_message(request: Request, message_id: int):
 
 
 @app.get("/opportunities", response_class=HTMLResponse)
-def opportunities(request: Request):
+def opportunities(request: Request, view: str = "recommended"):
     from server.preparation import refresh
 
     with storage.database() as db:
         refresh(db)
         rows = db.execute(
             "SELECT opportunities.*, contacts.organization FROM opportunities LEFT JOIN contacts "
-            "ON contacts.id=opportunities.contact_id ORDER BY opportunities.id DESC"
+            "ON contacts.id=opportunities.contact_id ORDER BY opportunities.score DESC,opportunities.id DESC"
         ).fetchall()
+        rows = [dict(o, quality=quality.summary(o)) for o in rows]
+        held_count = sum(
+            o["status"] == "open" and not o["quality"]["allowed"] for o in rows
+        )
+        rows = [o for o in rows if (not o["quality"]["allowed"]) == (view == "held")]
         recipients = db.execute(
             "SELECT id,organization FROM contacts ORDER BY organization"
         ).fetchall()
     return render(
-        request, "opportunities.html", opportunities=rows, contacts=recipients
+        request,
+        "opportunities.html",
+        opportunities=rows,
+        contacts=recipients,
+        held_count=held_count,
+        quality_view=view,
     )
 
 

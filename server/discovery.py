@@ -9,7 +9,7 @@ from urllib.parse import urlsplit
 from pydantic import BaseModel, ConfigDict, Field
 
 from server import admin_db as storage
-from server import ai_client, writing_style
+from server import ai_client, writing_style, opportunity_quality as quality
 
 LANES = (
     (
@@ -54,6 +54,10 @@ class DiscoveredOpportunity(EvidenceModel):
     cta: str = Field(min_length=1, max_length=500)
     framing: str = Field(min_length=1, max_length=100)
     fit: int = Field(ge=0, le=3)
+    contact_fit: int = Field(ge=0, le=3)
+    opening_fit: int = Field(ge=0, le=3)
+    startpoint: str = Field(max_length=700)
+    source_quote: str = Field(max_length=400)
 
 
 class DiscoveryResult(EvidenceModel):
@@ -161,7 +165,6 @@ def run():
         BOUNDARY,
         CAMPAIGN,
         digest,
-        learned_bonus,
         public_url,
         today,
     )
@@ -172,6 +175,7 @@ def run():
             "discovery_" + lane,
             BOUNDARY
             + CAMPAIGN
+            + quality.RULES
             + " Recherchiere breit und unabhängig von einem bestehenden Kontaktbestand. "
             "Entdecke neue Akteure und konkrete Möglichkeiten, die Kampagne bekannt zu machen. "
             "Suche im deutschsprachigen Raum UND international auf Deutsch und Englisch. "
@@ -199,6 +203,7 @@ def run():
         "discovery_extract",
         BOUNDARY
         + CAMPAIGN
+        + quality.RULES
         + " Extrahiere maximal acht unterschiedliche, relevante Anlässe aus den Recherchebelegen. "
         "Priorisiere Vielfalt bei Themen, Quellmedien und Akteuren. Höchstens zwei Funde pro Organisation. "
         "Leite für jeden Anlass einen konkreten öffentlichen Kontakt ab: Veranstalter, Initiative, "
@@ -219,7 +224,14 @@ def run():
         db.execute("BEGIN IMMEDIATE")
         for item in result.opportunities:
             source = public_url(item.source_url)
-            if source not in allowed or item.fit < 2 or not timely(item, today()):
+            if source not in allowed or item.fit < 3 or not timely(item, today()):
+                continue
+            assessment = quality.Assessment.model_validate(
+                {k: getattr(item, k) for k in quality.Assessment.model_fields}
+            )
+            evidence = "\n".join(r["findings"] for r in research)
+            tier, score, explanation = quality.grade(assessment, evidence)
+            if tier != "good":
                 continue
             for field in ("title", "reason", "cta", "framing"):
                 setattr(item, field, writing_style.normalize(getattr(item, field)))
@@ -234,22 +246,6 @@ def run():
                 "SELECT 1 FROM opportunities WHERE source_key=?", (key,)
             ).fetchone():
                 continue
-            age = (today() - date.fromisoformat(item.published_at)).days
-            novelty = (
-                10
-                if not db.execute(
-                    "SELECT 1 FROM messages WHERE contact_id=?", (cid,)
-                ).fetchone()
-                else 0
-            )
-            freshness = 10 if item.kind == "event" else max(0, 14 - age)
-            learning = learned_bonus(db, item.framing)
-            score = min(100, item.fit * 25 + freshness + novelty + learning)
-            explanation = (
-                f"Passung {item.fit}/3; Aktualität {freshness}; "
-                f"neuer Gesprächspartner {novelty}; Review-Erfahrung {learning:+d}. "
-                "Passung ist eine KI-Einschätzung."
-            )
             inserted = db.execute(
                 "INSERT INTO opportunities(contact_id,title,source_url,reason,cta,created_at,source_key,"
                 "published_at,score,score_reason,framing,kind,event_at,discovered_new) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
@@ -272,6 +268,7 @@ def run():
             )
             from server.preparation import enqueue
 
+            quality.save(db, inserted.lastrowid, assessment, evidence)
             enqueue(db, cid, inserted.lastrowid)
             per_contact[cid] = per_contact.get(cid, 0) + 1
             created += 1

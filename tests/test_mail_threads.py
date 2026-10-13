@@ -6,7 +6,7 @@ import pytest
 
 from server import admin_db, ai_client, mail_threads, outreach, outreach_delivery
 from test_admin import login, post
-from test_outreach import message, proposal
+from test_outreach import draft_response, message, proposal
 
 
 def test_generation_keeps_subject_and_finds_older_reply_for_selected_recipient(
@@ -32,9 +32,16 @@ def test_generation_keeps_subject_and_finds_older_reply_for_selected_recipient(
         )
     received = []
 
-    def generate(*args, **kwargs):
-        received.append(args[2])
-        return proposal(subject="An unrelated new subject"), set()
+    def generate(purpose, instructions, data, **kwargs):
+        if purpose == "outreach_draft":
+            received.append(data)
+        return draft_response(
+            purpose,
+            instructions,
+            data,
+            candidate=proposal(subject="An unrelated new subject"),
+            **kwargs,
+        )
 
     monkeypatch.setattr(ai_client, "request", generate)
     assert outreach.generate_draft(1) == 1

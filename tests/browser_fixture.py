@@ -80,6 +80,40 @@ def main():
             db.execute(
                 """INSERT INTO messages(contact_id,direction,message_id,subject,body,occurred_at,peer_addresses,references_json) VALUES (1,'inbound','<prior@example.test>','Existing conversation','Earlier feedback','2026-10-10','["partner@example.test"]','["<root@example.test>"]')"""
             )
+    if os.getenv("TGL_BROWSER_QUALITY") == "1":
+        from server import opportunity_quality as quality
+
+        evidence = "We organize a visible exit from addictive social platforms."
+        with admin_db.database() as db:
+            for oid, title, fit, opening in [
+                (1, "Weak match", 1, 0),
+                (2, "Excellent match", 3, 3),
+                (3, "Good match", 3, 2),
+            ]:
+                if oid == 1:
+                    db.execute("UPDATE opportunities SET title=? WHERE id=1", (title,))
+                else:
+                    db.execute(
+                        "INSERT INTO opportunities(contact_id,title,source_url,created_at) VALUES (1,?,'https://example.org/research',?)",
+                        (title, admin_db.now()),
+                    )
+                quality.save(
+                    db,
+                    oid,
+                    quality.Assessment(
+                        fit=fit,
+                        contact_fit=3,
+                        opening_fit=opening,
+                        reason="Synthetische Bewertung mit belegtem Bezug.",
+                        startpoint="Können wir zu eurem Plattformausstieg beitragen?",
+                        source_quote=evidence,
+                    ),
+                    evidence,
+                )
+                db.execute(
+                    "INSERT INTO drafts(contact_id,opportunity_id,subject,body,created_at,updated_at) VALUES (1,?,?,'Synthetic draft',?,?)",
+                    (oid, title, admin_db.now(), admin_db.now()),
+                )
     uvicorn.run(
         admin.app,
         host="127.0.0.1",

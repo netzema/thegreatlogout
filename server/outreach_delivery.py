@@ -16,7 +16,7 @@ from email.parser import BytesParser
 from email.utils import format_datetime
 
 from server import admin_db as storage
-from server import mail_threads
+from server import mail_threads, opportunity_quality as quality
 from server.contact_history import valid_address
 from server.outreach import eligible
 
@@ -65,6 +65,10 @@ def require_approved(db, did, version):
         raise DeliveryError(
             "Aktuelle Freigabe erforderlich. Bitte den Entwurf neu laden."
         )
+    try:
+        quality.require_draft(db, draft)
+    except ValueError as exc:
+        raise DeliveryError(str(exc)) from exc
     contact = db.execute(
         "SELECT * FROM contacts WHERE id=?", (draft["contact_id"],)
     ).fetchone()

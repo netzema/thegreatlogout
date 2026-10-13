@@ -1,7 +1,50 @@
 """One review package per opportunity, with resumable contact research and drafting."""
 
+import json
+
 from server import admin_db as storage
-from server import contact_research
+from server import contact_research, opportunity_quality as quality
+
+
+def editorial_summary(draft):
+    """Expose only the current, structured editorial report to the review screen."""
+    draft = dict(draft)
+    status = draft.get("editorial_status", "")
+    current = bool(status) and draft.get("editorial_version") == draft["version"]
+    try:
+        report = json.loads(draft.get("editorial_report", "{}"))
+    except (ValueError, TypeError):
+        report = {}
+    if not isinstance(report, dict):
+        report = {}
+    issues = report.get("issues", [])
+    if not isinstance(issues, list):
+        issues = []
+    candidate = report.get("unapplied_candidate")
+    if not isinstance(candidate, dict) or not all(
+        isinstance(candidate.get(key), str) for key in ("subject", "body")
+    ):
+        candidate = None
+    return {
+        "status": status,
+        "current": current,
+        "unresolved": bool(status)
+        and (not current or status in {"needs_review", "no_fit"}),
+        "summary": str(report.get("summary", ""))[:1500],
+        "issues": [item for item in issues if isinstance(item, dict)][:8],
+        "candidate": candidate,
+    }
+
+
+def editorial_note(draft):
+    review = editorial_summary(draft)
+    if not review["current"]:
+        return "Die Textprüfung gehört zu einer älteren Version. Bitte den aktuellen Entwurf prüfen."
+    return review["summary"] or (
+        "Für diese Nachricht fehlt ein überzeugender Gesprächseinstieg. Bitte den Entwurf prüfen."
+        if review["status"] == "no_fit"
+        else "Die Textprüfung hat offene Punkte gefunden. Bitte den Entwurf überarbeiten."
+    )
 
 
 def state(db, oid, status, note, draft_id=None):
@@ -47,7 +90,7 @@ def run(cid, oid):
             "Kontaktadresse recherchieren und Anschreiben vorbereiten …",
         )
         existing = db.execute(
-            "SELECT id,status FROM drafts WHERE opportunity_id=? ORDER BY id DESC LIMIT 1",
+            "SELECT * FROM drafts WHERE opportunity_id=? ORDER BY id DESC LIMIT 1",
             (oid,),
         ).fetchone()
         if existing and existing["status"] in {"sent", "rejected"}:
@@ -65,13 +108,15 @@ def run(cid, oid):
         # Recheck after API work. A concurrent dismissal/objection must not become ready.
         draft_context(db, cid, oid)
         draft = db.execute(
-            "SELECT id,status FROM drafts WHERE opportunity_id=? ORDER BY id DESC LIMIT 1",
+            "SELECT * FROM drafts WHERE opportunity_id=? ORDER BY id DESC LIMIT 1",
             (oid,),
         ).fetchone()
         address_ready = address_ready and bool(
             db.execute("SELECT email FROM contacts WHERE id=?", (cid,)).fetchone()[0]
         )
-        if draft and address_ready:
+        if draft and editorial_summary(draft)["unresolved"]:
+            state(db, oid, "needs_attention", editorial_note(draft), draft["id"])
+        elif draft and address_ready:
             state(
                 db,
                 oid,
@@ -108,17 +153,25 @@ def refresh(db):
         "SELECT o.*,c.email FROM opportunities o JOIN contacts c ON c.id=o.contact_id WHERE o.preparation_draft_id IS NOT NULL AND o.status='open'"
     ).fetchall():
         draft = db.execute(
-            "SELECT status FROM drafts WHERE id=?", (o["preparation_draft_id"],)
+            "SELECT * FROM drafts WHERE id=?", (o["preparation_draft_id"],)
         ).fetchone()
         if not draft:
             continue
-        if draft[0] == "sent":
+        if draft["status"] != "sent" and not quality.allowed(o):
+            state(
+                db,
+                o["id"],
+                "held",
+                "Kein ausreichend belegter Gesprächseinstieg. Vorerst nicht anschreiben.",
+            )
+            continue
+        if draft["status"] == "sent":
             state(db, o["id"], "sent", "Versand im Kontaktverlauf protokolliert.")
-        elif draft[0] == "rejected":
+        elif draft["status"] == "rejected":
             state(
                 db, o["id"], "reviewed", "Dieser Vorschlag wurde bereits entschieden."
             )
-        elif draft[0] == "approved":
+        elif draft["status"] == "approved":
             delivery = db.execute(
                 "SELECT status,note FROM outreach_deliveries WHERE draft_id=?",
                 (o["preparation_draft_id"],),
@@ -141,13 +194,15 @@ def refresh(db):
                     "approved",
                     "Empfänger und Text sind freigegeben. Noch nicht versendet. Nächster Schritt im Review.",
                 )
-        elif draft[0] == "deferred":
+        elif draft["status"] == "deferred":
             state(
                 db,
                 o["id"],
                 "deferred",
                 "Dieser Entwurf ist bis zur Wiedervorlage zurückgestellt.",
             )
+        elif editorial_summary(draft)["unresolved"]:
+            state(db, o["id"], "needs_attention", editorial_note(draft))
         elif o["preparation_state"] in {
             "ready",
             "needs_attention",

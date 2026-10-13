@@ -1,5 +1,120 @@
 # Assisted outreach and recovery
 
+## German and English editorial loop (13 October 2026)
+
+Generation uses `server.draft_editor`: draft, independent critique,
+at most two targeted revisions, and a critique after each revision. This is at
+most six successful model steps for a new draft, five when reviewing an existing
+draft. Failed provider calls also consume the shared daily request budget.
+The critique checks natural language, personal voice, a supported connection,
+one credible request, and factual accuracy. It reports concrete passages and
+changes, never an estimated probability of a positive response. German and
+English have separate writing, review and revision prompts and strict review
+schemas (`natural_german` or `natural_english`). English review summaries and
+revision instructions are in German for the owner; quoted passages stay English.
+
+English editing requires the caller to set `review_english=True` on
+`draft_editor.run`. `outreach.generate_draft` enables it for new drafts in either
+language. Direct editor calls retain the earlier behavior of leaving English
+text unchanged unless they explicitly opt in. The opt-in and prompt version are
+part of the checkpoint fingerprint, so an old skipped English result cannot be
+reused as a completed English review.
+
+The same campaign facts, source quotation, conversation opening, selected mail
+thread, writing note, and owner decision notes accompany writing and review.
+Historical campaign messages are conversation evidence, not style examples.
+The writing guidance favors clear, direct, friendly sentences and an honest
+reason for contacting this particular recipient. English guidance uses idiomatic
+English rather than translated German sentence structures. No private style-sample
+correspondence is included in model requests.
+
+`writing_style.OWNER_EDIT_LESSONS` adds the lessons from the owner's actual edits
+before sending: a warm conditional request for relevant support can be personal,
+campaign ownership and the wish to keep contacts independently of platforms can
+be explicit, and a useful campaign link belongs naturally in the message. German
+closing greetings follow the owner's preference for a final comma. These are
+preferences, not a mandatory closing template or permission to invent facts.
+The one edited English example kept its voice and question and only gained a
+campaign-information link; it does not establish a preference for rewriting every
+English request as a publicity request. Typographical or grammatical mistakes in
+manual edits are not learned. Only these derived lessons enter the writing note;
+the private before/after correspondence is not added as style examples to model
+requests.
+
+`draft_editor_runs` and append-only `draft_editor_steps` retain successful work
+after every model call. Budget exhaustion and network failure resume at the
+unfinished stage. A per-stage lease prevents overlapping calls for the same
+run. Changing the source context or writing instructions requires a new run.
+Changing only the date permits a next-day budget resume; the caller still
+checks whether the opportunity remains current.
+
+`server.draft_rewrite.rewrite(id)` reviews an existing German draft;
+`rewrite(id, include_english=True)` also permits English drafts to enter the loop.
+Sent messages are excluded. It applies a replacement only after a passing critique,
+archives the previous version in
+`draft_revisions`, resets approval, and preserves `original_body`. Before saving,
+it rechecks the draft version, recipient, selected conversation, contact state,
+source assessment and writing note. A failed critique remains visible without
+replacing the existing text. Held occasions remain held, even if their prose
+passes. A stylistic change never establishes recipient relevance.
+
+The Review page shows the current editorial result and unresolved points.
+Unresolved or stale assessments block approval and export until the text is
+reviewed and edited. Manual text edits archive the previous version and clear
+the old assessment; normal human review remains available. Preparation does
+not label unresolved text as ready. Existing reply attribution continues to
+count only actual replies with explicit message references. Approval, model
+judgment and sending alone are not evidence of a positive response.
+
+Database text updates are visible immediately. Timer workers load the new
+editor on their next invocation. The running admin process requires the usual
+`sudo systemctl restart thegreatlogout-admin.service` to load the new review
+metadata and approval checks. No Nginx change is required. The editor itself
+never sends, deletes or automatically approves mail.
+
+Historical verification of the first, German-only pass on 13 October: at that
+point all nine pending German drafts had been examined, four rewritten and
+proofread, and five retained with a specific `no_fit` explanation. After the
+bounded model reviews, two texts received a final editorial edit; their prior
+automated assessment was cleared, as for any manual text change. The then-current
+six English drafts and two sent records matched the pre-edit snapshot. All message
+and delivery rows also matched that snapshot; that pass sent or deleted nothing.
+Its validation result was 186 passing tests plus Ruff, JavaScript syntax and
+whitespace checks. The admin health endpoint was healthy. The text changes had
+been stored in production, while activation of the new admin review metadata
+still awaited an owner-run restart because passwordless sudo was unavailable.
+These counts and activation observations describe that earlier pass, not the
+current database or the later English extension.
+
+### Current verification after owner edits and English review
+
+On 13 October, five owner-edited sent messages were compared locally with the
+last pre-edit backup. Only the derived style lessons were appended to the live
+writing note (version 6). Sent messages were not rewritten.
+
+All 12 then-open occasions were checked against public sources. Five unsuitable
+occasions and their five unsent English drafts were removed from the active
+queue. One additional stale occasion was dismissed while preserving its already
+sent message. Dismissed source identities remain stored to prevent rediscovery.
+Six active occasions remain: five already contacted and one newly prepared.
+The latter has a verified original article, a public professional contact source,
+and an unapproved English draft proofread in the work session.
+
+An additional external model critique was rejected by the environment's approval
+review before execution. The new draft therefore has no automated editorial
+verdict; ordinary owner review is available. No API request was made in this
+pass. The seven sent draft rows, all messages and all delivery records match the
+private pre-change backup exactly. No message was sent. Foreign-key checks pass.
+
+Final validation: 197 tests pass, along with Ruff, both required JavaScript
+syntax checks and whitespace checks. The active admin process was restarted at
+13:58:09 UTC and its health endpoint returns OK. This loads the review interface
+and approval checks from the earlier pass. The final language-selection and
+scheduled-deferral fixes run in fresh editor/worker processes; they do not add
+admin routes. Database text and queue changes are already visible in production.
+
+## Initial rollout (10 October 2026)
+
 Implemented and validated on 10 October 2026. Existing assigned correspondence
 now supplies recipient addresses; a separate address-confirmation pass is not
 required. The owner approves recipient and text together in Review. The system
@@ -417,3 +532,49 @@ including desktop/mobile layouts and duplicate-send protection. Two existing
 unsent reply drafts received the matching conversation subject and a new version;
 their bodies and all accepted delivery records were preserved. A restricted local
 SQLite backup was taken before the update. No live email was sent for testing.
+
+
+## Conservative opportunity qualification and capitalization (11 October 2026)
+
+The owner's revised policy prioritizes fit over volume: there is time to wait for
+an appropriate occasion. `server.opportunity_quality` evaluates direct campaign
+fit, the actor's relevant responsibility, and a concrete useful opening (each
+0–3). The displayed score weights these dimensions 45/20/35. Freshness, fame,
+novelty and earlier approvals cannot compensate for a weak topic or opening.
+Recommendation requires direct fit 3, responsibility and opening at least 2,
+a concrete starting point, and a verbatim supporting excerpt in the supplied
+source text. Scores are model judgments, not probabilities of success.
+
+New discovery only creates contacts and preparation jobs for qualifying results.
+Existing occasions can be classified as good, watch, poor or unassessed.
+Recommendations and Review are sorted by fit. Held proposals remain accessible
+in separate views with their explanation, but cannot be approved, exported or
+sent. The scheduler and draft generator also reject held occasions. Reassessment
+invalidates their previous approvals, preserves draft wording and sent records,
+and respects in-flight/unknown delivery locks. Manually entered occasions without
+an automatic source key remain reviewable until explicitly assessed.
+
+Existing open occasions were reassessed against freshly fetched public sources,
+without contact addresses, correspondence or earlier model rationales in the
+assessment prompt. Unreadable sources produce a conservative watch state.
+Of 15 assessed occasions, 5 qualified, 6 were held for observation and 4 lacked a
+sufficient basis. These are dated assessment results, not permanent judgments.
+The repeatable maintenance entry point `python -m server.opportunity_quality`
+processes open occasions not yet assessed, respects the existing daily API limit,
+and prints only aggregate progress. Individual reassessment uses `assess(id)`.
+A new, evidenced occasion can make a later contact appropriate.
+
+The writing note now explicitly exempts required capitalization: proper names,
+German nouns and nominalizations, acronyms, English I and formal Sie/Ihr/Ihnen.
+Mechanical normalization only lowercases known ordinary opening words and
+preserves unknown words and acronyms. Model instructions apply the grammatical
+rule in context. The stored writing note was updated without replacing other
+preferences. Existing draft bodies were not regenerated.
+
+Validation: 153 Python tests passed, including qualification thresholds, source
+quotes, blocked approval/export/transport, scheduling, ordering and capitalization
+exceptions. The isolated quality browser test passed recommendation/held filters,
+disabled approval, direct links and desktop/mobile layouts. A private SQLite
+snapshot was taken before updating the stored note and assessments. No real mail
+was sent. Runtime route changes require restarting the root-managed admin service.
+This work was implemented alongside pre-existing UI changes, which were preserved.

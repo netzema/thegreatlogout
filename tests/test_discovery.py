@@ -5,7 +5,7 @@ import pytest
 
 from server import admin_db, ai_client, discovery, outreach
 from test_admin import login
-from test_outreach import proposal
+from test_outreach import draft_response
 
 
 def finding(**changes):
@@ -19,6 +19,10 @@ def finding(**changes):
         cta="Exchange campaign materials",
         framing="collaboration",
         fit=3,
+        contact_fit=3,
+        opening_fit=3,
+        startpoint="Discuss the visible platform exit initiative",
+        source_quote="Source-backed synthetic research",
         contact=dict(
             organization="New Public Initiative",
             person="Alex Example",
@@ -206,7 +210,7 @@ def test_upcoming_event_with_older_announcement_queues_review_draft_and_expires(
             == 1
         )
         cid, oid = row["contact_id"], row["id"]
-    monkeypatch.setattr(ai_client, "request", lambda *a, **kw: (proposal(), set()))
+    monkeypatch.setattr(ai_client, "request", draft_response)
     assert outreach.generate_draft(cid, oid) == 1
     with admin_db.database() as db:
         assert db.execute("SELECT status FROM drafts").fetchone()[0] == "draft"

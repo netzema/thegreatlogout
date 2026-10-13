@@ -330,50 +330,53 @@ const BASE_EMAIL_SEQUENCE_DE = [
     key: "day-0",
     delayDays: 0,
     subject: "Willkommen bei The Great Logout",
-    title: "Du bist dabei. Jetzt wird dein Ausstieg konkret.",
+    title: "So bereitest du deinen Ausstieg vor",
     body: [
       "danke, dass du bei The Great Logout mitmachst.",
-      "Das hier ist kein stiller Detox und auch kein neuer Versuch, einfach disziplinierter zu sein. Es ist ein sichtbarer Abschied von sozialen Medien, die dich immer wieder zurückholen wollen.",
-      "Wenn du einfach verschwindest, merkt der Feed nichts davon. Wenn du offen sagst, warum du gehst, sehen andere: Ausloggen ist möglich, ohne dass man gleich aus dem Leben der Menschen verschwindet.",
-      "Der Ablauf ist einfach: Sag, warum du gehst. Sag, wo man dich weiterhin erreicht. Dann log dich aus.",
-      "Heute bereitest du alles vor: Sichere wichtige Kontakte, lege dein Ausstiegsdatum fest und entscheide, wo man dich danach erreicht.",
-      "Deine Aufgabe für heute: Wähle dein Logout-Datum und einen Kontaktweg, der nach dem Ausstieg bleibt."
+      "In den nächsten ein bis sieben Tagen erklärst du öffentlich, warum du süchtig machende soziale Medien verlässt. Du sagst, wo du weiterhin erreichbar bist, und loggst dich anschließend aus. Damit widersprichst du einem Geschäftsmodell, das davon lebt, dich immer wieder in den Feed zu ziehen.",
+      "Wer ohne Ankündigung geht, wird im Feed leicht übersehen. Wenn du deine Gründe teilst, können andere deinen Ausstieg nachvollziehen und selbst darüber nachdenken. Aus einzelnen Entscheidungen kann gemeinsamer Druck auf die Plattformen entstehen.",
+      "Du musst dafür weder alle überzeugen noch eine große Abschiedsrede schreiben. Es reicht, mit deinen eigenen Worten zu erklären, was dich zum Gehen bewegt.",
+      "Überlege heute, mit wem du in Kontakt bleiben möchtest. Sichere die nötigen Kontaktdaten und schreib den Menschen bei Bedarf direkt. Vielleicht passt für euch E-Mail, Signal oder das Telefon; vielleicht verabredet ihr euch lieber persönlich. Für öffentliche Neuigkeiten kommen auch eine Website oder ein Newsletter infrage.",
+      "Deine Aufgabe für heute: Lege fest, an welchem Tag du dich ausloggst und wie man dich danach erreicht."
     ]
   },
   {
     key: "day-1",
     delayDays: 1,
-    subject: "Tag 1: Sag es klar",
-    title: "Warum ich gehe",
+    subject: "Tag 1: Sag, warum du gehst",
+    title: "Dein erster Post zum Ausstieg",
     body: [
-      "heute sagst du zum ersten Mal öffentlich, dass du gehst.",
-      "Du musst dich nicht endlos erklären. Oft ist der klarste Post auch der stärkste: Ich verlasse diese Plattform. Nicht aus einer Laune heraus, sondern ganz bewusst.",
-      "Es geht nicht darum, besser zu sein als andere. Du ziehst nur eine Grenze gegenüber einem System, das dich immer wieder zurückholen will.",
+      "heute kündigst du öffentlich an, dass du diese Plattform verlässt.",
+      "Schreib, warum du gehst und dass du in den nächsten Tagen mehr dazu sagen wirst. Ein einfacher Anfang wäre: Ich verlasse diese Plattform, weil ich nicht länger so viel Zeit im Feed verbringen will.",
+      "Damit wird deine Entscheidung für andere sichtbar. Vielleicht denken sie selbst über einen Ausstieg nach, vielleicht auch nicht. Dein Post zeigt jedenfalls, dass die Nutzung dieser Plattform keine Selbstverständlichkeit ist.",
+      "Dabei geht es nicht darum, dich über Menschen zu stellen, die bleiben. Du verweigerst einem System deine Aufmerksamkeit, das darauf ausgelegt ist, dich immer wieder zurückzuholen.",
       "Deine Aufgabe für heute: Veröffentliche deinen ersten Post zum Ausstieg."
     ]
   },
   {
     key: "day-2",
     delayDays: 2,
-    subject: "Tag 2: Es liegt nicht nur an dir",
-    title: "Was der Feed mit mir macht",
+    subject: "Tag 2: Es liegt nicht nur an deiner Willenskraft",
+    title: "Wie der Feed deine Aufmerksamkeit beansprucht",
     body: [
       "der Feed ist so gebaut, dass du immer wieder zurückkommst.",
-      "Viele geben sich deshalb selbst die Schuld und halten sich für faul oder undiszipliniert. Aber es liegt nicht nur an deiner Willenskraft, wenn ein System dich ständig unterbricht, reizt und belohnt.",
-      "Schreib heute über deine Aufmerksamkeit. Was nimmt dir der Feed im Alltag? Was unterbricht er? Was hast du früher getan, wenn du warten musstest, müde, gelangweilt oder allein warst?",
-      "Deine Aufgabe für heute: Nenne ein konkretes Beispiel dafür, wie der Feed deine Aufmerksamkeit verändert hat."
+      "Wer länger scrollt als geplant, macht sich oft selbst Vorwürfe. Doch Willenskraft erklärt nur einen Teil davon: Ganze Teams arbeiten daran, dich mit Benachrichtigungen, Likes, kurzen Videos und immer neuen Empfehlungen zum Weiterschauen zu bewegen.",
+      "Der endlose Feed hat keinen natürlichen Schlusspunkt. Dazu kommt die Aussicht, dass gleich etwas Interessantes auftauchen könnte. So wird aus einem kurzen Blick aufs Handy leicht eine längere Unterbrechung.",
+      "Wie ist das bei dir? Schaust du beim Lesen immer wieder nach? Bleibst du abends länger wach? Oder greifst du inzwischen schon zum Handy, sobald du irgendwo warten musst?",
+      "Deine Aufgabe für heute: Beschreibe in einem Post eine konkrete Situation, in der der Feed deine Aufmerksamkeit beansprucht, obwohl du etwas anderes vorhattest."
     ]
   },
   {
     key: "day-3",
     delayDays: 3,
-    subject: "Tag 3: Was du dir zurückholst",
-    title: "Was ich mir zurückhole",
+    subject: "Tag 3: Wofür du wieder mehr Zeit möchtest",
+    title: "Was du dir vom Ausstieg erhoffst",
     body: [
-      "ausloggen ist nicht nur ein Nein zum Feed.",
-      "Du löschst nicht bloß eine App. Du schaffst Platz für Dinge, die im ständigen Scrollen zu kurz gekommen sind.",
-      "Vielleicht möchtest du ruhige Morgen zurück. Vielleicht wieder lesen, ohne alle paar Minuten zum Handy zu greifen. Oder einfach Langeweile zulassen, bis die eigenen Gedanken wieder hörbar werden.",
-      "Deine Aufgabe für heute: Poste, was du dir zurückholen möchtest."
+      "mit deinem Ausstieg sagst du auch, wofür du deine Zeit und Aufmerksamkeit lieber einsetzen möchtest.",
+      "Vielleicht willst du morgens frühstücken, ohne sofort Nachrichten und Kommentare zu lesen. Vielleicht möchtest du ein Buch lesen, ohne alle paar Minuten nach dem Handy zu greifen, oder bei einem Gespräch weniger abgelenkt sein.",
+      "Auch weniger Vergleich kann ein Grund sein: den eigenen Alltag nicht ständig neben die sorgfältig ausgewählten Bilder anderer zu stellen. Oder du möchtest beim Warten einfach deinen Gedanken nachgehen, ohne gleich den nächsten Clip zu öffnen.",
+      "Der Ausstieg wird nicht automatisch all das verändern. Ein konkreter Wunsch hilft dir aber, zu beschreiben, warum du gehst und was dir dabei wichtig ist.",
+      "Deine Aufgabe für heute: Poste, wofür du nach dem Ausstieg mehr Zeit oder Aufmerksamkeit haben möchtest."
     ]
   },
   {
@@ -383,237 +386,257 @@ const BASE_EMAIL_SEQUENCE_DE = [
     title: "Warum Big Tech zu viel Macht hat",
     body: [
       "beim Ausstieg geht es um mehr als deine Bildschirmzeit.",
-      "Wenige Konzerne prägen, was Milliarden Menschen sehen, fürchten, vergleichen, glauben und diskutieren. Der Feed ist kein neutrales Fenster, sondern ein Ranking-System mit einem Geschäftsmodell.",
-      "Wer so viel Aufmerksamkeit lenkt, beeinflusst auch Kultur und Politik, ohne demokratisch dazu beauftragt worden zu sein.",
-      "Deine Aufgabe für heute: Sag, was eine Plattform nicht länger für dich auswählen soll."
+      "Wenige Konzerne bestimmen mit, welche Nachrichten, Meinungen und Lebensweisen Milliarden Menschen täglich sehen. Der Feed zeigt diese Inhalte nicht einfach der Reihe nach: Er sortiert sie danach, was Aufmerksamkeit bindet und dem Unternehmen Geld bringt.",
+      "Das beeinflusst Kultur und Politik. Manche Stimmen werden häufig empfohlen, andere kaum sichtbar. Ein Streit kann immer neue Menschen erreichen, weil er viele Reaktionen auslöst. So gestalten private Unternehmen die öffentliche Debatte, ohne dafür demokratisch beauftragt zu sein.",
+      "Dein Ausstieg allein beendet diese Macht nicht. Er ist aber eine bewusste Weigerung, sie weiterhin mit deiner Aufmerksamkeit zu unterstützen.",
+      "Deine Aufgabe für heute: Erkläre in einem Post, worüber du einer Plattform weniger Einfluss geben willst – etwa darüber, welche Nachrichten du liest oder welche Themen deinen Tag bestimmen."
     ]
   },
   {
     key: "day-5",
     delayDays: 5,
-    subject: "Tag 5: Lass eine Tür offen",
-    title: "Wo man mich findet",
+    subject: "Tag 5: So bleibst du erreichbar",
+    title: "Wo man dich nach dem Ausstieg erreicht",
     body: [
-      "heute wird es praktisch.",
-      "Viele bleiben, weil sich Gehen wie Verschwinden anfühlt. Das ist verständlich: Freundschaften, Einladungen und lose Kontakte laufen inzwischen oft über Plattformen.",
-      "Lass deshalb eine Tür offen. Sag den Menschen, wo sie dich erreichen können: per E-Mail, Signal, Telefon, über deine Website oder einfach im echten Leben. Du musst nicht überall erreichbar sein. Ein guter Weg reicht.",
-      "Deine Aufgabe für heute: Teile den Kontaktweg, der für dich bleiben soll."
+      "heute geht es darum, wie du mit den Menschen in Kontakt bleibst, die dir wichtig sind.",
+      "Viele zögern mit dem Ausstieg, weil Freundschaften, Einladungen und Neuigkeiten über die Plattform laufen. Diese Beziehungen sind real. Sie müssen mit dem Account nicht enden, auch wenn der Wechsel etwas Organisation braucht.",
+      "Für eine Nachricht an einen Freund musst du nicht erst durch den Feed scrollen. Tauscht Nummern oder E-Mail-Adressen aus und vereinbart, wie ihr euch schreibt. Ein oder zwei verlässliche Kontaktmöglichkeiten reichen; du musst nicht überall erreichbar sein.",
+      "Teile in deinem Post, wie man dich künftig erreicht. Kontaktdaten, die du nicht öffentlich nennen möchtest, kannst du direkt an einzelne Menschen schicken.",
+      "Deine Aufgabe für heute: Veröffentliche, wie man dich nach dem Ausstieg erreichen kann."
     ]
   },
   {
     key: "day-6",
     delayDays: 6,
-    subject: "Tag 6: Zeig, dass die Tür offen ist",
-    title: "Andere einladen",
+    subject: "Tag 6: Lade andere zum Mitmachen ein",
+    title: "Deinen Ausstieg mit anderen teilen",
     body: [
-      "heute geht es nicht um Druck.",
-      "Niemand geht, weil man ihn beschämt. Eine ruhige Einladung wirkt besser: Ich gehe. Das ist mein Grund. Wenn es dir ähnlich geht, darfst du auch gehen.",
-      "Ein sichtbarer Ausstieg zeigt anderen eine Möglichkeit, die ihnen vielleicht gefehlt hat. Man kann bewusst gehen und trotzdem verbunden bleiben.",
-      "Deine Aufgabe für heute: Lade andere ein, ohne Druck zu machen."
+      "heute kannst du Menschen einladen, sich deinem Ausstieg anzuschließen.",
+      "Erkläre deine Entscheidung, ohne ihnen ihre Nutzung vorzuwerfen. Zum Beispiel: Ich gehe, weil mir der Feed zu viel Zeit nimmt. Falls du auch aussteigen möchtest, können wir das gemeinsam machen.",
+      "So wird sichtbar, dass man eine Plattform bewusst verlassen und trotzdem in Kontakt bleiben kann. Der Ausstieg ist keine heimliche Niederlage im Versuch, disziplinierter zu sein, sondern eine öffentliche Entscheidung gegen dieses Geschäftsmodell.",
+      "Wenn jemand nachfragt, kannst du deine Gründe erläutern. Du musst weder jeden Streit gewinnen noch Zustimmung sammeln. Auch wenn niemand reagiert, hast du deinen Ausstieg erklärt.",
+      "Deine Aufgabe für heute: Lade andere in einem Post zum Mitmachen ein und lass ihnen die Entscheidung."
     ]
   },
   {
     key: "day-7",
     delayDays: 7,
     subject: "Tag 7: Log dich aus",
-    title: "Letzter Post. Logout.",
+    title: "Dein letzter Post vor dem Ausstieg",
     body: [
-      "heute ist der letzte Post.",
-      "Sag noch einmal, warum du gehst und wo man dich weiterhin erreicht. Dann mach den Ausstieg real: Lösch die Apps, deaktiviere deine Accounts oder entferne zumindest die schnellen Zugänge.",
-      "Vielleicht zieht es dich danach automatisch wieder zum Feed. Das heißt nicht, dass deine Entscheidung falsch war. Der alte Reflex braucht einfach etwas Zeit.",
-      "Deine Aufgabe für heute: Veröffentliche deinen letzten Post und log dich aus."
+      "heute veröffentlichst du deinen letzten Post auf der Plattform.",
+      "Sag noch einmal, warum du gehst und wo man dich weiterhin erreicht. Danach loggst du dich aus. Lösche die Apps und entferne gespeicherte Schnellzugriffe. Wenn du dich dafür entschieden hast, kannst du auch deinen Account deaktivieren.",
+      "Vielleicht greifst du danach trotzdem zum Handy, um den Feed zu öffnen. Gewohnheiten verschwinden nicht unbedingt mit der App. Das allein sagt nichts darüber aus, ob deine Entscheidung richtig war; du musst dich auch nicht sofort befreit fühlen.",
+      "Deine Aufgabe für heute: Veröffentliche deinen Abschiedspost und logge dich aus.",
+      "Wenn du später erzählen möchtest, wie es dir damit geht, kannst du auf diese E-Mails antworten. Uns interessieren auch Schwierigkeiten und gemischte Erfahrungen. Mit deiner Erlaubnis könnten wir später einen kurzen, anonymisierten Erfahrungsbericht auf der Website teilen."
     ]
   },
   {
     key: "day-14",
     delayDays: 14,
-    subject: "Zwei Wochen später: die erste Ruhe",
-    title: "Wie fühlt sich die neue Ruhe an?",
+    subject: "Zwei Wochen nach dem Start: Wie geht es dir?",
+    title: "Die ersten Tage nach dem Ausstieg",
     body: [
-      "die erste Ruhe kann seltsam sein.",
-      "Vielleicht hast du mit sofortiger Erleichterung gerechnet. In Wirklichkeit ist es oft gemischt: Ruhe, Langeweile, Unruhe, die Angst, etwas zu verpassen, oder der Impuls, doch kurz nachzusehen.",
-      "Das bedeutet nicht, dass dein Logout gescheitert ist. Der alte Reflex klingt nur noch nach.",
-      "Eine Frage für heute: Was hast du bemerkt, das der Feed sonst überdeckt hat?"
+      "seit deinem Start bei The Great Logout sind zwei Wochen vergangen. Wie war die Zeit seit deinem Ausstieg?",
+      "Vielleicht bist du erleichtert. Vielleicht fehlt dir etwas, du langweilst dich oder möchtest doch kurz nachsehen. Unterschiedliche Erfahrungen können nebeneinander bestehen. Du musst den Ausstieg nicht als Erfolgsgeschichte erzählen.",
+      "Falls du nach einer Beschäftigung für die bisherigen Scroll-Pausen suchst: Du könntest jemanden direkt anschreiben, etwas kochen, eine Seite lesen oder spazieren gehen. Es muss daraus kein neues Vorhaben werden, das du dokumentierst und teilst.",
+      "Und wenn du gerade nichts tust, muss diese Zeit nicht gleich verplant werden. Beim Warten oder Umherschauen können Gedanken auftauchen, für die zwischen den vielen Beiträgen wenig Platz war.",
+      "Was fällt dir seit dem Ausstieg auf? Wir möchten verstehen, was leichter wird, was fehlt und was schwierig bleibt. Deine Erfahrungen können helfen, die Kampagne konkreter und ehrlicher zu machen."
     ]
   },
   {
     key: "day-30",
     delayDays: 30,
-    subject: "Dreißig Tage später: was kam zurück?",
-    title: "Was zurückkam",
+    subject: "Ein Monat nach dem Start: Was hat sich verändert?",
+    title: "Was du gewinnst und was dir fehlt",
     body: [
-      "nach dreißig Tagen lassen sich erste Muster erkennen.",
-      "Vielleicht schläfst du anders. Vielleicht ist deine Aufmerksamkeit noch unruhig, aber nicht mehr ganz so umkämpft. Vielleicht hast du zum Handy gegriffen und gemerkt, dass dort nichts auf dich wartet.",
-      "Schreib auf, was zurückgekommen ist: Zeit, Ruhe, Fokus, Langeweile, direkte Nachrichten, weniger Streit oder weniger Vergleich.",
-      "Schreib auch auf, was schwer war. Auch das ist wichtig."
+      "dein Start bei The Great Logout liegt jetzt etwa einen Monat zurück. Vielleicht kannst du schon vergleichen, was sich im Alltag verändert hat.",
+      "Schläfst du anders? Liest du länger am Stück? Greifst du noch genauso oft zum Handy? Es kann sein, dass dich weniger Beiträge ablenken und du zugleich spontane Kontakte vermisst. Beides gehört zu deiner Erfahrung.",
+      "Wenn du magst, halte in ein paar Zeilen fest, was anders geworden ist und was nicht. Vielleicht hast du mehr Zeit, weniger Streit mit Fremden oder weniger Anlass, dich zu vergleichen. Vielleicht ist bisher auch kaum ein Unterschied zu spüren.",
+      "Was fehlt dir, und was war schwieriger als erwartet? Solche Antworten sind für andere ebenso hilfreich wie Berichte über Erleichterung. Wenn wir etwas verwenden möchten, das Rückschlüsse auf dich zulässt, fragen wir dich vorher."
     ]
   },
   {
     key: "reason-1",
     delayDays: 60,
-    subject: "Grund 1: Deine Aufmerksamkeit ist wertvoll",
+    subject: "Grund 1: Plattformen machen mit Aufmerksamkeit Geschäfte",
     title: "Deine Aufmerksamkeit ist kein Rohstoff",
     body: [
-      "deine Aufmerksamkeit ist kostbar.",
-      "Mit ihr hörst du zu, lernst, liebst, denkst, bemerkst, gestaltest und veränderst dein Leben.",
-      "Für den Feed ist diese Aufmerksamkeit vor allem ein Rohstoff. Gehen heißt auch: Ich entscheide wieder selbst, wohin sie fließt."
+      "deine Aufmerksamkeit bestimmt mit, wie du deinen Alltag erlebst.",
+      "Du brauchst sie, um zuzuhören, zu lernen, mit anderen etwas zu planen oder dich in eine Sache zu vertiefen. Sie ist auch dann wichtig, wenn du nichts leistest, sondern jemandem Gesellschaft leistest oder einen Verlust verarbeitest.",
+      "Plattformen machen aus deinem Verhalten messbare Signale: Bei welchem Beitrag bleibst du stehen? Worauf reagierst du wütend, was schaust du spätabends noch an? Damit passen sie den Feed so an, dass du möglichst lange bleibst.",
+      "Ein Ausstieg spart deshalb nicht nur Zeit. Er entzieht einem Geschäftsmodell Aufmerksamkeit, das aus diesen Reaktionen Profit macht. Wofür möchtest du deine Aufmerksamkeit einsetzen, seit du dich mit dem Ausstieg beschäftigst?"
     ]
   },
   {
     key: "reason-2",
     delayDays: 90,
-    subject: "Grund 2: Der Feed will dich zurückholen",
-    title: "Er wurde gebaut, damit du zurückkommst",
+    subject: "Grund 2: Der Feed soll dich zurückholen",
+    title: "Warum Aufhören so schwer sein kann",
     body: [
-      "der Feed ist kein neutraler Raum.",
-      "Er sortiert, was du siehst, was verschwindet, was sich wiederholt und was am Ende deine Stimmung prägt.",
-      "Wenn dir das Aufhören schwerer gefallen ist als erwartet, bist du nicht schwach. Das System hat nur genau so funktioniert, wie es sollte."
+      "der Feed sortiert, was du siehst, was sich wiederholt und was kaum vorkommt.",
+      "Dahinter steht ein Geschäftsmodell: Je länger und häufiger Menschen zuschauen und reagieren, desto mehr Daten lassen sich sammeln. Mit diesen Daten kann Werbung gezielter ausgespielt werden. Das macht die Aufmerksamkeit für Werbekunden wertvoller.",
+      "Wenn dir das Aufhören schwergefallen ist, lässt sich das deshalb nicht einfach mit mangelnder Disziplin erklären. Du hast ein Angebot genutzt, das systematisch darauf ausgerichtet ist, dich zurückzuholen.",
+      "Erkennst du heute Situationen, in denen du früher automatisch den Feed geöffnet hast? Hat sich daran etwas verändert?"
     ]
   },
   {
     key: "reason-3",
     delayDays: 120,
     subject: "Grund 3: Big Tech hat zu viel Macht",
-    title: "Big Tech legt sich über das öffentliche Leben",
+    title: "Wer bestimmt, was öffentlich sichtbar wird?",
     body: [
-      "wenige Unternehmen prägen, was Milliarden Menschen sehen.",
-      "Sie beeinflussen Nachrichten, Kultur, Politik, Beziehungen, Schönheitsideale, Sprache, Humor und Empörung.",
-      "Ein paar Unternehmen sitzen heute zwischen Milliarden Menschen und der Wirklichkeit. Das ist zu viel Macht.",
-      "Niemand sollte unser öffentliches Leben im Hintergrund steuern, nur um mehr Werbung zu verkaufen."
+      "wenige Unternehmen bestimmen mit, welche Ausschnitte der Welt Milliarden Menschen sehen.",
+      "Das betrifft Nachrichten und politische Debatten ebenso wie Musik, Humor, Schönheitsideale und Beziehungen. Was im eigenen Feed oft vorkommt, kann leicht wie die Meinung aller wirken.",
+      "Diese Macht besteht auch darin, bestimmte Stimmen hervorzuheben und andere kaum zu zeigen. Konflikte können weiter angeheizt werden, solange sie genügend Reaktionen auslösen. Solche Entscheidungen haben gesellschaftliche Folgen, auch wenn sie als technische Sortierung erscheinen.",
+      "Kein Unternehmen sollte das öffentliche Leben beiläufig nach den Erträgen seines Werbegeschäfts ordnen können. Wie entscheidest du inzwischen, welche Themen und Stimmen du verfolgst?"
     ]
   },
   {
     key: "reason-4",
     delayDays: 150,
     subject: "Grund 4: Empörung wird belohnt",
-    title: "Wut funktioniert zu gut",
+    title: "Warum Wut so viel Aufmerksamkeit bekommt",
     body: [
-      "Algorithmen müssen Konflikte nicht einmal selbst erfinden.",
-      "Sie müssen nur erkennen, was uns festhält, und mehr davon zeigen. Wut funktioniert. Gewissheit auch. Für Zwischentöne bleibt kaum Zeit.",
-      "Wenn du den Feed verlässt, nimmst du dein eigenes Nervensystem aus diesem Geschäftsmodell heraus."
+      "Algorithmen müssen einen Streit nicht erfinden, um ihn zu verschärfen.",
+      "Es reicht, Beiträge häufiger zu zeigen, auf die viele Menschen reagieren. Scharfe Anschuldigungen, eindeutige Feindbilder und Verachtung können so mehr Verbreitung finden als eine sorgfältige Einordnung.",
+      "Wenn Menschen immer wieder andere Ausschnitte sehen, die ihre Befürchtungen und Überzeugungen bestätigen, wird Verständigung schwieriger. Man streitet dann nicht nur über Bewertungen, sondern auch darüber, was überhaupt passiert ist.",
+      "Mit dem Ausstieg verweigerst du einem Geschäftsmodell deine Aufmerksamkeit, das auch von deiner Empörung profitiert. Hat sich verändert, wie du von einem Streit erfährst und ob du dich daran beteiligst?"
     ]
   },
   {
     key: "month-6",
     delayDays: 183,
-    subject: "Sechs Monate später: Wie stabil ist dein Ausstieg?",
-    title: "Nicht leise zurückkehren",
+    subject: "Sechs Monate nach dem Start: Wo stehst du heute?",
+    title: "Ist der Feed wieder Teil deines Alltags?",
     body: [
-      "nach sechs Monaten wirkt der alte Sog oft ganz harmlos.",
-      "Vielleicht kommt er als Link, Login, Veranstaltung oder App, die alle anderen noch nutzen. Und plötzlich ist der Feed wieder in deiner Tasche, als wäre nichts gewesen.",
-      "Wenn du wieder hineingerutscht bist, schau ehrlich hin. Nicht, um dich zu bestrafen, sondern um den Auslöser zu verstehen.",
-      "Wenn du draußen geblieben bist, schütze diese Entscheidung."
+      "seit deinem Start ist etwa ein halbes Jahr vergangen. Welche Rolle spielen die Plattformen heute für dich?",
+      "Eine Rückkehr kann mit etwas Alltäglichem anfangen: einem Link, einer Einladung zu einer Veranstaltung oder einer App, die du für die Arbeit wieder installierst. Vielleicht bleibt es bei diesem Anlass. Vielleicht scrollst du bald wieder regelmäßig.",
+      "The Great Logout zielt auf einen dauerhaften, sichtbaren Ausstieg. Es geht um die Weigerung, Plattformen weiter zu unterstützen, die aus Aufmerksamkeit, Wut, Einsamkeit und Gewohnheit wirtschaftliche und politische Macht gewinnen.",
+      "Falls du zurückgekehrt bist, lohnt sich ein Blick auf den Anlass: Waren es Kontakte, Arbeit, Bequemlichkeit oder die Sorge, etwas zu verpassen? Das ist kein Grund für Vorwürfe. Es hilft dir zu entscheiden, was du weiterhin brauchst und wovon du dich erneut lösen möchtest.",
+      "Wenn du bei deinem Ausstieg geblieben bist: Was hat ihn möglich gemacht? Vielleicht helfen dir direkte Kontakte oder die gelöschten Apps. Du musst die Plattform nicht wieder nutzen, nur weil dein Account noch existiert.",
+      "Uns interessieren beide Erfahrungen: wie du ohne Feed zurechtkommst und was dich zurückgebracht hat."
     ]
   },
   {
     key: "reason-5",
     delayDays: 210,
-    subject: "Grund 5: Selbst Langeweile wird besetzt",
-    title: "Langeweile ist kein Versagen",
+    subject: "Grund 5: Der Feed füllt jede freie Minute",
+    title: "Was beim Warten Platz hat",
     body: [
-      "Langeweile gehört zum Leben.",
-      "Warten, spazieren, im Zug sitzen, den eigenen Gedanken freien Lauf lassen.",
-      "Der Feed besetzt genau diesen Raum. Er gewöhnt uns daran, sofort nach einem neuen Reiz zu greifen, noch bevor ein eigener Gedanke entstehen kann."
+      "beim Warten auf den Zug oder in einer Schlange gibt es oft wenig zu tun.",
+      "Das kann langweilig sein. Es kann aber auch Zeit sein, in der du an ein Gespräch zurückdenkst, eine Idee weiterverfolgst oder überlegst, was du als Nächstes machen möchtest. Nicht jeder solche Moment muss produktiv werden.",
+      "Der Feed bietet für jede Pause einen neuen Reiz. Wer daran gewöhnt ist, greift womöglich schon zum Handy, bevor die eigenen Gedanken abschweifen können. Der gewöhnliche Alltag kann daneben langsam und ereignisarm wirken.",
+      "Was machst du inzwischen in solchen Pausen? Fehlt dir die Ablenkung, genießt du die freie Zeit oder ist es je nach Tag anders?"
     ]
   },
   {
     key: "reason-6",
     delayDays: 240,
-    subject: "Grund 6: Vergleich wurde Alltag",
-    title: "Der Feed erzeugt Mangel",
+    subject: "Grund 6: Der ständige Vergleich wird zum Alltag",
+    title: "Wenn das eigene Leben nie genug scheint",
     body: [
-      "Vergleich wirkt selbst dann, wenn du weißt, dass Bilder gestellt oder bearbeitet sind.",
-      "Der Feed zeigt das Leben anderer so, dass leicht ein Gefühl von Mangel entsteht.",
-      "Gehen heißt auch, dein eigenes Leben nicht länger an einer endlosen Reihe von Inszenierungen zu messen."
+      "auch wenn du weißt, dass Bilder bearbeitet sind, kann der Vergleich mit ihnen etwas auslösen.",
+      "Im Feed folgen gut eingerichtete Wohnungen, Reisen, Körper, Karrieren und scheinbar mühelose Beziehungen aufeinander. Irgendjemand wirkt immer erfolgreicher, zufriedener oder disziplinierter. Dem eigenen Alltag stehen dabei ausgewählte Momente aus vielen anderen Leben gegenüber.",
+      "Das zu durchschauen schützt nicht unbedingt vor der Wirkung der Wiederholung. Wenn der Vergleich müde macht, ist das kein persönliches Versagen.",
+      "Der Ausstieg kann diesen ständigen Vergleich unterbrechen. Merkst du einen Unterschied darin, woran du deinen Alltag misst?"
     ]
   },
   {
     key: "reason-7",
     delayDays: 270,
     subject: "Grund 7: Einsamkeit ist profitabel",
-    title: "Kontakt ist nicht Nähe",
+    title: "Wann aus Kontakt Nähe entsteht",
     body: [
-      "Plattformen versprechen Verbindung.",
-      "Oft liefern sie Kontakt ohne echte Nähe. Du kannst Hunderte Menschen beobachten und dich trotzdem allein fühlen.",
-      "Das Ziel ist nicht, dich zurückzuziehen. Es geht darum, Beziehungen auf direkte Wege zu bringen, die keine Abhängigkeit brauchen."
+      "Plattformen versprechen, Menschen miteinander zu verbinden. Manche wichtigen Freundschaften entstehen tatsächlich dort.",
+      "Doch viele Beiträge von anderen zu sehen ist nicht dasselbe, wie miteinander zu sprechen. Du kannst den ganzen Tag erreichbar sein und trotzdem jemanden vermissen, der dir zuhört.",
+      "Die Hoffnung auf Kontakt und die Angst, eine Einladung zu verpassen, können Menschen immer wieder in den Feed bringen. Davon profitieren die Plattformen, unabhängig davon, ob sich daraus ein Gespräch ergibt.",
+      "Die Kampagne soll Beziehungen erhalten, ohne dass du dafür ständig scrollen musst. Welche Kontakte funktionieren inzwischen anders? Gibt es Menschen, die du seit dem Ausstieg schwerer erreichst?"
     ]
   },
   {
     key: "reason-8",
     delayDays: 300,
-    subject: "Grund 8: Politik wurde Performance",
-    title: "Reaktion ist nicht Handlung",
+    subject: "Grund 8: Politische Reaktionen ersetzen noch kein Handeln",
+    title: "Was nach dem Teilen eines Beitrags passiert",
     body: [
-      "Ein Like kann sich wie Haltung anfühlen.",
-      "Ein Repost kann sich wie Mut anfühlen, ein Kommentar wie echtes Handeln.",
-      "Eine Gesellschaft kann den ganzen Tag empört sein und trotzdem stillstehen."
+      "ein Like kann Zustimmung ausdrücken, und ein geteilter Beitrag kann andere auf Unrecht aufmerksam machen.",
+      "Das kann etwas bewirken, etwa wenn dadurch Menschen von einer Initiative erfahren. Es kann aber auch das Gefühl entstehen, bereits genug getan zu haben. Nach dem Kommentar folgt der nächste Beitrag, während das Problem bestehen bleibt.",
+      "Eine Gesellschaft kann den ganzen Tag empört sein und trotzdem stillstehen. Der Feed belohnt schnelle Reaktionen; gemeinsame Arbeit braucht oft längere Gespräche, Absprachen und Geduld.",
+      "Was möchtest du über das Lesen und Teilen hinaus tun? Vielleicht unterstützt du eine Initiative, organisierst dich mit anderen oder nimmst Kontakt zu Menschen vor Ort auf. Ausloggen allein ersetzt dieses Handeln nicht."
     ]
   },
   {
     key: "reason-9",
     delayDays: 330,
-    subject: "Grund 9: Kultur wird flacher",
-    title: "Schnell ist nicht automatisch wichtig",
+    subject: "Grund 9: Kultur gerät unter den Druck der Reichweite",
+    title: "Was sich schnell verbreitet, ist nicht alles",
     body: [
-      "der Feed ist nicht für Tiefe gemacht.",
-      "Er ist auf schnelle Verbreitung ausgelegt. Was sich am schnellsten verbreitet, wirkt dadurch leicht wie das Wichtigste.",
-      "Kultur braucht Reibung, Erinnerung, Geduld und Räume, in denen nicht alles sofort gemessen wird. Sonst passen wir uns immer stärker an ein System an, das unsere Aufmerksamkeit lenkt."
+      "im Feed wird schnelle Verbreitung leicht zum Maßstab dafür, was wichtig ist.",
+      "Das verändert, wie Kunst, Musik, Humor und politische Gedanken präsentiert werden. Wer sichtbar bleiben will, muss berücksichtigen, was das System belohnt. Schwieriges wird verkürzt, Eigenheiten werden zur Marke und Persönliches wird zum nächsten Beitrag.",
+      "Kultur braucht auch Zeit für etwas, das sich nicht sofort erschließt. Ein Buch, ein Gespräch oder ein Musikstück muss nicht nach wenigen Sekunden seine Reichweite rechtfertigen.",
+      "Hast du seit deinem Ausstieg etwas entdeckt oder weiterverfolgt, das dir im Feed kaum begegnet wäre?"
     ]
   },
   {
     key: "reason-10",
     delayDays: 360,
-    subject: "Grund 10: Menschen werden passiv gehalten",
-    title: "Die Welt braucht mehr als Zuschauer",
+    subject: "Grund 10: Zuschauen allein verändert wenig",
+    title: "Aufmerksamkeit für gemeinsames Handeln",
     body: [
-      "der Feed zersplittert unseren Blick auf die Welt.",
-      "Gemeinsame Probleme wirken schnell zu groß oder hoffnungslos, wenn alle eine andere, persönlich sortierte Version der Wirklichkeit sehen.",
-      "Ausloggen bringt Aufmerksamkeit und Energie dorthin zurück, wo echte Veränderung möglich ist."
+      "im Feed sieht jede Person eine anders sortierte Auswahl der Welt.",
+      "Die Beiträge sollen Reaktionen auslösen und zum Weiterschauen bewegen. Zwischen Klimakrise, Krieg, Ungleichheit und alltäglichen Meldungen können gemeinsame Probleme unüberschaubar wirken. Der nächste Beitrag bietet Ablenkung, aber noch keine Möglichkeit, etwas zu verändern.",
+      "Gesellschaftliche Veränderung braucht Menschen, die sich zusammensetzen, widersprechen, planen, protestieren und füreinander sorgen. Dafür braucht es Aufmerksamkeit, die über die nächste kurze Reaktion hinausreicht.",
+      "Ausloggen ist noch kein politisches Programm. Es kann aber Zeit und Kraft freimachen, etwa für die Nachbarschaft, den Arbeitsplatz oder eine Initiative. Gibt es etwas, dem du dich gemeinsam mit anderen widmen möchtest?"
     ]
   },
   {
     key: "year-1",
     delayDays: 365,
-    subject: "Ein Jahr später",
-    title: "Ein Jahr ohne Feed",
+    subject: "Ein Jahr nach dem Start: Dein Rückblick",
+    title: "Welche Rolle spielt der Feed heute?",
     body: [
-      "ein Jahr ist mehr als eine kleine Pause.",
-      "Etwas hat sich verändert, auch wenn es leise passiert ist. Deine Aufmerksamkeit ist woanders hingeflossen, und deine Beziehungen haben neue Wege gefunden.",
-      "Die wichtige Frage ist nicht, ob du alles perfekt gemacht hast. Entscheidend ist, ob du heute bewusster mit deiner Aufmerksamkeit umgehst.",
-      "Danke, dass du den Ausstieg sichtbar gemacht hast."
+      "vor etwa einem Jahr hast du dich für The Great Logout angemeldet. Wie blickst du heute auf deine Entscheidung?",
+      "Vielleicht bist du ganz ausgestiegen. Vielleicht nutzt du einzelne Plattformen wieder oder hast eine verlassen und eine andere behalten. Uns interessiert, was du erlebt hast, ohne dass daraus eine makellose Geschichte werden muss.",
+      "Womit verbringst du deine Zeit? Wie hältst du Kontakt? Hat sich verändert, wie bewusst du entscheidest, ob und wofür du eine Plattform nutzt?",
+      "Die Kampagne soll von solchen Erfahrungen lernen. Falls wir einen kurzen Bericht von dir auf der Website teilen möchten, fragen wir dich vorher.",
+      "Danke, dass du dich mit dem Ausstieg auseinandergesetzt und deine Gründe mit anderen geteilt hast."
     ]
   },
   {
     key: "reason-11",
     delayDays: 390,
-    subject: "Grund 11: Begehren wird produziert",
-    title: "Der Feed verkauft Rastlosigkeit",
+    subject: "Grund 11: Der Feed weckt immer neue Kaufwünsche",
+    title: "Warum das nächste Angebot nie das letzte ist",
     body: [
-      "der Feed muss dich nicht glücklich machen.",
-      "Es reicht, wenn er dich rastlos hält: Das gute Leben scheint immer nur einen Kauf, eine Reise oder ein Upgrade entfernt.",
-      "Diese Rastlosigkeit treibt Konsum, Müll, Vergleich und Schulden."
+      "der Feed muss dich nicht zufrieden machen, um wirtschaftlich erfolgreich zu sein.",
+      "Werbung und Beiträge legen immer wieder nahe, dass dir noch etwas fehlt: eine Reise, ein neues Gerät, die richtige Kleidung oder eine verbesserte Version deiner selbst. Aus dem Vergleich entsteht der nächste Kaufwunsch.",
+      "Das hat Folgen über den Bildschirm hinaus. Ein Trend, der nach zwei Wochen vorbei ist, kann Produktion, Transporte, Verpackungen und Abfall verursachen, die weit länger nachwirken. Dazu können Schulden und der Druck kommen, immer mithalten zu müssen.",
+      "Begegnest du seit dem Ausstieg anderen Kaufanreizen? Hat sich etwas daran verändert, was du dir wünschst oder kaufst?"
     ]
   },
   {
     key: "reason-12",
     delayDays: 420,
-    subject: "Grund 12: Beziehungen verdienen Besseres",
-    title: "Freundschaft braucht einen direkten Weg",
+    subject: "Grund 12: Beziehungen brauchen keinen endlosen Feed",
+    title: "Wie du mit anderen in Kontakt bleibst",
     body: [
-      "viele Menschen bleiben, weil sich Gehen wie Verschwinden anfühlt.",
-      "Diese Angst ist real. Plattformen haben sich zwischen Menschen und ihre Beziehungen geschoben.",
-      "Wenn die Beziehung wichtig ist, gib ihr einen direkten Weg."
+      "viele Menschen bleiben auf einer Plattform, weil sie dort wichtige Kontakte haben.",
+      "Das betrifft Freundschaften und Familien ebenso wie Kunst, Veranstaltungen, Kundschaft oder gemeinsame Projekte. Der mögliche Verlust dieser Kontakte ist ein ernsthafter Grund, beim Ausstieg zu zögern.",
+      "Es lohnt sich trotzdem zu fragen, ob du für diese Beziehungen den ganzen Feed brauchst. Vielleicht öffnest du die App wegen einer Nachricht und bleibst dann lange bei Beiträgen hängen, die mit diesem Menschen nichts zu tun haben.",
+      "Direkte Nachrichten per E-Mail oder Signal, Telefonate, eine Website oder ein Newsletter können Teile davon übernehmen. Was funktioniert für deine Kontakte, und wo fehlt dir noch eine praktikable Möglichkeit?"
     ]
   },
   {
     key: "reason-13",
     delayDays: 450,
-    subject: "Grund 13: Sichtbare Ausstiege machen Mut",
+    subject: "Grund 13: Ein sichtbarer Ausstieg kann andere ermutigen",
     title: "Der Ausstieg ist die Botschaft",
     body: [
-      "leise zu gehen kann dir selbst helfen.",
-      "Wenn du deinen Ausstieg sichtbar machst, hilft das auch anderen. Sie sehen, dass es einen Weg hinaus gibt.",
-      "Du brauchst dafür kein perfektes Argument: Sag, warum du gehst. Sag, wo man dich erreicht. Dann log dich aus."
+      "wenn jemand eine Plattform ohne Erklärung verlässt, fällt das im laufenden Feed oft kaum auf.",
+      "Wer seine Gründe öffentlich nennt, macht mehr sichtbar als einen ungenutzten Account: eine bewusste Entscheidung gegen ein System, das möglichst viel Aufmerksamkeit binden will. Andere können daran anknüpfen, Fragen stellen oder selbst einen Ausstieg erwägen.",
+      "Dafür musst du niemanden überzeugen und kein perfektes Argument liefern. Der Ablauf bleibt einfach: Erkläre ein bis sieben Tage lang, warum du gehst, sag, wo man dich weiterhin erreicht, und logge dich anschließend aus.",
+      "Wie haben andere auf deine Entscheidung reagiert? Vielleicht gab es Gespräche, vielleicht blieb es still. Beides interessiert uns."
     ]
   }
 ];
@@ -690,44 +713,44 @@ const REFLECTION_PROMPTS_BY_KEY = {
 
 const POST_OPTIONS_BY_KEY_DE = {
   "day-0": [
-    "Ich bereite meinen Ausstieg vor.\nIch verschwinde nicht.",
-    "Behalte die Menschen.\nVerlier den Feed.",
-    "Meine Aufmerksamkeit und meine Beziehungen gehören wieder mir."
+    "Ich bereite meinen Ausstieg vor.\nWir können trotzdem in Kontakt bleiben.",
+    "Freundschaften brauchen keinen endlosen Feed.",
+    "Ich möchte mit Freunden reden,\nohne nebenbei zu scrollen."
   ],
   "day-1": [
     "Ich verlasse diese Plattform.\nIn den nächsten Tagen erkläre ich warum.",
-    "Das ist kein Detox.\nDas ist eine Grenze.",
+    "Ich gehe, weil ich dieses Geschäftsmodell\nnicht länger unterstützen will.",
     "Der Ausstieg ist die Botschaft."
   ],
   "day-2": [
     "Meine Aufmerksamkeit steht nicht zum Verkauf.",
-    "Aufmerksamkeit ist wertvoll.\nIch gebe sie nicht länger ab.",
-    "Du bist nicht undiszipliniert.\nDer Feed soll dich zurückholen."
+    "Plattformen verdienen an meiner Aufmerksamkeit.\nIch will sie anders nutzen.",
+    "Der Feed ist so gebaut,\ndass Aufhören schwerfällt."
   ],
   "day-3": [
-    "Ich hole mir meine Zeit zurück.\nSie war nie für den Feed bestimmt.",
-    "Weniger Scrollen.\nMehr Leben.",
-    "Vielleicht ist Langeweile kein Problem.\nVielleicht ist sie ein Signal."
+    "Ich will meine Zeit nicht mehr\nmit endlosem Scrollen verbringen.",
+    "Ich möchte wieder lesen,\nohne immer aufs Handy zu schauen.",
+    "Ich möchte auch mal warten,\nohne sofort den Feed zu öffnen."
   ],
   "day-4": [
-    "Ich will meine Gedanken nicht vorsortiert bekommen.",
-    "Ich will nicht, dass ein paar Konzerne meinen Alltag vorsortieren.",
+    "Ich will selbst entscheiden,\nwelchen Themen ich meine Zeit widme.",
+    "Ein paar Konzerne haben zu viel Einfluss\nauf das, was wir täglich sehen.",
     "Mein Kopf ist kein Werbeplatz."
   ],
   "day-5": [
     "Ich verlasse den Feed,\nnicht die Menschen.",
     "Du erreichst mich weiterhin hier: ...",
-    "Ich verschwinde nicht.\nIch bin nur nicht mehr hier."
+    "Ich verlasse diese Plattform\nund möchte mit euch in Kontakt bleiben."
   ],
   "day-6": [
-    "Wenn dir der Feed mehr nimmt, als er gibt,\ndarfst du gehen.",
-    "Sag, warum du gehst.\nSag, wo man dich findet.\nDann log dich aus.",
-    "Wenn alles nur noch rauscht,\nist Ausloggen ein Anfang."
+    "Ich gehe, weil mir der Feed zu viel nimmt.\nWer möchte mitmachen?",
+    "Sag, warum du gehst und wo man dich erreicht.\nDann log dich aus.",
+    "Du denkst auch über einen Ausstieg nach?\nWir können gemeinsam gehen."
   ],
   "day-7": [
-    "Das ist mein letzter Post hier.\nWir sehen uns im echten Leben.",
-    "Ich logge mich aus,\num wieder bei mir anzukommen.",
-    "Das echte Leben hat keinen endlosen Feed."
+    "Das ist mein letzter Post hier.\nSo bleiben wir in Kontakt: ...",
+    "Ich logge mich aus.\nIch will meine Aufmerksamkeit anders nutzen.",
+    "Ich will meine Zeit nicht länger\neinem endlosen Feed überlassen."
   ],
   "day-14": [],
   "day-30": [],
@@ -737,24 +760,24 @@ const POST_OPTIONS_BY_KEY_DE = {
 
 const REFLECTION_PROMPTS_BY_KEY_DE = {
   "day-14": [
-    "Was hat der Feed sonst überdeckt?",
-    "Was fühlte sich besser an als erwartet?",
-    "Was war schwerer als gedacht?"
+    "Was fällt dir seit dem Ausstieg im Alltag auf?",
+    "Was war leichter als erwartet?",
+    "Was war schwieriger als gedacht?"
   ],
   "day-30": [
-    "Was kam nach dreißig Tagen zurück?",
-    "Was vermisst du noch?",
-    "Was würdest du jemandem sagen, der heute beginnt?"
+    "Was hat sich seit dem Ausstieg verändert – und was nicht?",
+    "Fehlt dir etwas, das du auf der Plattform hattest?",
+    "Was würdest du jemandem sagen, der heute anfängt?"
   ],
   "month-6": [
-    "Was wollte dich zurückziehen?",
-    "Welche Abkürzung muss wieder verschwinden?",
-    "Welche Grenze muss stärker werden?"
+    "Gab es einen Anlass, die Plattform wieder zu öffnen?",
+    "Was hilft dir, bei deiner Entscheidung zu bleiben?",
+    "Was möchtest du an deiner bisherigen Lösung ändern?"
   ],
   "year-1": [
-    "Was hat sich nach einem Jahr verändert?",
-    "Was wurde durch das Gehen möglich?",
-    "Was sollte The Great Logout ehrlicher erzählen?"
+    "Was hat sich im vergangenen Jahr für dich verändert?",
+    "Hat dir der Ausstieg etwas ermöglicht, und wenn ja, was?",
+    "Welche Erfahrungen sollte The Great Logout deutlicher ansprechen?"
   ]
 };
 

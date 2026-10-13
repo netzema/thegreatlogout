@@ -37,6 +37,10 @@ structurally critical without sounding bureaucratic or promotional.
   sufficient address evidence; recipient and message are reviewed together.
   `server.mail_threads` preserves the selected conversation and subject for replies;
   changing the conversation requires a fresh draft review.
+- `server.opportunity_quality` gates automatically discovered outreach on direct fit,
+  relevant responsibility and a source-backed conversation opening. Held occasions
+  cannot be prepared, approved, exported or sent. Newness and reach never override
+  weak fit. Writing normalization preserves required capitalization after greetings.
 - `server.discovery` searches public themes independently of existing contacts and
   creates source-backed contacts with unknown permission. Existing contacts are
   matched locally afterward. Discovery never expands the IMAP import scope.

@@ -224,13 +224,13 @@
     ? {
         kicker: "Optionale Website-Statistik",
         title: "Hilf mit, die Kampagne zu verbessern",
-        body: "Mit deiner Zustimmung erfassen wir eine datensparsame Nutzungsstatistik auf unserem eigenen Server. So sehen wir, welche Outreach-Kampagnen funktionieren.",
+        body: "Mit deiner Zustimmung erfassen wir eine datensparsame Nutzungsstatistik auf unserem eigenen Server. Sie hilft uns zu verstehen, mit welchen Aktionen wir Menschen für die Kampagne erreichen.",
         privacy: "Mehr zum Datenschutz",
         denied: "Ablehnen",
         granted: "Zustimmen",
         close: "Schließen",
-        statusGranted: "Aktueller Status: Statistik ist erlaubt.",
-        statusDenied: "Aktueller Status: Statistik ist abgelehnt.",
+        statusGranted: "Du hast der Website-Statistik zugestimmt.",
+        statusDenied: "Du hast die Website-Statistik abgelehnt.",
       }
     : {
         kicker: "Optional website statistics",
