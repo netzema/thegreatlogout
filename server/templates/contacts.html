@@ -9,7 +9,7 @@
   <label>Organisation oder Person<input type="search" name="q" value="{{ q }}" maxlength="100" placeholder="Namen eingeben"></label>
   <button>Suchen</button>{% if q %}<a class="button secondary" href="/contacts">Zurücksetzen</a>{% endif %}
 </form>
-<p class="muted result-count">{{ contacts|length }} {{ 'Treffer' if q else 'Kontakte angezeigt' }}{% if contacts|length == 500 %} · Maximal 500 Einträge. Grenze die Liste mit der Suche ein.{% endif %}</p>
+<p class="muted result-count">{{ contacts|length }} {{ 'Treffer' if q else 'Kontakt angezeigt' if contacts|length == 1 else 'Kontakte angezeigt' }}{% if contacts|length == 500 %} · Maximal 500 Einträge. Grenze die Liste mit der Suche ein.{% endif %}</p>
 <section class="card table-wrap contact-list" tabindex="0" role="region" aria-label="Kontaktliste">
   <table class="contacts-table" role="table"><caption class="sr-only">Kontakte und nächste Schritte</caption>
     <thead><tr><th scope="col">Organisation</th><th scope="col">Status</th><th scope="col">Nächster Schritt</th><th scope="col">Wiedervorlage</th></tr></thead>
